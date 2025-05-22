@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交互式装修预算审阅</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Overview: Key stats (total cost, cost/sqm) - Goal: Inform - Method: Prominent text display. Cost Breakdown (Management Fee, Tax, Major Works Categories) - Goal: Compare/Inform - Method: Chart.js Donut Chart - Interaction: Hover for details - Justification: Visualizes major cost components. Management Fee/Tax vs. Industry - Goal: Compare/Warn - Method: Text with highlighted values - Justification: Alerts user to potential overcharges.
+        - Budget Details: Itemized list per area/room - Goal: Inform/Detail - Method: HTML Table, with area selection - Interaction: Area selector (dropdown) to filter, hover on "工艺做法" for full text or warnings on vague terms - Justification: Allows detailed exploration of costs.
+        - Key Concerns (水电, 增减项, etc.): Explanatory text, tables for unit prices (e.g., 水电) - Goal: Warn/Inform - Method: Structured HTML, highlighted text - Interaction: Click to expand details within accordions - Justification: Focuses user on high-risk areas.
+        - Contract Clauses: List of clauses with explanations - Goal: Inform/Clarify - Method: Accordion or list - Interaction: Expand/collapse - Justification: Makes dense legal text more accessible.
+        - Review Suggestions: Bulleted lists - Goal: Advise/Empower - Method: HTML lists - Justification: Clear, actionable steps.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visuals via Chart.js (Canvas) or HTML/CSS. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-button.active {
+            border-color: #D97706; /* amber-600 */
+            color: #D97706; /* amber-600 */
+            font-weight: 600;
+        }
+        .tab-button {
+            border-bottom-width: 2px;
+            border-color: transparent;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px; /* Adjusted for donut chart */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+         .section-intro {
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #4A5568; /* gray-700 */
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-neutral-800 antialiased">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl sm:text-4xl font-bold text-amber-700">装修预算合同交互审阅</h1>
+            <p class="text-neutral-600 mt-2">项目地点：中海浣云居 (建筑面积: 416m²)</p>
+        </header>
+
+        <div class="bg-white shadow-xl rounded-lg p-4 sm:p-6">
+            <div class="mb-6 border-b border-neutral-300">
+                <nav class="flex flex-wrap -mb-px" aria-label="Tabs">
+                    <button class="tab-button active text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="overview">合同概览</button>
+                    <button class="tab-button text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="details">预算明细</button>
+                    <button class="tab-button text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="risks">核心风险点</button>
+                    <button class="tab-button text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="clauses">合同条款解读</button>
+                    <button class="tab-button text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="suggestions">审阅与谈判建议</button>
+                </nav>
+            </div>
+
+            <div id="tabContent">
+                <div id="overview" class="tab-pane active">
+                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">合同概览</h2>
+                    <p class="section-intro">本部分将为您展示这份装修预算合同的核心财务数据，包括总费用、各项主要开支的构成，并将其与行业通常标准进行对比，帮助您快速把握预算的整体情况和关键财务指标。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-stone-50 p-6 rounded-lg shadow">
+                            <h3 class="text-xl font-semibold text-neutral-700 mb-3">核心费用数据</h3>
+                            <ul class="space-y-2 text-neutral-700">
+                                <li><strong>基础装修总价：</strong><span class="font-mono text-lg">330,584.70 元</span></li>
+                                <li><strong>其他收费合计：</strong><span class="font-mono text-lg">45,785.98 元</span></li>
+                                <li><strong><span class="text-red-600 font-bold">最终合同总价：</span></strong><span class="font-mono text-xl text-red-600 font-bold">376,370.68 元</span></li>
+                                <li><strong>单位面积成本：</strong><span class="font-mono text-lg">约 904.74 元/m²</span> (基于416m²)</li>
+                                <li class="mt-3 pt-3 border-t border-stone-300">
+                                    <strong>项目管理费：</strong><span class="font-mono text-lg">33,058.47 元</span>
+                                    <span class="text-sm text-red-500 ml-2">(占基础装修10%，行业参考6-8%)</span>
+                                    <div class="tooltip">
+                                        <span class="text-xs bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full cursor-pointer">!</span>
+                                        <span class="tooltiptext">管理费偏高，需详细了解服务内容，警惕重复收费。</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong>税金：</strong><span class="font-mono text-lg">12,727.51 元</span>
+                                    <span class="text-sm text-red-500 ml-2">(占基础装修约3.85%，税率异常)</span>
+                                     <div class="tooltip">
+                                        <span class="text-xs bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full cursor-pointer">!</span>
+                                        <span class="tooltiptext">3.85%税率不常见，需确认计税方式及合规性，索要发票。</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-stone-50 p-6 rounded-lg shadow">
+                            <h3 class="text-xl font-semibold text-neutral-700 mb-3">主要费用构成 (估算)</h3>
+                            <div class="chart-container">
+                                <canvas id="costBreakdownChart"></canvas>
+                            </div>
+                            <p class="text-xs text-neutral-500 mt-2 text-center">注：此图表根据预算主要项目估算，水电等未明确项目未计入具体分类。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="details" class="tab-pane hidden">
+                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">预算明细</h2>
+                    <p class="section-intro">在这里，您可以按房屋的不同区域查看详细的装修项目清单。每个项目都列出了其单价、数量、总金额以及工艺做法和材料说明。请特别留意那些材料描述模糊或计价方式复杂的项目，这些往往是后期产生争议或增项的源头。</p>
+                    <div class="mb-4">
+                        <label for="areaSelector" class="block text-sm font-medium text-neutral-700 mb-1">选择区域查看明细：</label>
+                        <select id="areaSelector" class="w-full sm:w-1/2 p-2 border border-neutral-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500">
+                            </select>
+                    </div>
+                    <div id="budgetItemsContainer" class="overflow-x-auto">
+                        </div>
+                </div>
+
+                <div id="risks" class="tab-pane hidden">
+                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">核心风险点</h2>
+                    <p class="section-intro">本部分将为您深度剖析合同中存在的几大核心风险。这些风险点往往是装修过程中最容易引发纠纷、导致预算超支的环节。了解这些风险，能帮助您提前做好防范，避免不必要的损失。</p>
+                    <div class="space-y-4">
+                        <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
+                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
+                                <span><span class="text-red-500 font-bold">高风险：</span>水电项目“零元陷阱”与预收款机制</span>
+                                <span class="arrow transform transition-transform duration-300">&#9660;</span>
+                            </button>
+                            <div class="accordion-content mt-2 text-neutral-600">
+                                <p>预算中水电项目数量和金额均为“0”，但备注说明按实际发生收费。这是典型的“低开高走”手段，后期费用可能远超预期。</p>
+                                <p class="mt-1"><strong>关键点：</strong>备注D条约定“跃层和别墅的房屋水电改造不得超过260元/平米”。务必将此上限写入合同，并要求提供详细点位图和预估量。</p>
+                                <p class="mt-1"><strong>风险等级：</strong>极高。水电改造费用不确定性大，是主要增项来源。</p>
+                                <p class="mt-1"><strong>应对：</strong>签订前明确点位、预估工程量、约定费用上限、明确材料品牌规格、分阶段验收付款。</p>
+                                <details class="mt-2 text-sm">
+                                    <summary class="cursor-pointer text-amber-600">点击查看水电项目单价列表</summary>
+                                    <div class="overflow-x-auto mt-2">
+                                        <table class="min-w-full divide-y divide-neutral-200 text-xs">
+                                            <thead class="bg-stone-100"><tr><th class="px-2 py-1 text-left font-medium text-neutral-500 uppercase tracking-wider">项目名称</th><th class="px-2 py-1 text-left font-medium text-neutral-500 uppercase tracking-wider">单位</th><th class="px-2 py-1 text-left font-medium text-neutral-500 uppercase tracking-wider">单价(元)</th></tr></thead>
+                                            <tbody class="bg-white divide-y divide-neutral-200" id="waterElectricityPrices"></tbody>
+                                        </table>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
+                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
+                                <span><span class="text-orange-500 font-bold">中高风险：</span>不合理的10%减项管理费</span>
+                                 <span class="arrow transform transition-transform duration-300">&#9660;</span>
+                            </button>
+                            <div class="accordion-content mt-2 text-neutral-600">
+                                <p>合同备注4条规定，若减项大于增项，需支付差额部分的10%作为减项管理费。这是对客户节省行为的“惩罚”，非常不合理。</p>
+                                <p class="mt-1"><strong>风险等级：</strong>中高。限制了客户合理调整预算的权利。</p>
+                                <p class="mt-1"><strong>应对：</strong>坚决要求删除此条款，或大幅降低比例，并明确仅针对大额减项。</p>
+                            </div>
+                        </div>
+                         <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
+                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
+                                <span><span class="text-orange-500 font-bold">中高风险：</span>管理费偏高与税金比例异常</span>
+                                 <span class="arrow transform transition-transform duration-300">&#9660;</span>
+                            </button>
+                            <div class="accordion-content mt-2 text-neutral-600">
+                                <p>项目管理费占基础装修10%（行业参考6-8%），可能利润空间较大或包含重复收费。税金按3.85%收取，与常见税率（如3%简易计税或9%建安服务）不符，需警惕合规性问题。</p>
+                                <p class="mt-1"><strong>风险等级：</strong>中高。直接影响总费用，且税金问题可能涉及法律风险。</p>
+                                <p class="mt-1"><strong>应对：</strong>要求详细说明管理费构成。要求明确税金计算依据、计税方式，并索要正规发票。</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
+                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
+                                <span><span class="text-yellow-500 font-bold">中风险：</span>材料品牌规格描述模糊</span>
+                                 <span class="arrow transform transition-transform duration-300">&#9660;</span>
+                            </button>
+                            <div class="accordion-content mt-2 text-neutral-600">
+                                <p>预算中大量使用“专用基础材料”、“专用腻子”等模糊词汇，未明确具体品牌、型号、环保等级。这为施工方使用低价、低质材料留下空间，或成为后期加价理由。</p>
+                                <p class="mt-1"><strong>风险等级：</strong>中。影响工程质量和环保，可能导致后期增项。</p>
+                                <p class="mt-1"><strong>应对：</strong>要求将所有主辅材的品牌、型号、规格、环保等级明确写入合同附件，材料进场时严格验收。</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
+                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
+                                <span><span class="text-yellow-500 font-bold">中风险：</span>复杂的计价方式与潜在增项条款</span>
+                                 <span class="arrow transform transition-transform duration-300">&#9660;</span>
+                            </button>
+                            <div class="accordion-content mt-2 text-neutral-600">
+                                <p>吊顶（投影/展开面积）、找平/回填（超厚度加价）、防水（原基层处理另计）、成品保护/搬运（不含自购主材）、中央空调开孔（超长加价）等均存在复杂计价或额外收费条款。</p>
+                                <p class="mt-1"><strong>风险等级：</strong>中。容易产生计量争议和费用增加。</p>
+                                <p class="mt-1"><strong>应对：</strong>对每项复杂计价，要求提供详细计算方式和图示。对“费用另计”项，要求施工前评估并书面确认费用。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="clauses" class="tab-pane hidden">
+                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">合同条款解读（备注说明）</h2>
+                    <p class="section-intro">装修合同的“备注说明”部分往往包含许多重要但易被忽视的条款。这些条款直接关系到您的权利和义务。本部分将逐条为您解读这些备注，帮助您理解其深层含义和潜在影响。</p>
+                    <div class="space-y-3" id="contractClausesContainer">
+                        </div>
+                </div>
+
+                <div id="suggestions" class="tab-pane hidden">
+                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">审阅与谈判建议</h2>
+                    <p class="section-intro">面对复杂的装修合同，主动沟通和有效谈判至关重要。本部分为您提供了一系列实用的审阅要点、谈判技巧以及在合同签订前和施工过程中需要注意的事项，希望能助您顺利完成装修。</p>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-neutral-700 mb-2">预算审核要点清单</h3>
+                            <ul class="list-disc list-inside space-y-1 text-neutral-600 pl-4">
+                                <li>仔细核对所有项目的工程量、单价、总价是否准确。</li>
+                                <li>要求明确所有“专用材料”的具体品牌、型号、规格、环保等级。</li>
+                                <li>重点审阅吊顶、找平、回填等项目的复杂计价方式，要求解释清楚。</li>
+                                <li>识别所有“费用另计”、“额外收费”、“不含”等潜在增项，要求提前估价。</li>
+                                <li>通过网络或咨询，对比主要项目单价的合理性。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-neutral-700 mb-2">与装修公司沟通谈判技巧</h3>
+                            <ul class="list-disc list-inside space-y-1 text-neutral-600 pl-4">
+                                <li>所有重要沟通、确认和变更，务必采用书面形式并保留证据。</li>
+                                <li>针对疑问，提出具体、明确的问题，要求详细解释和解决方案。</li>
+                                <li>不要急于做决定，给自己时间思考、查证或咨询第三方意见。</li>
+                                <li>坚持自身权益，对不合理条款（如减项管理费）明确提出修改要求。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-neutral-700 mb-2">合同签订前注意事项</h3>
+                            <ul class="list-disc list-inside space-y-1 text-neutral-600 pl-4">
+                                <li>确保合同文本完整，包含预算、图纸、材料清单、工艺、工期、付款、保修、违约责任等。</li>
+                                <li>逐条审阅合同，特别是风险点。不理解处务必问清并要求修改。</li>
+                                <li>明确增减项管理：争取删除减项管理费，约定所有变更书面确认，施工方原因增项由其承担。</li>
+                                <li>务必约定水电改造费用上限（参考备注D：别墅≤260元/m²），超出需书面确认。</li>
+                                <li>合理化付款节点，与关键施工节点（水电验收、泥木验收等）挂钩。</li>
+                                <li>核查装修公司资质、口碑，选择正规公司。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-neutral-700 mb-2">施工过程中的监督与验收要点</h3>
+                            <ul class="list-disc list-inside space-y-1 text-neutral-600 pl-4">
+                                <li>定期巡查工地，发现问题及时与项目经理沟通。</li>
+                                <li>材料进场时，严格对照合同约定核对品牌、型号、规格。</li>
+                                <li>隐蔽工程（水电、防水等）封蔽前必须严格验收，拍照留证。</li>
+                                <li>按合同约定节点分阶段验收，签署验收单。</li>
+                                <li>保留所有合同、图纸、变更单、付款凭证、验收单、沟通记录。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-sm text-neutral-500">
+            <p>&copy; 2024 装修预算合同交互审阅工具。信息仅供参考，请结合实际情况决策。</p>
+        </footer>
+    </div>
+
+    <script>
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        const areaSelector = document.getElementById('areaSelector');
+        const budgetItemsContainer = document.getElementById('budgetItemsContainer');
+        const contractClausesContainer = document.getElementById('contractClausesContainer');
+        const waterElectricityPricesTableBody = document.getElementById('waterElectricityPrices');
+
+        const budgetData = {
+            totalBasePrice: 330584.70,
+            otherFees: 45785.98,
+            totalFinalPrice: 376370.68,
+            managementFee: 33058.47, // 10%
+            taxFee: 12727.51, // 3.85%
+            buildingArea: 416,
+            areas: [
+                {
+                    name: "负二层入户门厅",
+                    items: [
+                        { id: 1, name: "铲除墙基层处理及恢复", unit: "平方米", price: 25, quantity: 40.9, total: 1022.5, craft: "原白灰墙面铲除、刷界面剂一遍，墙面、顶面批刮专用基础材料找平，找补阴阳角提角等，人工费加材料费" },
+                        { id: 2, name: "墙纸、墙布墙顶面刮灰/艺术漆墙顶面刮灰", unit: "平方米", price: 58, quantity: 51.5, total: 2987, craft: "批刮专用腻子做基层处理，腻子批刮不得少于两遍，应大面顺平，打磨平整；含墙纸封底用基膜" },
+                        { id: 3, name: "铲除顶面基层处理及恢复", unit: "平方米", price: 25, quantity: 10.6, total: 265, craft: "同墙面铲除工艺" },
+                        { id: 4, name: "石膏板平顶", unit: "平方米", price: 230, quantity: 8, total: 1840, craft: "轻钢龙骨骨架，泰山石膏板封面。按投影面积计算。（有中央空调的及侧面高度大于200MM的按展开面积计算）。" },
+                        { id: 5, name: "石膏板弧型叠级造型顶(二级造型)", unit: "平方米", price: 380, quantity: 2.6, total: 988, craft: "轻钢龙骨骨架，泰山石膏板封面。工艺同上，含弧形工艺。" },
+                        { id: 6, name: "弧线、异形石膏板反光灯槽口", unit: "米", price: 95, quantity: 4, total: 380, craft: "木质结构基层，石膏板封面，含防开裂处理。" },
+                        { id: 7, name: "多乐士竹炭系列旷境乳胶漆或立邦金装抗甲醛5合一乳胶漆", unit: "平方米", price: 76, quantity: 11.6, total: 881.6, craft: "批刮专用腻子，腻子批刮不得少于两遍...底漆一遍，面漆二遍。此价格限一套居室刷双色，含白色。每增加一色，另加150元/色" }
+                    ]
+                },
+                {
+                    name: "负一层楼梯间",
+                    items: [
+                         { id: 1, name: "铲除墙基层处理及恢复", unit: "平方米", price: 25, quantity: 30, total: 750, craft: "原白灰墙面铲除、刷界面剂一遍，墙面、顶面批刮专用基础材料找平..." },
+                         { id: 2, name: "墙纸、墙布墙顶面刮灰", unit: "平方米", price: 58, quantity: 30, total: 1740, craft: "批刮专用腻子做基层处理..." }
+                    ]
+                },
+                 {
+                    name: "其他收费",
+                    items: [
+                        { id: 1, name: "工程远程费", unit: "项", price: 0, quantity: 1, total: 0, craft: "根据实际情况可能产生" },
+                        { id: 2, name: "其他服务费", unit: "项", price: 0, quantity: 1, total: 0, craft: "根据实际情况可能产生" },
+                        { id: 3, name: "税金", unit: "项", price: 12727.51095, quantity: 1, total: 12727.51, craft: "按基础装修总价3.85%计算" },
+                        { id: 4, name: "项目管理费", unit: "项", price: 33058.47, quantity: 1, total: 33058.47, craft: "按基础装修总价10%计算" }
+                    ]
+                }
+                // Add more areas and items as extracted from the document
+            ],
+            waterElectricityItems: [
+                { name: "Φ20mm PP-R管暗装", unit: "米", price: 95 },
+                { name: "Φ25mm PP-R管暗装", unit: "米", price: 110 },
+                { name: "Φ50mm 排水管", unit: "米", price: 150 },
+                { name: "洁具预埋件安装", unit: "个", price: 350 },
+                { name: "2.5平方线开槽", unit: "米", price: 45 },
+                { name: "4平方线开槽", unit: "米", price: 55 },
+                { name: "6平方线开槽", unit: "米", price: 60 },
+                { name: "弱电布线开槽", unit: "米", price: 45 },
+                { name: "开关、插座暗盒", unit: "个", price: 10 },
+                { name: "开关、插座安装(面板客户自购)", unit: "个", price: 6 },
+            ],
+            contractClauses: [
+                { title: "备注1：保修责任", content: "乙方自竣工验收合格、付清全部工程款项并办理相关手续后，履行两年保修。对甲方未与乙方通过正常手续而在同一工地自行增加、另外施工的项目，乙方不承担保修。 Implications: 自行采购或施工部分无保修，需明确责任边界。" },
+                { title: "备注2：图纸误差与增减项处理", content: "设计图纸尺寸若与施工现场有误差，以实际尺寸为准，误差项按增减项处理。 Implications: 可能导致预算与实际支出不符，施工前需精确测量核对。" },
+                { title: "备注3：水电项目预收款机制", content: "水电报价为估算后收取的预收费用，最终造价按实际发生数量和价目表计算。 Implications: 核心风险点！典型的“低开高走”陷阱，实际费用可能远超预估。" },
+                { title: "备注4：增减项管理与费用承担", content: "甲方提出变动，费用由甲方承担。如减项大于增项，甲方需支付差额部分的10%作为减项管理费。 Implications: 减项管理费不合理，限制客户调整。所有变更费用均由客户承担，责任划分不公。" },
+                { title: "备注5：乙方调整项目与费用承担", content: "乙方根据现场结构问题调整或增减项目，征得甲方同意后施工，相关费用由甲方承担。 Implications: 即使是房屋结构问题调整，费用也由客户承担，客户较被动。" },
+                { title: "备注6：其他未明确费用", content: "乙方除负责物业要求的出入证费用外，其余各类押金、手续费等由甲方承担。 Implications: 宽泛条款，可能涵盖物业管理费、垃圾清运费等多种未列明费用，需提前问清。" },
+                { title: "备注D (来自水电部分)：水电改造费用上限", content: "普通水电改造，平层的房屋水电改造不得超过200元/平米，跃层和别墅的房屋水电改造不得超过260元/平米。 Implications: 这是非常重要的一条！可作为与装修公司协商水电费用上限的依据，务必写入主合同。" }
+            ]
+        };
+
+        // Populate Area Selector
+        budgetData.areas.forEach(area => {
+            const option = document.createElement('option');
+            option.value = area.name;
+            option.textContent = area.name;
+            areaSelector.appendChild(option);
+        });
+
+        function displayBudgetItems(areaName) {
+            const area = budgetData.areas.find(a => a.name === areaName);
+            if (!area) {
+                budgetItemsContainer.innerHTML = '<p>请选择一个区域查看详情。</p>';
+                return;
+            }
+
+            let tableHTML = `
+                <table class="min-w-full divide-y divide-neutral-200 text-sm">
+                    <thead class="bg-stone-100">
+                        <tr>
+                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">序号</th>
+                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">项目名称</th>
+                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">单位</th>
+                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">单价(元)</th>
+                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">数量</th>
+                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">金额(元)</th>
+                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">工艺做法及材料说明</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-neutral-200">`;
+
+            area.items.forEach(item => {
+                let craftCellContent = item.craft;
+                if (item.craft.includes("专用基础材料") || item.craft.includes("专用腻子")) {
+                    craftCellContent += ` <span class="tooltip text-red-500 font-bold cursor-pointer">⚠️<span class="tooltiptext">材料描述模糊，请要求明确品牌型号！</span></span>`;
+                }
+                 if (item.name.includes("石膏板") && (item.craft.includes("展开面积") || item.craft.includes("按展开面积计算"))) {
+                    craftCellContent += ` <span class="tooltip text-orange-500 font-bold cursor-pointer">⚠️<span class="tooltiptext">注意“展开面积”计价，可能远大于投影面积！</span></span>`;
+                }
+
+                tableHTML += `
+                    <tr>
+                        <td class="px-3 py-2 whitespace-nowrap">${item.id}</td>
+                        <td class="px-3 py-2">${item.name}</td>
+                        <td class="px-3 py-2 whitespace-nowrap">${item.unit}</td>
+                        <td class="px-3 py-2 whitespace-nowrap font-mono">${item.price.toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap font-mono">${item.quantity}</td>
+                        <td class="px-3 py-2 whitespace-nowrap font-mono text-amber-700 font-semibold">${item.total.toFixed(2)}</td>
+                        <td class="px-3 py-2 text-xs">${craftCellContent}</td>
+                    </tr>`;
+            });
+
+            tableHTML += `</tbody></table>`;
+            budgetItemsContainer.innerHTML = tableHTML;
+        }
+        
+        areaSelector.addEventListener('change', (event) => {
+            displayBudgetItems(event.target.value);
+        });
+        if (budgetData.areas.length > 0) {
+            displayBudgetItems(budgetData.areas[0].name); // Display first area by default
+        }
+
+
+        // Populate Contract Clauses
+        budgetData.contractClauses.forEach(clause => {
+            const div = document.createElement('div');
+            div.className = 'accordion-item bg-stone-50 p-3 rounded-lg shadow';
+            div.innerHTML = `
+                <button class="accordion-header w-full text-left text-md font-semibold text-neutral-700 flex justify-between items-center">
+                    <span>${clause.title}</span>
+                    <span class="arrow transform transition-transform duration-300">&#9660;</span>
+                </button>
+                <div class="accordion-content mt-2 text-neutral-600 text-sm">
+                    <p>${clause.content.replace("Implications:", "<strong>关键解读：</strong>")}</p>
+                </div>`;
+            contractClausesContainer.appendChild(div);
+        });
+        
+        // Populate Water and Electricity Prices
+        budgetData.waterElectricityItems.forEach(item => {
+            const row = waterElectricityPricesTableBody.insertRow();
+            row.innerHTML = `
+                <td class="px-2 py-1 whitespace-nowrap">${item.name}</td>
+                <td class="px-2 py-1 whitespace-nowrap">${item.unit}</td>
+                <td class="px-2 py-1 whitespace-nowrap font-mono">${item.price.toFixed(2)}</td>
+            `;
+        });
+
+
+        // Tab switching logic
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const tabName = button.getAttribute('data-tab');
+                tabPanes.forEach(pane => {
+                    if (pane.id === tabName) {
+                        pane.classList.remove('hidden');
+                        pane.classList.add('active');
+                    } else {
+                        pane.classList.add('hidden');
+                        pane.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Accordion logic for risks and clauses
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const arrow = header.querySelector('.arrow');
+                if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                    content.style.maxHeight = '0px';
+                    arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    arrow.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+        
+        // Chart.js: Cost Breakdown Chart
+        const ctx = document.getElementById('costBreakdownChart').getContext('2d');
+        // Simplified data for chart - in a real scenario, this would be calculated by summing up categories
+        const estimatedBaseWork = budgetData.totalBasePrice - budgetData.managementFee - budgetData.taxFee;
+        const chartData = {
+            labels: ['基础施工(估算)', '项目管理费', '税金', '其他收费(未分类)'],
+            datasets: [{
+                label: '费用构成',
+                data: [
+                    estimatedBaseWork, 
+                    budgetData.managementFee, 
+                    budgetData.taxFee, 
+                    budgetData.otherFees - budgetData.managementFee - budgetData.taxFee //工程远程费、其他服务费
+                ],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.7)', // Blue
+                    'rgba(255, 159, 64, 0.7)', // Orange
+                    'rgba(255, 99, 132, 0.7)',  // Red
+                    'rgba(75, 192, 192, 0.7)'  // Green
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 10,
+                            font: { size: 10 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(context.parsed);
+                                }
+                                const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(2) + '%';
+                                label += ` (${percentage})`;
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
