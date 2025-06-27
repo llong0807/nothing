@@ -439,6 +439,17 @@
         #shipper-cargo-manage-page .cargo-item:hover {
             transform: translateY(-3px);
         }
+        /* Specific background for "Found Car" items */
+        #shipper-cargo-manage-page #found-car-cargo .cargo-item {
+            background-color: #e8f5e9; /* Very light green for "found car" */
+            border: 1px solid #c8e6c9;
+        }
+        /* Specific background for "Cancelled" items */
+        #shipper-cargo-manage-page #cancelled-cargo .cargo-item {
+            background-color: #f5f5f5; /* Light grey for "cancelled" */
+            border: 1px solid #e0e0e0;
+        }
+
         /* New styles for cargo item details */
         #shipper-cargo-manage-page .cargo-item .item-header {
             display: flex;
@@ -519,7 +530,7 @@
         #shipper-cargo-manage-page .cargo-actions .action-btn.secondary:hover {
             background-color: #757575;
         }
-        #shipper-cargo-manage-page .cargo-actions .action-btn.primary { /* For "优先曝光" */
+        #shipper-cargo-manage-page .cargo-actions .action-btn.primary { /* For "优先曝光" or "再次发布" */
             background-color: #ff9800; /* Orange */
         }
         #shipper-cargo-manage-page .cargo-actions .action-btn.primary:hover {
@@ -1081,25 +1092,58 @@
                     </div>
                 </div>
                 <div id="found-car-cargo" class="cargo-content" style="display:none;">
+                    <!-- Optimized "已找车" Cargo Item 1 -->
                     <div class="cargo-item">
-                        <h4>货源ID: #20250624005</h4>
-                        <p><strong>路线:</strong> 广州 - 深圳</p>
-                        <p><strong>货物:</strong> 服装, 2吨</p>
-                        <p><strong>状态:</strong> 已匹配司机</p>
+                        <div class="item-header">
+                            <span class="route-info">广州番禺区到深圳宝安区</span>
+                            <span class="publish-time">发布时间：6月24日</span>
+                        </div>
+                        <p class="cargo-details">货物: 服装, 2吨, 2x1.5x1米</p>
+                        <p class="load-time">装卸时间: 6月28日</p>
+                        <!-- Dynamic alert removed as requested -->
                         <div class="cargo-actions">
-                            <button onclick="alert('追踪订单')">追踪</button>
-                            <button class="secondary" onclick="alert('取消订单')">取消</button>
+                            <button class="action-btn" onclick="alert('联系意向车主')">联系意向车主</button>
+                        </div>
+                    </div>
+                    <!-- Optimized "已找车" Cargo Item 2 -->
+                    <div class="cargo-item">
+                        <div class="item-header">
+                            <span class="route-info">上海静安区到杭州西湖区</span>
+                            <span class="publish-time">发布时间：6月23日</span>
+                        </div>
+                        <p class="cargo-details">货物: 电子设备, 3吨, 3x2x1.8米</p>
+                        <p class="load-time">装卸时间: 随到随装</p>
+                        <!-- Dynamic alert removed as requested -->
+                        <div class="cargo-actions">
+                            <button class="action-btn" onclick="alert('联系意向车主')">联系意向车主</button>
                         </div>
                     </div>
                 </div>
                 <div id="cancelled-cargo" class="cargo-content" style="display:none;">
+                    <!-- Optimized "已作废" Cargo Item 1 -->
                     <div class="cargo-item">
-                        <h4>货源ID: #20250623010</h4>
-                        <p><strong>路线:</strong> 成都 - 重庆</p>
-                        <p><strong>货物:</strong> 家具, 10方</p>
-                        <p><strong>状态:</strong> 已作废</p>
+                        <div class="item-header">
+                            <span class="route-info">成都武侯区到重庆渝北区</span>
+                            <span class="publish-time">发布时间：6月22日</span>
+                        </div>
+                        <p class="cargo-details">货物: 家具, 10方, 4x2x2米</p>
+                        <p class="load-time">装卸时间: 6月25日</p>
+                        <!-- Dynamic alert removed as requested -->
                         <div class="cargo-actions">
-                            <button onclick="alert('查看详情')">查看详情</button>
+                            <button class="action-btn primary" onclick="alert('再次发布货源')">再次发布</button>
+                        </div>
+                    </div>
+                    <!-- Optimized "已作废" Cargo Item 2 -->
+                    <div class="cargo-item">
+                        <div class="item-header">
+                            <span class="route-info">北京朝阳区到天津滨海新区</span>
+                            <span class="publish-time">发布时间：6月21日</span>
+                        </div>
+                        <p class="cargo-details">货物: 建筑材料, 8吨, 3x2x1米</p>
+                        <p class="load-time">装卸时间: 随到随装</p>
+                        <!-- Dynamic alert removed as requested -->
+                        <div class="cargo-actions">
+                            <button class="action-btn primary" onclick="alert('再次发布货源')">再次发布</button>
                         </div>
                     </div>
                 </div>
@@ -1380,7 +1424,7 @@
         function checkOverlayPassword() {
             const passwordInput = document.getElementById('overlayPasswordInput');
             const password = passwordInput.value;
-            const correctPassword = "123321"; // The required password
+            const correctPassword = "123321"; // The required password has been updated to "123321"
 
             if (password === correctPassword) {
                 document.getElementById('password-overlay').style.display = 'none'; // Hide the overlay
