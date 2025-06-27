@@ -251,20 +251,40 @@
         #shipper-home-page .header {
             color: #2196f3; /* Blue header for shipper */
         }
-        #shipper-home-page .banner {
+        /* Banner styles */
+        .banner-container {
             width: 100%;
-            height: 140px; /* Taller banner */
-            background: linear-gradient(45deg, #64b5f6, #2196f3); /* Blue gradient */
-            color: #fff;
+            height: 140px;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .banner-wrapper {
+            display: flex;
+            width: 300%; /* 3 pages */
+            height: 100%;
+            transition: transform 1s ease-in-out;
+        }
+        .banner-page {
+            width: 33.33%; /* Each page takes 1/3 of the wrapper width */
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            margin-bottom: 25px;
-            border-radius: 12px; /* Rounded corners */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: #fff;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0; /* Prevent shrinking */
+            background-size: cover;
+            background-position: center;
         }
+        .banner-page:nth-child(1) { background: linear-gradient(45deg, #64b5f6, #2196f3); } /* Blue */
+        .banner-page:nth-child(2) { background: linear-gradient(45deg, #81c784, #4caf50); } /* Green */
+        .banner-page:nth-child(3) { background: linear-gradient(45deg, #ffb74d, #ff9800); } /* Orange */
+
+        /* Radar board styles */
         #shipper-home-page .radar-board {
             background-color: #e1f5fe; /* Lighter blue */
             border-radius: 12px;
@@ -284,6 +304,14 @@
             text-align: center;
             position: relative;
             z-index: 2; /* Ensure text is above animated elements */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        #shipper-home-page .radar-board h3 .icon {
+            font-size: 20px;
+            color: #1976d2;
         }
         #shipper-home-page .radar-board .radar-items-container {
             position: relative;
@@ -302,26 +330,69 @@
         #shipper-home-page .radar-item:last-child {
             border-bottom: none;
         }
+        #shipper-home-page .radar-item.highlight {
+            font-size: 16px; /* Larger font for highlight */
+            font-weight: bold;
+            color: #e63946; /* Highlight color */
+            animation: pulseHighlight 1s infinite alternate; /* Pulsing effect */
+        }
+
+        /* Free Shipping Button styles */
         #shipper-home-page .free-shipping-button {
             width: 90%;
-            padding: 22px; /* More padding */
-            background: linear-gradient(45deg, #4caf50, #81c784); /* Green gradient */
+            padding: 25px 20px; /* Increased padding */
+            background: linear-gradient(45deg, #ff7e5f, #feb47b); /* Warm orange gradient */
             color: #fff;
             border: none;
-            border-radius: 18px; /* More rounded */
-            font-size: 24px; /* Larger font */
-            font-weight: bold;
+            border-radius: 20px; /* More rounded */
             text-align: center;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4); /* Stronger shadow */
+            box-shadow: 0 10px 25px rgba(255, 126, 95, 0.4); /* Stronger, warmer shadow */
             margin: 0 auto;
-            display: block;
+            display: flex; /* Use flexbox for internal layout */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between title and slogan */
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         #shipper-home-page .free-shipping-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.5);
+            transform: translateY(-5px); /* More pronounced lift */
+            box-shadow: 0 12px 30px rgba(255, 126, 95, 0.6);
         }
+        #shipper-home-page .free-shipping-button .main-text {
+            font-size: 28px; /* Even larger font */
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #shipper-home-page .free-shipping-button .main-text .icon {
+            font-size: 30px;
+        }
+        #shipper-home-page .free-shipping-button .slogan {
+            font-size: 16px; /* Slogan font size */
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+        #shipper-home-page .free-shipping-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: skewX(-30deg);
+            transition: all 0.5s ease;
+        }
+        #shipper-home-page .free-shipping-button:hover::before {
+            left: 100%;
+        }
+
 
         /* Shipper Cargo Management Page */
         #shipper-cargo-manage-page .header {
@@ -368,23 +439,65 @@
         #shipper-cargo-manage-page .cargo-item:hover {
             transform: translateY(-3px);
         }
-        #shipper-cargo-manage-page .cargo-item h4 {
-            margin-top: 0;
-            margin-bottom: 12px; /* More space */
-            color: #333;
-            font-size: 18px; /* Larger title */
+        /* New styles for cargo item details */
+        #shipper-cargo-manage-page .cargo-item .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to start for multi-line route */
+            margin-bottom: 8px;
         }
-        #shipper-cargo-manage-page .cargo-item p {
-            margin: 6px 0; /* More space */
+        #shipper-cargo-manage-page .cargo-item .route-info {
+            flex-grow: 1;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.4;
+            margin-right: 10px; /* Space between route and time */
+            white-space: normal; /* Allow text wrapping */
+        }
+        #shipper-cargo-manage-page .cargo-item .publish-time {
+            font-size: 13px;
+            color: #888;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        #shipper-cargo-manage-page .cargo-item .cargo-details,
+        #shipper-cargo-manage-page .cargo-item .load-time {
             font-size: 14px;
             color: #555;
+            margin-bottom: 6px;
             line-height: 1.5;
         }
+        #shipper-cargo-manage-page .cargo-item .dynamic-alert {
+            margin-top: 12px;
+            padding: 8px 12px;
+            background-color: #e6f7ff; /* Light blue background */
+            border-left: 4px solid #1890ff; /* Blue left border */
+            border-radius: 6px;
+            font-size: 13px;
+            color: #333;
+            overflow: hidden; /* Hide overflow for slide effect */
+            position: relative;
+            height: 30px; /* Fixed height for animation */
+            display: flex;
+            align-items: center;
+        }
+        #shipper-cargo-manage-page .cargo-item .dynamic-alert-text {
+            position: absolute;
+            width: calc(100% - 24px); /* Adjust for padding */
+            opacity: 0;
+            transform: translateY(100%);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        #shipper-cargo-manage-page .cargo-item .dynamic-alert-text.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         #shipper-cargo-manage-page .cargo-actions {
             text-align: right;
             margin-top: 15px; /* More space */
         }
-        #shipper-cargo-manage-page .cargo-actions button {
+        #shipper-cargo-manage-page .cargo-actions .action-btn { /* Unified button style */
             background-color: #2196f3; /* Blue button */
             color: #fff;
             border: none;
@@ -396,16 +509,23 @@
             transition: background-color 0.2s ease, transform 0.2s ease;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        #shipper-cargo-manage-page .cargo-actions button:hover {
+        #shipper-cargo-manage-page .cargo-actions .action-btn:hover {
             background-color: #1976d2;
             transform: translateY(-1px);
         }
-        #shipper-cargo-manage-page .cargo-actions button.secondary {
+        #shipper-cargo-manage-page .cargo-actions .action-btn.secondary {
             background-color: #9e9e9e; /* Grey secondary */
         }
-        #shipper-cargo-manage-page .cargo-actions button.secondary:hover {
+        #shipper-cargo-manage-page .cargo-actions .action-btn.secondary:hover {
             background-color: #757575;
         }
+        #shipper-cargo-manage-page .cargo-actions .action-btn.primary { /* For "优先曝光" */
+            background-color: #ff9800; /* Orange */
+        }
+        #shipper-cargo-manage-page .cargo-actions .action-btn.primary:hover {
+            background-color: #fb8c00;
+        }
+
 
         /* Shipper My Page */
         #shipper-my-page .header {
@@ -453,10 +573,10 @@
         #shipper-my-page .menu-item {
             display: flex;
             align-items: center;
-            padding: 18px 20px; /* More padding */
+            padding: 18px 20px;
             border-bottom: 1px solid #f5f5f5; /* Lighter border */
             color: #555;
-            font-size: 16px; /* Larger font */
+            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
@@ -467,8 +587,8 @@
             background-color: #f5f5f5;
         }
         #shipper-my-page .menu-item .icon {
-            margin-right: 18px; /* More space */
-            font-size: 22px; /* Larger icon */
+            margin-right: 18px;
+            font-size: 22px;
             color: #2196f3; /* Blue icon color */
         }
         #shipper-my-page .menu-item .arrow {
@@ -478,15 +598,15 @@
         }
         #shipper-my-page .settings-button {
             width: 90%;
-            padding: 18px; /* More padding */
+            padding: 18px;
             background-color: #e0e0e0;
             color: #333;
             border: none;
-            border-radius: 12px; /* More rounded */
+            border-radius: 12px;
             font-size: 17px;
             text-align: center;
             cursor: pointer;
-            margin: 30px auto 20px; /* More margin */
+            margin: 30px auto 20px;
             display: block;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: background-color 0.2s ease, transform 0.2s ease;
@@ -802,16 +922,15 @@
 
         .radar-items-container {
             position: relative;
-            overflow: hidden; /* Hide content outside */
+            height: calc(100% - 32px); /* Adjust based on h3 height */
+            overflow: hidden;
         }
 
-        .radar-items-inner {
-            animation: scrollRadar 15s linear infinite; /* Adjust duration as needed */
-        }
-
-        @keyframes scrollRadar {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100%); } /* Scrolls items upwards */
+        /* Keyframes for dynamic radar scrolling */
+        /* This is now controlled by JS for more granular control */
+        @keyframes pulseHighlight {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.02); opacity: 0.9; }
         }
 
         /* Pause animation on hover */
@@ -857,34 +976,36 @@
         <div id="shipper-home-page" class="page">
             <div class="header">首页 (货方)</div>
             <div class="content">
-                <div class="banner">宣传文案 / 广告位</div>
-                <div class="radar-board">
-                    <h3>雷达功能看板</h3>
-                    <div class="radar-items-container">
-                        <div class="radar-items-inner">
-                            <div class="radar-item">用户A 发布了从北京到上海的货源</div>
-                            <div class="radar-item">用户B 发布了从广州到深圳的货源</div>
-                            <div class="radar-item">用户C 发布了从成都到重庆的货源</div>
-                            <div class="radar-item">用户D 发布了从上海到杭州的货源</div>
-                            <div class="radar-item">用户E 发布了从武汉到长沙的货源</div>
-                            <div class="radar-item">用户F 发布了从深圳到重庆的货源</div>
-                            <div class="radar-item">用户G 发布了从天津到济南的货源</div>
-                            <div class="radar-item">用户H 发布了从西安到郑州的货源</div>
-                            <div class="radar-item">用户I 发布了从南京到合肥的货源</div>
-                            <!-- Duplicate items to make scrolling seamless -->
-                            <div class="radar-item">用户A 发布了从北京到上海的货源</div>
-                            <div class="radar-item">用户B 发布了从广州到深圳的货源</div>
-                            <div class="radar-item">用户C 发布了从成都到重庆的货源</div>
-                            <div class="radar-item">用户D 发布了从上海到杭州的货源</div>
-                            <div class="radar-item">用户E 发布了从武汉到长沙的货源</div>
-                            <div class="radar-item">用户F 发布了从深圳到重庆的货源</div>
-                            <div class="radar-item">用户G 发布了从天津到济南的货源</div>
-                            <div class="radar-item">用户H 发布了从西安到郑州的货源</div>
-                            <div class="radar-item">用户I 发布了从南京到合肥的货源</div>
+                <!-- Optimized Banner Area -->
+                <div class="banner-container">
+                    <div class="banner-wrapper" id="bannerWrapper">
+                        <div class="banner-page">
+                            <span>大运到家，省心省力！</span>
+                        </div>
+                        <div class="banner-page">
+                            <span>新用户首单立减，优惠享不停！</span>
+                        </div>
+                        <div class="banner-page">
+                            <span>智能匹配，极速发货，告别等待！</span>
                         </div>
                     </div>
                 </div>
-                <button class="free-shipping-button" onclick="alert('进入发货页面')">免费发货</button>
+
+                <!-- Optimized Radar Board -->
+                <div class="radar-board">
+                    <h3><span class="icon">📡</span> 雷达功能看板</h3>
+                    <div class="radar-items-container">
+                        <div class="radar-items-inner" id="radarItemsInner">
+                            <!-- Radar items will be dynamically added by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optimized Free Shipping Button -->
+                <button class="free-shipping-button" onclick="alert('进入发货页面')">
+                    <span class="main-text"><span class="icon">✨</span> 免费发货</span>
+                    <span class="slogan">多快好省，如此简单！</span>
+                </button>
             </div>
             <div class="footer">
                 <div class="tab-button active" onclick="showPage('shipper-home-page')">
@@ -910,24 +1031,52 @@
             <div class="cargo-list">
                 <!-- Content will dynamically change based on tab selection -->
                 <div id="published-cargo" class="cargo-content active">
+                    <!-- Optimized Cargo Item 1 -->
                     <div class="cargo-item">
-                        <h4>货源ID: #20250625001</h4>
-                        <p><strong>路线:</strong> 北京 - 上海</p>
-                        <p><strong>货物:</strong> 电子产品, 5吨</p>
-                        <p><strong>状态:</strong> 待接单</p>
+                        <div class="item-header">
+                            <span class="route-info">北京西城区到上海浦东新区</span>
+                            <span class="publish-time">发布时间：6月27日</span>
+                        </div>
+                        <p class="cargo-details">货物: 电子产品, 5吨, 3.2x2x1.5米</p>
+                        <p class="load-time">装卸时间: 随到随装</p>
+                        <div class="dynamic-alert" id="dynamicAlert-item1">
+                            <span class="dynamic-alert-text active">李师傅刚刚收藏了您的货源！</span>
+                        </div>
                         <div class="cargo-actions">
-                            <button onclick="alert('查看详情')">查看详情</button>
-                            <button class="secondary" onclick="alert('修改货源')">修改</button>
+                            <button class="action-btn secondary" onclick="alert('撤销货源')">撤销</button>
+                            <button class="action-btn secondary" onclick="alert('修改货源')">修改</button>
+                            <button class="action-btn primary" onclick="alert('优先曝光货源')">优先曝光</button>
                         </div>
                     </div>
+                    <!-- Optimized Cargo Item 2 -->
                     <div class="cargo-item">
-                        <h4>货源ID: #20250625002</h4>
-                        <p><strong>路线:</strong> 深圳 - 广州</p>
-                        <p><strong>货物:</strong> 生鲜, 2吨</p>
-                        <p><strong>状态:</strong> 匹配中</p>
+                        <div class="item-header">
+                            <span class="route-info">深圳南山区到广州天河区</span>
+                            <span class="publish-time">发布时间：6月26日</span>
+                        </div>
+                        <p class="cargo-details">货物: 生鲜蔬菜, 2吨, 2.5x1.8x1米</p>
+                        <p class="load-time">装卸时间: 7月1日</p>
+                        <div class="dynamic-alert" id="dynamicAlert-item2">
+                            <span class="dynamic-alert-text active">已有意向车主，点击查看></span>
+                        </div>
                         <div class="cargo-actions">
-                            <button onclick="alert('查看详情')">查看详情</button>
-                            <button class="secondary" onclick="alert('取消货源')">取消</button>
+                            <button class="action-btn secondary" onclick="alert('撤销货源')">撤销</button>
+                            <button class="action-btn secondary" onclick="alert('修改货源')">修改</button>
+                            <button class="action-btn primary" onclick="alert('优先曝光货源')">优先曝光</button>
+                        </div>
+                    </div>
+                    <!-- Original Cargo Item (for comparison, not fully optimized) -->
+                    <div class="cargo-item">
+                        <div class="item-header">
+                            <span class="route-info">成都武侯区到重庆渝北区</span>
+                            <span class="publish-time">发布时间：6月25日</span>
+                        </div>
+                        <p class="cargo-details">货物: 家具, 10方, 4x2x2米</p>
+                        <p class="load-time">装卸时间: 随到随装</p>
+                        <div class="cargo-actions">
+                            <button class="action-btn secondary" onclick="alert('撤销货源')">撤销</button>
+                            <button class="action-btn secondary" onclick="alert('修改货源')">修改</button>
+                            <button class="action-btn primary" onclick="alert('优先曝光货源')">优先曝光</button>
                         </div>
                     </div>
                 </div>
@@ -1141,7 +1290,7 @@
                 <div class="tab-button" onclick="showPage('driver-find-cargo-page')">
                     <span class="icon">🔍</span> 找货
                 </div>
-                <div class="tab-button active" onclick="showPage('driver-cargo-manage-page')">
+                <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
                     <span class="icon">📦</span> 货源管理
                 </div>
                 <div class="tab-button" onclick="showPage('driver-my-page')">
@@ -1231,7 +1380,7 @@
         function checkOverlayPassword() {
             const passwordInput = document.getElementById('overlayPasswordInput');
             const password = passwordInput.value;
-            const correctPassword = "123321"; // The required password
+            const correctPassword = "云雷123"; // The required password
 
             if (password === correctPassword) {
                 document.getElementById('password-overlay').style.display = 'none'; // Hide the overlay
@@ -1241,6 +1390,157 @@
                 passwordInput.value = ''; // Clear the input field
             }
         }
+
+        // Shipper Home Page Banner Auto-Slide
+        let currentBannerIndex = 0;
+        const bannerWrapper = document.getElementById('bannerWrapper');
+        const totalBanners = 3; // As per requirement
+
+        function autoSlideBanner() {
+            currentBannerIndex = (currentBannerIndex + 1) % totalBanners;
+            bannerWrapper.style.transform = `translateX(-${currentBannerIndex * 100 / totalBanners}%)`;
+        }
+        // Set interval for banner auto-slide
+        setInterval(autoSlideBanner, 5000); // Change banner every 5 seconds
+
+        // Radar Board dynamic content and animation
+        const radarItemsData = [
+            { text: "云雷大仙发布一条上海到深圳的货源：电子产品，8吨", highlight: false },
+            { text: "王师傅接单了从北京到天津的货源：建材，10方", highlight: false },
+            { text: "张小姐发布一条广州到武汉的货源：生鲜，2吨", highlight: false },
+            { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
+            { text: "李老板发布一条成都到重庆的货源：家具，5方", highlight: false },
+            { text: "系统匹配到您附近的新货源：蔬菜，3吨", highlight: false },
+            { text: "赵司机完成了从深圳到厦门货源的运输", highlight: false },
+            { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
+            { text: "钱先生发布一条杭州到南京的货源：纺织品，6吨", highlight: false },
+            { text: "孙女士发布一条武汉到长沙的货源：医药用品，1吨", highlight: false },
+            { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
+            { text: "周师傅接单了从济南到青岛的货源：海鲜，4吨", highlight: false }
+        ];
+
+        let radarItemHeight = 0; // Will be calculated dynamically
+        let currentRadarDisplayIndex = 0; // Tracks which item is at the top of the visible list
+        let radarScrollTimeout; // Use a single timeout for sequential scrolling
+
+        function initializeRadarDisplay() {
+            const radarItemsInner = document.getElementById('radarItemsInner');
+            radarItemsInner.innerHTML = ''; // Clear existing content
+
+            // Populate initial visible items (e.g., 5 items)
+            const initialItemsCount = 5;
+            for (let i = 0; i < initialItemsCount; i++) {
+                const itemIndex = (currentRadarDisplayIndex + i) % radarItemsData.length;
+                const radarItemDiv = document.createElement('div');
+                radarItemDiv.classList.add('radar-item');
+                if (radarItemsData[itemIndex].highlight) {
+                    radarItemDiv.classList.add('highlight');
+                }
+                radarItemDiv.textContent = radarItemsData[itemIndex].text;
+                radarItemsInner.appendChild(radarItemDiv);
+            }
+
+            // Measure item height after they are in DOM
+            if (radarItemsInner.children.length > 0) {
+                radarItemHeight = radarItemsInner.children[0].offsetHeight;
+            }
+
+            startRadarScrolling();
+        }
+
+        function startRadarScrolling() {
+            if (radarScrollTimeout) clearTimeout(radarScrollTimeout); // Clear any existing timeout
+
+            // Determine the delay for the next scroll
+            let nextScrollDelay = Math.random() * (4000 - 2000) + 2000; // Random speed between 2-4 seconds
+
+            // Check if the *next* item to be displayed (which is currently at the bottom) is a highlight item
+            // We need to look ahead to the item that will become the *new* top item after the scroll
+            const nextItemToBeTopIndex = (currentRadarDisplayIndex + 1) % radarItemsData.length; // The item that will move to the top position after the current scroll
+            if (radarItemsData[nextItemToBeTopIndex].highlight) {
+                nextScrollDelay = 5000; // Pause for 5 seconds for highlighted items
+            }
+
+            radarScrollTimeout = setTimeout(() => {
+                scrollRadarItem();
+                startRadarScrolling(); // Schedule the next scroll
+            }, nextScrollDelay);
+        }
+
+        function scrollRadarItem() {
+            const radarItemsInner = document.getElementById('radarItemsInner');
+            if (!radarItemsInner || radarItemHeight === 0) {
+                // Re-measure if height is not set, or if element is not found (unlikely)
+                if (radarItemsInner && radarItemsInner.children.length > 0) {
+                    radarItemHeight = radarItemsInner.children[0].offsetHeight;
+                }
+                if (radarItemHeight === 0) return; // Still no height, cannot scroll
+            }
+
+            // Add the next item to the bottom before starting the scroll
+            const itemToAddIndex = (currentRadarDisplayIndex + radarItemsInner.children.length) % radarItemsData.length;
+            const newItemData = radarItemsData[itemToAddIndex];
+            const radarItemDiv = document.createElement('div');
+            radarItemDiv.classList.add('radar-item');
+            if (newItemData.highlight) {
+                radarItemDiv.classList.add('highlight');
+            }
+            radarItemDiv.textContent = newItemData.text;
+            radarItemsInner.appendChild(radarItemDiv);
+
+            // Apply smooth transition for the upward slide
+            radarItemsInner.style.transition = 'transform 1s ease-in-out'; // Fixed 1-second slide duration
+            radarItemsInner.style.transform = `translateY(-${radarItemHeight}px)`;
+
+            // After the slide animation completes, reset position and remove the top item
+            setTimeout(() => {
+                // Remove the first child (the one that scrolled out of view)
+                if (radarItemsInner.children.length > 0) {
+                    radarItemsInner.removeChild(radarItemsInner.children[0]);
+                }
+
+                // Immediately reset transform without transition to prepare for the next scroll
+                radarItemsInner.style.transition = 'none';
+                radarItemsInner.style.transform = 'translateY(0)';
+
+                // Update the index for the next item that will be at the top of the visible list
+                currentRadarDisplayIndex = (currentRadarDisplayIndex + 1) % radarItemsData.length;
+
+            }, 1000); // This timeout should match the CSS transition duration
+        }
+
+
+        // Shipper Cargo Management Page Dynamic Alerts
+        const dynamicCargoAlertMessages = [
+            "李师傅刚刚收藏了您的货源！",
+            "已有意向车主，点击查看>",
+            "您的货源正在被多位司机关注！",
+            "系统为您推荐了3位优质司机！"
+        ];
+        let dynamicCargoAlertIndex = 0;
+
+        function updateDynamicCargoAlert(alertElementId) {
+            const alertElement = document.getElementById(alertElementId);
+            if (!alertElement) return;
+
+            // Remove existing text elements to prepare for new one
+            const existingTextElements = alertElement.querySelectorAll('.dynamic-alert-text');
+            existingTextElements.forEach(el => el.remove());
+
+            const newMessage = dynamicCargoAlertMessages[dynamicCargoAlertIndex];
+
+            const newTextElement = document.createElement('span');
+            newTextElement.classList.add('dynamic-alert-text');
+            newTextElement.textContent = newMessage;
+            alertElement.appendChild(newTextElement);
+
+            // Trigger reflow to ensure transition works
+            void newTextElement.offsetWidth;
+            newTextElement.classList.add('active');
+
+            dynamicCargoAlertIndex = (dynamicCargoAlertIndex + 1) % dynamicCargoAlertMessages.length;
+        }
+
 
         // Initialize shipper's cargo management tabs
         function setupShipperCargoTabs() {
@@ -1301,10 +1601,13 @@
         // Initialize the app on window load
         window.onload = function() {
             // Initially, only the password overlay is visible.
-            // All other pages (including the original login-page) are hidden by default.
-            // The checkOverlayPassword function will handle showing the 'login-page' after successful authentication.
             setupShipperCargoTabs();
             setupDriverCargoTabs();
+            initializeRadarDisplay(); // Start radar content updates
+
+            // Start dynamic alerts for cargo management page
+            setInterval(() => updateDynamicCargoAlert('dynamicAlert-item1'), 4000); // Update every 4 seconds
+            setInterval(() => updateDynamicCargoAlert('dynamicAlert-item2'), 5000); // Update every 5 seconds
         };
 
         // Basic alert polyfill to avoid blocking prompts in iframe
