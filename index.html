@@ -1,548 +1,1388 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>交互式装修预算审阅</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Visualization & Content Choices:
-        - Overview: Key stats (total cost, cost/sqm) - Goal: Inform - Method: Prominent text display. Cost Breakdown (Management Fee, Tax, Major Works Categories) - Goal: Compare/Inform - Method: Chart.js Donut Chart - Interaction: Hover for details - Justification: Visualizes major cost components. Management Fee/Tax vs. Industry - Goal: Compare/Warn - Method: Text with highlighted values - Justification: Alerts user to potential overcharges.
-        - Budget Details: Itemized list per area/room - Goal: Inform/Detail - Method: HTML Table, with area selection - Interaction: Area selector (dropdown) to filter, hover on "工艺做法" for full text or warnings on vague terms - Justification: Allows detailed exploration of costs.
-        - Key Concerns (水电, 增减项, etc.): Explanatory text, tables for unit prices (e.g., 水电) - Goal: Warn/Inform - Method: Structured HTML, highlighted text - Interaction: Click to expand details within accordions - Justification: Focuses user on high-risk areas.
-        - Contract Clauses: List of clauses with explanations - Goal: Inform/Clarify - Method: Accordion or list - Interaction: Expand/collapse - Justification: Makes dense legal text more accessible.
-        - Review Suggestions: Bulleted lists - Goal: Advise/Empower - Method: HTML lists - Justification: Clear, actionable steps.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visuals via Chart.js (Canvas) or HTML/CSS. -->
+    <title>手机物流App原型</title>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .tab-button.active {
-            border-color: #D97706; /* amber-600 */
-            color: #D97706; /* amber-600 */
-            font-weight: 600;
+        /* Base styles for the app screen wrapper */
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light grey background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent body scroll, content will scroll within app-screen */
+            color: #333;
         }
-        .tab-button {
-            border-bottom-width: 2px;
-            border-color: transparent;
+
+        /* The main container simulating a phone screen */
+        .app-screen {
+            width: 375px; /* Standard mobile width */
+            height: 812px; /* Standard mobile height */
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Softer, larger shadow */
+            overflow: hidden; /* Hide overflow content from rounded corners */
+            display: flex;
+            flex-direction: column;
+            position: relative; /* For absolute positioning of pages */
+            transition: transform 0.3s ease-in-out; /* Smooth transition for potential future scaling */
         }
-        .chart-container {
-            position: relative;
+
+        /* Hidden by default, shown by JS */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 400px; /* Adjusted for donut chart */
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 350px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 220px;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -110px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
             opacity: 0;
-            transition: opacity 0.3s;
+            pointer-events: none; /* Disable interaction when hidden */
+            transition: opacity 0.3s ease-in-out; /* Smooth fade in/out */
+            background-color: #fff; /* Ensure page background is white */
         }
-        .tooltip .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
+
+        .page.active {
             opacity: 1;
+            pointer-events: all; /* Enable interaction when active */
         }
-        .accordion-content {
-            max-height: 0;
+
+        /* Password Overlay Page */
+        #password-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #a8dadc, #457b9d); /* A calming blue-green gradient */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20; /* Ensure it's above all other pages */
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        #password-overlay .overlay-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+        #password-overlay .overlay-input {
+            width: 70%;
+            padding: 15px;
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+        #password-overlay .overlay-button {
+            width: 70%;
+            padding: 18px;
+            background-color: #e63946; /* A vibrant red for action */
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(230, 57, 70, 0.4);
+            transition: all 0.3s ease;
+        }
+        #password-overlay .overlay-button:hover {
+            background-color: #d62839;
+            transform: translateY(-2px);
+        }
+
+
+        /* Common Header Style */
+        .header {
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+            position: relative; /* For potential back buttons */
+            z-index: 10; /* Ensure header is on top */
+        }
+
+        /* Common Content Area */
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto; /* Enable scrolling for content area */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            background-color: #f9f9f9; /* Light background for content */
+        }
+
+        /* Footer / Tab Bar styles */
+        .footer {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            background-color: #fff;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+            z-index: 10; /* Ensure footer is on top */
+        }
+
+        .tab-button {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 12px;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tab-button .icon {
+            font-size: 20px;
+        }
+
+        /* Page-specific styles */
+
+        /* Login Page */
+        #login-page {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e0f7fa, #c8e6c9); /* Soft gradient background */
+        }
+        #login-page .logo {
+            font-size: 56px; /* Larger logo */
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 80px; /* Reverted margin */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        /* Removed .password-input style as the input field is removed */
+        #login-page .login-button {
+            width: 80%;
+            padding: 18px; /* Larger padding */
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 12px; /* More rounded */
+            font-size: 20px; /* Larger font */
+            cursor: pointer;
+            margin-bottom: 25px; /* More space */
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); /* Prominent shadow */
+            transition: all 0.3s ease;
+        }
+        #login-page .login-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        #login-page .login-options {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+        }
+        #login-page .login-options a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 500;
+        }
+
+        /* Identity Selection Page */
+        #identity-page {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f0f4f8, #e7eff3); /* Another soft gradient */
+        }
+        #identity-page .identity-title {
+            font-size: 28px; /* Larger title */
+            font-weight: bold;
+            margin-bottom: 60px; /* More space */
+            color: #333;
+            text-align: center;
+        }
+        #identity-page .identity-card {
+            width: 75%; /* Slightly narrower */
+            padding: 40px 20px; /* More padding */
+            margin-bottom: 35px; /* More space */
+            border-radius: 20px; /* More rounded */
+            text-align: center;
+            font-size: 24px; /* Larger font */
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Initial shadow */
+        }
+        #identity-page .identity-card:hover {
+            transform: translateY(-8px); /* More pronounced lift */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+        }
+        #identity-page .identity-card .icon {
+            font-size: 50px; /* Larger icon */
+            margin-bottom: 20px; /* More space */
+            display: block; /* Ensure icon is block to center text below it */
+        }
+        #identity-page .shipper-card {
+            background-color: #e3f2fd; /* Light blue */
+            color: #2196f3; /* Blue */
+            border: 2px solid #2196f3;
+        }
+        #identity-page .driver-card {
+            background-color: #fff3e0; /* Light orange */
+            color: #ff9800; /* Orange */
+            border: 2px solid #ff9800;
+        }
+
+        /* Shipper Home Page */
+        #shipper-home-page .header {
+            color: #2196f3; /* Blue header for shipper */
+        }
+        #shipper-home-page .banner {
+            width: 100%;
+            height: 140px; /* Taller banner */
+            background: linear-gradient(45deg, #64b5f6, #2196f3); /* Blue gradient */
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 25px;
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        #shipper-home-page .radar-board {
+            background-color: #e1f5fe; /* Lighter blue */
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+            border: 1px solid #b3e5fc;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            position: relative; /* For animation */
+            height: 150px; /* Fixed height for radar board */
+            overflow: hidden; /* Hide scrollbar for radar */
+        }
+        #shipper-home-page .radar-board h3 {
+            margin-top: 0;
+            color: #1976d2; /* Darker blue */
+            font-size: 17px;
+            margin-bottom: 15px;
+            text-align: center;
+            position: relative;
+            z-index: 2; /* Ensure text is above animated elements */
+        }
+        #shipper-home-page .radar-board .radar-items-container {
+            position: relative;
+            height: calc(100% - 32px); /* Adjust based on h3 height */
             overflow: hidden;
-            transition: max-height 0.3s ease-out;
         }
-         .section-intro {
-            font-size: 1.05em;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            color: #4A5568; /* gray-700 */
+        #shipper-home-page .radar-item {
+            padding: 8px 0;
+            border-bottom: 1px dashed #c1e4ff;
+            font-size: 14px;
+            color: #424242;
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflow */
+            text-overflow: ellipsis; /* Add ellipsis */
         }
+        #shipper-home-page .radar-item:last-child {
+            border-bottom: none;
+        }
+        #shipper-home-page .free-shipping-button {
+            width: 90%;
+            padding: 22px; /* More padding */
+            background: linear-gradient(45deg, #4caf50, #81c784); /* Green gradient */
+            color: #fff;
+            border: none;
+            border-radius: 18px; /* More rounded */
+            font-size: 24px; /* Larger font */
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4); /* Stronger shadow */
+            margin: 0 auto;
+            display: block;
+            transition: all 0.3s ease;
+        }
+        #shipper-home-page .free-shipping-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.5);
+        }
+
+        /* Shipper Cargo Management Page */
+        #shipper-cargo-manage-page .header {
+            color: #2196f3; /* Blue header */
+        }
+        #shipper-cargo-manage-page .tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid #eee;
+            background-color: #fcfcfc;
+            padding: 5px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+        #shipper-cargo-manage-page .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0; /* Adjusted padding */
+            font-size: 15px;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent; /* Thicker active border */
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        #shipper-cargo-manage-page .tab.active {
+            color: #2196f3; /* Active blue */
+            border-bottom-color: #2196f3;
+            font-weight: bold;
+        }
+        #shipper-cargo-manage-page .cargo-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px 20px; /* Consistent padding */
+        }
+        #shipper-cargo-manage-page .cargo-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px; /* More rounded */
+            padding: 20px; /* More padding */
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Softer shadow */
+            transition: transform 0.2s ease-in-out;
+        }
+        #shipper-cargo-manage-page .cargo-item:hover {
+            transform: translateY(-3px);
+        }
+        #shipper-cargo-manage-page .cargo-item h4 {
+            margin-top: 0;
+            margin-bottom: 12px; /* More space */
+            color: #333;
+            font-size: 18px; /* Larger title */
+        }
+        #shipper-cargo-manage-page .cargo-item p {
+            margin: 6px 0; /* More space */
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        #shipper-cargo-manage-page .cargo-actions {
+            text-align: right;
+            margin-top: 15px; /* More space */
+        }
+        #shipper-cargo-manage-page .cargo-actions button {
+            background-color: #2196f3; /* Blue button */
+            color: #fff;
+            border: none;
+            border-radius: 8px; /* More rounded */
+            padding: 10px 15px; /* More padding */
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #shipper-cargo-manage-page .cargo-actions button:hover {
+            background-color: #1976d2;
+            transform: translateY(-1px);
+        }
+        #shipper-cargo-manage-page .cargo-actions button.secondary {
+            background-color: #9e9e9e; /* Grey secondary */
+        }
+        #shipper-cargo-manage-page .cargo-actions button.secondary:hover {
+            background-color: #757575;
+        }
+
+        /* Shipper My Page */
+        #shipper-my-page .header {
+            color: #2196f3; /* Blue header */
+        }
+        #shipper-my-page .profile-header {
+            background: linear-gradient(135deg, #2196f3, #64b5f6); /* Blue gradient */
+            color: #fff;
+            padding: 35px 20px; /* More padding */
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #shipper-my-page .avatar {
+            width: 90px; /* Larger avatar */
+            height: 90px;
+            background-color: #fff;
+            border-radius: 50%;
+            margin: 0 auto 15px; /* More space */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px; /* Larger icon */
+            color: #2196f3; /* Blue icon color */
+            border: 4px solid #fff; /* Thicker border */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        #shipper-my-page .nickname {
+            font-size: 24px; /* Larger font */
+            font-weight: bold;
+            margin-bottom: 8px; /* More space */
+        }
+        #shipper-my-page .level-online {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+        #shipper-my-page .section-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #424242;
+            padding: 18px 20px 12px; /* More padding */
+            border-bottom: 1px solid #eee;
+            background-color: #fcfcfc;
+        }
+        #shipper-my-page .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 20px; /* More padding */
+            border-bottom: 1px solid #f5f5f5; /* Lighter border */
+            color: #555;
+            font-size: 16px; /* Larger font */
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #shipper-my-page .menu-item:last-of-type {
+            border-bottom: none;
+        }
+        #shipper-my-page .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+        #shipper-my-page .menu-item .icon {
+            margin-right: 18px; /* More space */
+            font-size: 22px; /* Larger icon */
+            color: #2196f3; /* Blue icon color */
+        }
+        #shipper-my-page .menu-item .arrow {
+            margin-left: auto;
+            color: #bbb;
+            font-size: 18px;
+        }
+        #shipper-my-page .settings-button {
+            width: 90%;
+            padding: 18px; /* More padding */
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 12px; /* More rounded */
+            font-size: 17px;
+            text-align: center;
+            cursor: pointer;
+            margin: 30px auto 20px; /* More margin */
+            display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        #shipper-my-page .settings-button:hover {
+            background-color: #bdbdbd;
+            transform: translateY(-1px);
+        }
+
+        /* Driver Find Cargo Page */
+        #driver-find-cargo-page .header {
+            color: #ff9800; /* Orange header for driver */
+        }
+        #driver-find-cargo-page .tab-button.active {
+            color: #ff9800;
+        }
+        #driver-find-cargo-page .area-select {
+            padding: 15px 20px;
+            background-color: #fff8e1; /* Light orange background */
+            border-bottom: 1px solid #ffcc80;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space out items */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+        #driver-find-cargo-page .area-select span {
+            flex-grow: 1;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        #driver-find-cargo-page .area-select button {
+            background: none;
+            border: none;
+            color: #ff9800; /* Orange button */
+            font-size: 15px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        #driver-find-cargo-page .area-select button:hover {
+            background-color: #ffe0b2;
+        }
+        #driver-find-cargo-page .cargo-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px 20px;
+        }
+        #driver-find-cargo-page .cargo-item {
+            background-color: #fff;
+            border: 1px solid #ffe0b2; /* Orange border */
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        #driver-find-cargo-page .cargo-item:hover {
+            transform: translateY(-3px);
+        }
+        #driver-find-cargo-page .cargo-item h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 18px;
+        }
+        #driver-find-cargo-page .cargo-item p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        #driver-find-cargo-page .cargo-actions {
+            text-align: right;
+            margin-top: 15px;
+        }
+        #driver-find-cargo-page .cargo-actions button {
+            background-color: #ff9800; /* Orange button */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #driver-find-cargo-page .cargo-actions button:hover {
+            background-color: #fb8c00;
+            transform: translateY(-1px);
+        }
+        /* Driver Cargo Management Page */
+        #driver-cargo-manage-page .header {
+            color: #ff9800; /* Orange header */
+        }
+        #driver-cargo-manage-page .tab-button.active {
+            color: #ff9800;
+        }
+        #driver-cargo-manage-page .tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid #eee;
+            background-color: #fcfcfc;
+            padding: 5px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+        #driver-cargo-manage-page .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 15px;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        #driver-cargo-manage-page .tab.active {
+            color: #ff9800; /* Active orange */
+            border-bottom-color: #ff9800;
+            font-weight: bold;
+        }
+        #driver-cargo-manage-page .cargo-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px 20px;
+        }
+        #driver-cargo-manage-page .cargo-item {
+            background-color: #fff;
+            border: 1px solid #ffe0b2; /* Orange border */
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        #driver-cargo-manage-page .cargo-item:hover {
+            transform: translateY(-3px);
+        }
+        #driver-cargo-manage-page .cargo-item h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 18px;
+        }
+        #driver-cargo-manage-page .cargo-item p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        #driver-cargo-manage-page .cargo-actions {
+            text-align: right;
+            margin-top: 15px;
+        }
+        #driver-cargo-manage-page .cargo-actions button {
+            background-color: #ff9800; /* Orange button */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #driver-cargo-manage-page .cargo-actions button:hover {
+            background-color: #fb8c00;
+            transform: translateY(-1px);
+        }
+        #driver-cargo-manage-page .cargo-actions button.secondary {
+            background-color: #9e9e9e;
+        }
+        #driver-cargo-manage-page .cargo-actions button.secondary:hover {
+            background-color: #757575;
+        }
+
+        /* Driver My Page */
+        #driver-my-page .header {
+            color: #ff9800; /* Orange header */
+        }
+        #driver-my-page .tab-button.active {
+            color: #ff9800;
+        }
+        #driver-my-page .profile-header {
+            background: linear-gradient(135deg, #ff9800, #ffc107); /* Orange gradient */
+            color: #fff;
+            padding: 35px 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #driver-my-page .avatar {
+            width: 90px;
+            height: 90px;
+            background-color: #fff;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: #ff9800; /* Orange icon color */
+            border: 4px solid #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        #driver-my-page .nickname {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        #driver-my-page .level-online {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+        #driver-my-page .section-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #424242;
+            padding: 18px 20px 12px;
+            border-bottom: 1px solid #eee;
+            background-color: #fcfcfc;
+        }
+        #driver-my-page .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            border-bottom: 1px solid #f5f5f5;
+            color: #555;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #driver-my-page .menu-item:last-of-type {
+            border-bottom: none;
+        }
+        #driver-my-page .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+        #driver-my-page .menu-item .icon {
+            margin-right: 18px;
+            font-size: 22px;
+            color: #ff9800; /* Orange icon color */
+        }
+        #driver-my-page .menu-item .arrow {
+            margin-left: auto;
+            color: #bbb;
+            font-size: 18px;
+        }
+        #driver-my-page .settings-button {
+            width: 90%;
+            padding: 18px;
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            text-align: center;
+            cursor: pointer;
+            margin: 30px auto 20px;
+            display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        #driver-my-page .settings-button:hover {
+            background-color: #bdbdbd;
+            transform: translateY(-1px);
+        }
+
+        /* Radar board animation keyframes */
+        @keyframes radarScan {
+            0% { transform: rotate(0deg); opacity: 0.5; }
+            50% { opacity: 0.8; }
+            100% { transform: rotate(360deg); opacity: 0.5; }
+        }
+
+        .radar-board::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            height: 80%;
+            border: 2px dashed #b3e5fc;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+            animation: pulse 2s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        .radar-board::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, transparent 20%, #e1f5fe 80%);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+        }
+
+        .radar-items-container {
+            position: relative;
+            overflow: hidden; /* Hide content outside */
+        }
+
+        .radar-items-inner {
+            animation: scrollRadar 15s linear infinite; /* Adjust duration as needed */
+        }
+
+        @keyframes scrollRadar {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); } /* Scrolls items upwards */
+        }
+
+        /* Pause animation on hover */
+        .radar-board:hover .radar-items-inner {
+            animation-play-state: paused;
+        }
+
     </style>
 </head>
-<body class="bg-stone-100 text-neutral-800 antialiased">
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <header class="mb-8 text-center">
-            <h1 class="text-3xl sm:text-4xl font-bold text-amber-700">装修预算合同交互审阅</h1>
-            <p class="text-neutral-600 mt-2">项目地点：中海浣云居 (建筑面积: 416m²)</p>
-        </header>
+<body>
+    <div class="app-screen">
 
-        <div class="bg-white shadow-xl rounded-lg p-4 sm:p-6">
-            <div class="mb-6 border-b border-neutral-300">
-                <nav class="flex flex-wrap -mb-px" aria-label="Tabs">
-                    <button class="tab-button active text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="overview">合同概览</button>
-                    <button class="tab-button text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="details">预算明细</button>
-                    <button class="tab-button text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="risks">核心风险点</button>
-                    <button class="tab-button text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="clauses">合同条款解读</button>
-                    <button class="tab-button text-sm sm:text-base font-medium text-center text-neutral-600 hover:text-amber-600 py-3 px-3 sm:px-4 rounded-t-lg" data-tab="suggestions">审阅与谈判建议</button>
-                </nav>
+        <!-- New: Password Overlay Page - This is the first thing the user sees -->
+        <div id="password-overlay">
+            <div class="overlay-title">请输入访问密码</div>
+            <input type="password" id="overlayPasswordInput" class="overlay-input" placeholder="密码">
+            <button class="overlay-button" onclick="checkOverlayPassword()">进入原型</button>
+        </div>
+
+        <!-- 1. Original Login Page (Now hidden until overlay password is correct, and restored to original design) -->
+        <div id="login-page" class="page">
+            <div class="logo">物流App</div>
+            <button class="login-button" onclick="showPage('identity-page')">一键登录</button>
+            <div class="login-options">
+                <a href="#">短信验证码登录</a> | <a href="#">忘记密码</a>
             </div>
+        </div>
 
-            <div id="tabContent">
-                <div id="overview" class="tab-pane active">
-                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">合同概览</h2>
-                    <p class="section-intro">本部分将为您展示这份装修预算合同的核心财务数据，包括总费用、各项主要开支的构成，并将其与行业通常标准进行对比，帮助您快速把握预算的整体情况和关键财务指标。</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div class="bg-stone-50 p-6 rounded-lg shadow">
-                            <h3 class="text-xl font-semibold text-neutral-700 mb-3">核心费用数据</h3>
-                            <ul class="space-y-2 text-neutral-700">
-                                <li><strong>基础装修总价：</strong><span class="font-mono text-lg">330,584.70 元</span></li>
-                                <li><strong>其他收费合计：</strong><span class="font-mono text-lg">45,785.98 元</span></li>
-                                <li><strong><span class="text-red-600 font-bold">最终合同总价：</span></strong><span class="font-mono text-xl text-red-600 font-bold">376,370.68 元</span></li>
-                                <li><strong>单位面积成本：</strong><span class="font-mono text-lg">约 904.74 元/m²</span> (基于416m²)</li>
-                                <li class="mt-3 pt-3 border-t border-stone-300">
-                                    <strong>项目管理费：</strong><span class="font-mono text-lg">33,058.47 元</span>
-                                    <span class="text-sm text-red-500 ml-2">(占基础装修10%，行业参考6-8%)</span>
-                                    <div class="tooltip">
-                                        <span class="text-xs bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full cursor-pointer">!</span>
-                                        <span class="tooltiptext">管理费偏高，需详细了解服务内容，警惕重复收费。</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <strong>税金：</strong><span class="font-mono text-lg">12,727.51 元</span>
-                                    <span class="text-sm text-red-500 ml-2">(占基础装修约3.85%，税率异常)</span>
-                                     <div class="tooltip">
-                                        <span class="text-xs bg-amber-100 text-amber-700 px-1 py-0.5 rounded-full cursor-pointer">!</span>
-                                        <span class="tooltiptext">3.85%税率不常见，需确认计税方式及合规性，索要发票。</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="bg-stone-50 p-6 rounded-lg shadow">
-                            <h3 class="text-xl font-semibold text-neutral-700 mb-3">主要费用构成 (估算)</h3>
-                            <div class="chart-container">
-                                <canvas id="costBreakdownChart"></canvas>
-                            </div>
-                            <p class="text-xs text-neutral-500 mt-2 text-center">注：此图表根据预算主要项目估算，水电等未明确项目未计入具体分类。</p>
+        <!-- 2. Identity Selection Page -->
+        <div id="identity-page" class="page">
+            <div class="identity-title">请选择您的身份</div>
+            <div class="identity-card shipper-card" onclick="showPage('shipper-home-page')">
+                <span class="icon">📦</span>
+                我要发货
+            </div>
+            <div class="identity-card driver-card" onclick="showPage('driver-find-cargo-page')">
+                <span class="icon">🚚</span>
+                我要找货
+            </div>
+        </div>
+
+        <!-- 3. Shipper's Home Page -->
+        <div id="shipper-home-page" class="page">
+            <div class="header">首页 (货方)</div>
+            <div class="content">
+                <div class="banner">宣传文案 / 广告位</div>
+                <div class="radar-board">
+                    <h3>雷达功能看板</h3>
+                    <div class="radar-items-container">
+                        <div class="radar-items-inner">
+                            <div class="radar-item">用户A 发布了从北京到上海的货源</div>
+                            <div class="radar-item">用户B 发布了从广州到深圳的货源</div>
+                            <div class="radar-item">用户C 发布了从成都到重庆的货源</div>
+                            <div class="radar-item">用户D 发布了从上海到杭州的货源</div>
+                            <div class="radar-item">用户E 发布了从武汉到长沙的货源</div>
+                            <div class="radar-item">用户F 发布了从深圳到重庆的货源</div>
+                            <div class="radar-item">用户G 发布了从天津到济南的货源</div>
+                            <div class="radar-item">用户H 发布了从西安到郑州的货源</div>
+                            <div class="radar-item">用户I 发布了从南京到合肥的货源</div>
+                            <!-- Duplicate items to make scrolling seamless -->
+                            <div class="radar-item">用户A 发布了从北京到上海的货源</div>
+                            <div class="radar-item">用户B 发布了从广州到深圳的货源</div>
+                            <div class="radar-item">用户C 发布了从成都到重庆的货源</div>
+                            <div class="radar-item">用户D 发布了从上海到杭州的货源</div>
+                            <div class="radar-item">用户E 发布了从武汉到长沙的货源</div>
+                            <div class="radar-item">用户F 发布了从深圳到重庆的货源</div>
+                            <div class="radar-item">用户G 发布了从天津到济南的货源</div>
+                            <div class="radar-item">用户H 发布了从西安到郑州的货源</div>
+                            <div class="radar-item">用户I 发布了从南京到合肥的货源</div>
                         </div>
                     </div>
                 </div>
-
-                <div id="details" class="tab-pane hidden">
-                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">预算明细</h2>
-                    <p class="section-intro">在这里，您可以按房屋的不同区域查看详细的装修项目清单。每个项目都列出了其单价、数量、总金额以及工艺做法和材料说明。请特别留意那些材料描述模糊或计价方式复杂的项目，这些往往是后期产生争议或增项的源头。</p>
-                    <div class="mb-4">
-                        <label for="areaSelector" class="block text-sm font-medium text-neutral-700 mb-1">选择区域查看明细：</label>
-                        <select id="areaSelector" class="w-full sm:w-1/2 p-2 border border-neutral-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500">
-                            </select>
-                    </div>
-                    <div id="budgetItemsContainer" class="overflow-x-auto">
-                        </div>
+                <button class="free-shipping-button" onclick="alert('进入发货页面')">免费发货</button>
+            </div>
+            <div class="footer">
+                <div class="tab-button active" onclick="showPage('shipper-home-page')">
+                    <span class="icon">🏠</span> 首页
                 </div>
-
-                <div id="risks" class="tab-pane hidden">
-                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">核心风险点</h2>
-                    <p class="section-intro">本部分将为您深度剖析合同中存在的几大核心风险。这些风险点往往是装修过程中最容易引发纠纷、导致预算超支的环节。了解这些风险，能帮助您提前做好防范，避免不必要的损失。</p>
-                    <div class="space-y-4">
-                        <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
-                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
-                                <span><span class="text-red-500 font-bold">高风险：</span>水电项目“零元陷阱”与预收款机制</span>
-                                <span class="arrow transform transition-transform duration-300">&#9660;</span>
-                            </button>
-                            <div class="accordion-content mt-2 text-neutral-600">
-                                <p>预算中水电项目数量和金额均为“0”，但备注说明按实际发生收费。这是典型的“低开高走”手段，后期费用可能远超预期。</p>
-                                <p class="mt-1"><strong>关键点：</strong>备注D条约定“跃层和别墅的房屋水电改造不得超过260元/平米”。务必将此上限写入合同，并要求提供详细点位图和预估量。</p>
-                                <p class="mt-1"><strong>风险等级：</strong>极高。水电改造费用不确定性大，是主要增项来源。</p>
-                                <p class="mt-1"><strong>应对：</strong>签订前明确点位、预估工程量、约定费用上限、明确材料品牌规格、分阶段验收付款。</p>
-                                <details class="mt-2 text-sm">
-                                    <summary class="cursor-pointer text-amber-600">点击查看水电项目单价列表</summary>
-                                    <div class="overflow-x-auto mt-2">
-                                        <table class="min-w-full divide-y divide-neutral-200 text-xs">
-                                            <thead class="bg-stone-100"><tr><th class="px-2 py-1 text-left font-medium text-neutral-500 uppercase tracking-wider">项目名称</th><th class="px-2 py-1 text-left font-medium text-neutral-500 uppercase tracking-wider">单位</th><th class="px-2 py-1 text-left font-medium text-neutral-500 uppercase tracking-wider">单价(元)</th></tr></thead>
-                                            <tbody class="bg-white divide-y divide-neutral-200" id="waterElectricityPrices"></tbody>
-                                        </table>
-                                    </div>
-                                </details>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
-                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
-                                <span><span class="text-orange-500 font-bold">中高风险：</span>不合理的10%减项管理费</span>
-                                 <span class="arrow transform transition-transform duration-300">&#9660;</span>
-                            </button>
-                            <div class="accordion-content mt-2 text-neutral-600">
-                                <p>合同备注4条规定，若减项大于增项，需支付差额部分的10%作为减项管理费。这是对客户节省行为的“惩罚”，非常不合理。</p>
-                                <p class="mt-1"><strong>风险等级：</strong>中高。限制了客户合理调整预算的权利。</p>
-                                <p class="mt-1"><strong>应对：</strong>坚决要求删除此条款，或大幅降低比例，并明确仅针对大额减项。</p>
-                            </div>
-                        </div>
-                         <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
-                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
-                                <span><span class="text-orange-500 font-bold">中高风险：</span>管理费偏高与税金比例异常</span>
-                                 <span class="arrow transform transition-transform duration-300">&#9660;</span>
-                            </button>
-                            <div class="accordion-content mt-2 text-neutral-600">
-                                <p>项目管理费占基础装修10%（行业参考6-8%），可能利润空间较大或包含重复收费。税金按3.85%收取，与常见税率（如3%简易计税或9%建安服务）不符，需警惕合规性问题。</p>
-                                <p class="mt-1"><strong>风险等级：</strong>中高。直接影响总费用，且税金问题可能涉及法律风险。</p>
-                                <p class="mt-1"><strong>应对：</strong>要求详细说明管理费构成。要求明确税金计算依据、计税方式，并索要正规发票。</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
-                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
-                                <span><span class="text-yellow-500 font-bold">中风险：</span>材料品牌规格描述模糊</span>
-                                 <span class="arrow transform transition-transform duration-300">&#9660;</span>
-                            </button>
-                            <div class="accordion-content mt-2 text-neutral-600">
-                                <p>预算中大量使用“专用基础材料”、“专用腻子”等模糊词汇，未明确具体品牌、型号、环保等级。这为施工方使用低价、低质材料留下空间，或成为后期加价理由。</p>
-                                <p class="mt-1"><strong>风险等级：</strong>中。影响工程质量和环保，可能导致后期增项。</p>
-                                <p class="mt-1"><strong>应对：</strong>要求将所有主辅材的品牌、型号、规格、环保等级明确写入合同附件，材料进场时严格验收。</p>
-                            </div>
-                        </div>
-                        <div class="accordion-item bg-stone-50 p-4 rounded-lg shadow">
-                            <button class="accordion-header w-full text-left text-lg font-semibold text-neutral-700 flex justify-between items-center">
-                                <span><span class="text-yellow-500 font-bold">中风险：</span>复杂的计价方式与潜在增项条款</span>
-                                 <span class="arrow transform transition-transform duration-300">&#9660;</span>
-                            </button>
-                            <div class="accordion-content mt-2 text-neutral-600">
-                                <p>吊顶（投影/展开面积）、找平/回填（超厚度加价）、防水（原基层处理另计）、成品保护/搬运（不含自购主材）、中央空调开孔（超长加价）等均存在复杂计价或额外收费条款。</p>
-                                <p class="mt-1"><strong>风险等级：</strong>中。容易产生计量争议和费用增加。</p>
-                                <p class="mt-1"><strong>应对：</strong>对每项复杂计价，要求提供详细计算方式和图示。对“费用另计”项，要求施工前评估并书面确认费用。</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="tab-button" onclick="showPage('shipper-cargo-manage-page')">
+                    <span class="icon">📋</span> 货源管理
                 </div>
-
-                <div id="clauses" class="tab-pane hidden">
-                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">合同条款解读（备注说明）</h2>
-                    <p class="section-intro">装修合同的“备注说明”部分往往包含许多重要但易被忽视的条款。这些条款直接关系到您的权利和义务。本部分将逐条为您解读这些备注，帮助您理解其深层含义和潜在影响。</p>
-                    <div class="space-y-3" id="contractClausesContainer">
-                        </div>
-                </div>
-
-                <div id="suggestions" class="tab-pane hidden">
-                    <h2 class="text-2xl font-semibold text-amber-700 mb-4">审阅与谈判建议</h2>
-                    <p class="section-intro">面对复杂的装修合同，主动沟通和有效谈判至关重要。本部分为您提供了一系列实用的审阅要点、谈判技巧以及在合同签订前和施工过程中需要注意的事项，希望能助您顺利完成装修。</p>
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="text-xl font-semibold text-neutral-700 mb-2">预算审核要点清单</h3>
-                            <ul class="list-disc list-inside space-y-1 text-neutral-600 pl-4">
-                                <li>仔细核对所有项目的工程量、单价、总价是否准确。</li>
-                                <li>要求明确所有“专用材料”的具体品牌、型号、规格、环保等级。</li>
-                                <li>重点审阅吊顶、找平、回填等项目的复杂计价方式，要求解释清楚。</li>
-                                <li>识别所有“费用另计”、“额外收费”、“不含”等潜在增项，要求提前估价。</li>
-                                <li>通过网络或咨询，对比主要项目单价的合理性。</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-semibold text-neutral-700 mb-2">与装修公司沟通谈判技巧</h3>
-                            <ul class="list-disc list-inside space-y-1 text-neutral-600 pl-4">
-                                <li>所有重要沟通、确认和变更，务必采用书面形式并保留证据。</li>
-                                <li>针对疑问，提出具体、明确的问题，要求详细解释和解决方案。</li>
-                                <li>不要急于做决定，给自己时间思考、查证或咨询第三方意见。</li>
-                                <li>坚持自身权益，对不合理条款（如减项管理费）明确提出修改要求。</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-semibold text-neutral-700 mb-2">合同签订前注意事项</h3>
-                            <ul class="list-disc list-inside space-y-1 text-neutral-600 pl-4">
-                                <li>确保合同文本完整，包含预算、图纸、材料清单、工艺、工期、付款、保修、违约责任等。</li>
-                                <li>逐条审阅合同，特别是风险点。不理解处务必问清并要求修改。</li>
-                                <li>明确增减项管理：争取删除减项管理费，约定所有变更书面确认，施工方原因增项由其承担。</li>
-                                <li>务必约定水电改造费用上限（参考备注D：别墅≤260元/m²），超出需书面确认。</li>
-                                <li>合理化付款节点，与关键施工节点（水电验收、泥木验收等）挂钩。</li>
-                                <li>核查装修公司资质、口碑，选择正规公司。</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-semibold text-neutral-700 mb-2">施工过程中的监督与验收要点</h3>
-                            <ul class="list-disc list-inside space-y-1 text-neutral-600 pl-4">
-                                <li>定期巡查工地，发现问题及时与项目经理沟通。</li>
-                                <li>材料进场时，严格对照合同约定核对品牌、型号、规格。</li>
-                                <li>隐蔽工程（水电、防水等）封蔽前必须严格验收，拍照留证。</li>
-                                <li>按合同约定节点分阶段验收，签署验收单。</li>
-                                <li>保留所有合同、图纸、变更单、付款凭证、验收单、沟通记录。</li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="tab-button" onclick="showPage('shipper-my-page')">
+                    <span class="icon">👤</span> 我的
                 </div>
             </div>
         </div>
 
-        <footer class="mt-12 text-center text-sm text-neutral-500">
-            <p>&copy; 2024 装修预算合同交互审阅工具。信息仅供参考，请结合实际情况决策。</p>
-        </footer>
+        <!-- 4. Shipper's Cargo Management Page -->
+        <div id="shipper-cargo-manage-page" class="page">
+            <div class="header">货源管理 (货方)</div>
+            <div class="tabs">
+                <div class="tab active" data-tab="published">发布中</div>
+                <div class="tab" data-tab="found-car">已找车</div>
+                <div class="tab" data-tab="cancelled">已作废</div>
+            </div>
+            <div class="cargo-list">
+                <!-- Content will dynamically change based on tab selection -->
+                <div id="published-cargo" class="cargo-content active">
+                    <div class="cargo-item">
+                        <h4>货源ID: #20250625001</h4>
+                        <p><strong>路线:</strong> 北京 - 上海</p>
+                        <p><strong>货物:</strong> 电子产品, 5吨</p>
+                        <p><strong>状态:</strong> 待接单</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('查看详情')">查看详情</button>
+                            <button class="secondary" onclick="alert('修改货源')">修改</button>
+                        </div>
+                    </div>
+                    <div class="cargo-item">
+                        <h4>货源ID: #20250625002</h4>
+                        <p><strong>路线:</strong> 深圳 - 广州</p>
+                        <p><strong>货物:</strong> 生鲜, 2吨</p>
+                        <p><strong>状态:</strong> 匹配中</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('查看详情')">查看详情</button>
+                            <button class="secondary" onclick="alert('取消货源')">取消</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="found-car-cargo" class="cargo-content" style="display:none;">
+                    <div class="cargo-item">
+                        <h4>货源ID: #20250624005</h4>
+                        <p><strong>路线:</strong> 广州 - 深圳</p>
+                        <p><strong>货物:</strong> 服装, 2吨</p>
+                        <p><strong>状态:</strong> 已匹配司机</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('追踪订单')">追踪</button>
+                            <button class="secondary" onclick="alert('取消订单')">取消</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="cancelled-cargo" class="cargo-content" style="display:none;">
+                    <div class="cargo-item">
+                        <h4>货源ID: #20250623010</h4>
+                        <p><strong>路线:</strong> 成都 - 重庆</p>
+                        <p><strong>货物:</strong> 家具, 10方</p>
+                        <p><strong>状态:</strong> 已作废</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('查看详情')">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="tab-button" onclick="showPage('shipper-home-page')">
+                    <span class="icon">🏠</span> 首页
+                </div>
+                <div class="tab-button active" onclick="showPage('shipper-cargo-manage-page')">
+                    <span class="icon">📋</span> 货源管理
+                </div>
+                <div class="tab-button" onclick="showPage('shipper-my-page')">
+                    <span class="icon">👤</span> 我的
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Shipper's "My" Page -->
+        <div id="shipper-my-page" class="page">
+            <div class="header">我的 (货方)</div>
+            <div class="profile-header">
+                <div class="avatar">👤</div>
+                <div class="nickname">货主小王</div>
+                <div class="level-online">等级: 黄金会员 | 在线: 120小时</div>
+            </div>
+            <div class="content">
+                <div class="section-title">会员信息</div>
+                <div class="menu-item" onclick="alert('查看会员等级详情')">
+                    <span class="icon">⭐</span>
+                    <span>会员等级: 黄金会员</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="menu-item" onclick="alert('查看会员有效期详情')">
+                    <span class="icon">📅</span>
+                    <span>会员有效期: 2026-12-31</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-title">我的服务</div>
+                <div class="menu-item" onclick="alert('进入我的钱包')">
+                    <span class="icon">💰</span>
+                    <span>我的钱包</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="menu-item" onclick="alert('进入我的订单')">
+                    <span class="icon">📜</span>
+                    <span>我的订单</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="menu-item" onclick="alert('进入我的优惠券')">
+                    <span class="icon">🎁</span>
+                    <span>我的优惠券</span>
+                    <span class="arrow">›</span>
+                </div>
+                <button class="settings-button" onclick="alert('进入设置页面')">设置</button>
+            </div>
+            <div class="footer">
+                <div class="tab-button" onclick="showPage('shipper-home-page')">
+                    <span class="icon">🏠</span> 首页
+                </div>
+                <div class="tab-button" onclick="showPage('shipper-cargo-manage-page')">
+                    <span class="icon">📋</span> 货源管理
+                </div>
+                <div class="tab-button active" onclick="showPage('shipper-my-page')">
+                    <span class="icon">👤</span> 我的
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Driver's "Find Cargo" Page -->
+        <div id="driver-find-cargo-page" class="page">
+            <div class="header">找货 (车方)</div>
+            <div class="area-select">
+                <span>当前区域: 北京市</span>
+                <button onclick="alert('展开地区选择')">选择区域 ›</button>
+            </div>
+            <div class="cargo-list">
+                <div class="cargo-item">
+                    <h4>货源ID: #C20250625001</h4>
+                    <p><strong>路线:</strong> 北京 - 天津</p>
+                    <p><strong>货物:</strong> 建筑材料, 10吨</p>
+                    <p><strong>预估运费:</strong> ¥1200</p>
+                    <div class="cargo-actions">
+                        <button onclick="alert('查看详情')">查看详情</button>
+                        <button onclick="alert('抢单')">抢单</button>
+                    </div>
+                </div>
+                <div class="cargo-item">
+                    <h4>货源ID: #C20250625002</h4>
+                    <p><strong>路线:</strong> 北京 - 石家庄</p>
+                    <p><strong>货物:</strong> 农产品, 3吨</p>
+                    <p><strong>预估运费:</strong> ¥800</p>
+                    <div class="cargo-actions">
+                        <button onclick="alert('查看详情')">查看详情</button>
+                        <button onclick="alert('抢单')">抢单</button>
+                    </div>
+                </div>
+                <div class="cargo-item">
+                    <h4>货源ID: #C20250625003</h4>
+                    <p><strong>路线:</strong> 天津 - 济南</p>
+                    <p><strong>货物:</strong> 电子设备, 5方</p>
+                    <p><strong>预估运费:</strong> ¥1500</p>
+                    <div class="cargo-actions">
+                        <button onclick="alert('查看详情')">查看详情</button>
+                        <button onclick="alert('抢单')">抢单</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="tab-button active" onclick="showPage('driver-find-cargo-page')">
+                    <span class="icon">🔍</span> 找货
+                </div>
+                <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
+                    <span class="icon">📦</span> 货源管理
+                </div>
+                <div class="tab-button" onclick="showPage('driver-my-page')">
+                    <span class="icon">👷</span> 我的
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Driver's Cargo Management Page -->
+        <div id="driver-cargo-manage-page" class="page">
+            <div class="header">货源管理 (车方)</div>
+            <div class="tabs">
+                <div class="tab active" data-tab="feedback">已反馈</div>
+                <div class="tab" data-tab="contacted">已联系</div>
+                <div class="tab" data-tab="followed">已关注</div>
+                <div class="tab" data-tab="history">浏览记录</div>
+            </div>
+            <div class="cargo-list">
+                <!-- Content will dynamically change based on tab selection -->
+                <div id="feedback-cargo" class="cargo-content active">
+                    <div class="cargo-item">
+                        <h4>订单ID: #D20250625001</h4>
+                        <p><strong>路线:</strong> 北京 - 天津</p>
+                        <p><strong>货物:</strong> 建筑材料</p>
+                        <p><strong>状态:</strong> 待确认</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('联系货主')">联系货主</button>
+                            <button class="secondary" onclick="alert('取消反馈')">取消反馈</button>
+                        </div>
+                    </div>
+                    <div class="cargo-item">
+                        <h4>订单ID: #D20250625002</h4>
+                        <p><strong>路线:</strong> 上海 - 苏州</p>
+                        <p><strong>货物:</strong> 服装</p>
+                        <p><strong>状态:</strong> 匹配中</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('联系货主')">联系货主</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="contacted-cargo" class="cargo-content" style="display:none;">
+                    <div class="cargo-item">
+                        <h4>订单ID: #D20250624005</h4>
+                        <p><strong>路线:</strong> 上海 - 杭州</p>
+                        <p><strong>货物:</strong> 电子设备</p>
+                        <p><strong>状态:</strong> 已接受</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('开始导航')">开始导航</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="followed-cargo" class="cargo-content" style="display:none;">
+                    <div class="cargo-item">
+                        <h4>货源ID: #F20250623001</h4>
+                        <p><strong>路线:</strong> 广州 - 珠海</p>
+                        <p><strong>货物:</strong> 零配件</p>
+                        <p><strong>状态:</strong> 待抢</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('立即抢单')">立即抢单</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="history-cargo" class="cargo-content" style="display:none;">
+                    <div class="cargo-item">
+                        <h4>订单ID: #H20250622001</h4>
+                        <p><strong>路线:</strong> 成都 - 重庆</p>
+                        <p><strong>货物:</strong> 家具</p>
+                        <p><strong>状态:</strong> 已完成</p>
+                        <div class="cargo-actions">
+                            <button onclick="alert('查看详情')">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="tab-button" onclick="showPage('driver-find-cargo-page')">
+                    <span class="icon">🔍</span> 找货
+                </div>
+                <div class="tab-button active" onclick="showPage('driver-cargo-manage-page')">
+                    <span class="icon">📦</span> 货源管理
+                </div>
+                <div class="tab-button" onclick="showPage('driver-my-page')">
+                    <span class="icon">👷</span> 我的
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Driver's "My" Page -->
+        <div id="driver-my-page" class="page">
+            <div class="header">我的 (车方)</div>
+            <div class="profile-header">
+                <div class="avatar">👨‍✈️</div>
+                <div class="nickname">司机老张</div>
+                <div class="level-online">等级: 白金司机 | 在线: 500小时</div>
+            </div>
+            <div class="content">
+                <div class="section-title">会员信息</div>
+                <div class="menu-item" onclick="alert('查看会员等级详情')">
+                    <span class="icon">⭐</span>
+                    <span>会员等级: 白金司机</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="menu-item" onclick="alert('查看会员有效期详情')">
+                    <span class="icon">📅</span>
+                    <span>会员有效期: 2027-06-30</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-title">我的服务</div>
+                <div class="menu-item" onclick="alert('进入我的收入')">
+                    <span class="icon">💸</span>
+                    <span>我的收入</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="menu-item" onclick="alert('进入我的车辆管理')">
+                    <span class="icon">🚚</span>
+                    <span>我的车辆</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="menu-item" onclick="alert('查看我的绩效')">
+                    <span class="icon">🏅</span>
+                    <span>我的绩效</span>
+                    <span class="arrow">›</span>
+                </div>
+                <button class="settings-button" onclick="alert('进入设置页面')">设置</button>
+            </div>
+            <div class="footer">
+                <div class="tab-button" onclick="showPage('driver-find-cargo-page')">
+                    <span class="icon">🔍</span> 找货
+                </div>
+                <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
+                    <span class="icon">📦</span> 货源管理
+                </div>
+                <div class="tab-button active" onclick="showPage('driver-my-page')">
+                    <span class="icon">👷</span> 我的
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabPanes = document.querySelectorAll('.tab-pane');
-        const areaSelector = document.getElementById('areaSelector');
-        const budgetItemsContainer = document.getElementById('budgetItemsContainer');
-        const contractClausesContainer = document.getElementById('contractClausesContainer');
-        const waterElectricityPricesTableBody = document.getElementById('waterElectricityPrices');
+        // Function to show a specific page and hide others
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
 
-        const budgetData = {
-            totalBasePrice: 330584.70,
-            otherFees: 45785.98,
-            totalFinalPrice: 376370.68,
-            managementFee: 33058.47, // 10%
-            taxFee: 12727.51, // 3.85%
-            buildingArea: 416,
-            areas: [
-                {
-                    name: "负二层入户门厅",
-                    items: [
-                        { id: 1, name: "铲除墙基层处理及恢复", unit: "平方米", price: 25, quantity: 40.9, total: 1022.5, craft: "原白灰墙面铲除、刷界面剂一遍，墙面、顶面批刮专用基础材料找平，找补阴阳角提角等，人工费加材料费" },
-                        { id: 2, name: "墙纸、墙布墙顶面刮灰/艺术漆墙顶面刮灰", unit: "平方米", price: 58, quantity: 51.5, total: 2987, craft: "批刮专用腻子做基层处理，腻子批刮不得少于两遍，应大面顺平，打磨平整；含墙纸封底用基膜" },
-                        { id: 3, name: "铲除顶面基层处理及恢复", unit: "平方米", price: 25, quantity: 10.6, total: 265, craft: "同墙面铲除工艺" },
-                        { id: 4, name: "石膏板平顶", unit: "平方米", price: 230, quantity: 8, total: 1840, craft: "轻钢龙骨骨架，泰山石膏板封面。按投影面积计算。（有中央空调的及侧面高度大于200MM的按展开面积计算）。" },
-                        { id: 5, name: "石膏板弧型叠级造型顶(二级造型)", unit: "平方米", price: 380, quantity: 2.6, total: 988, craft: "轻钢龙骨骨架，泰山石膏板封面。工艺同上，含弧形工艺。" },
-                        { id: 6, name: "弧线、异形石膏板反光灯槽口", unit: "米", price: 95, quantity: 4, total: 380, craft: "木质结构基层，石膏板封面，含防开裂处理。" },
-                        { id: 7, name: "多乐士竹炭系列旷境乳胶漆或立邦金装抗甲醛5合一乳胶漆", unit: "平方米", price: 76, quantity: 11.6, total: 881.6, craft: "批刮专用腻子，腻子批刮不得少于两遍...底漆一遍，面漆二遍。此价格限一套居室刷双色，含白色。每增加一色，另加150元/色" }
-                    ]
-                },
-                {
-                    name: "负一层楼梯间",
-                    items: [
-                         { id: 1, name: "铲除墙基层处理及恢复", unit: "平方米", price: 25, quantity: 30, total: 750, craft: "原白灰墙面铲除、刷界面剂一遍，墙面、顶面批刮专用基础材料找平..." },
-                         { id: 2, name: "墙纸、墙布墙顶面刮灰", unit: "平方米", price: 58, quantity: 30, total: 1740, craft: "批刮专用腻子做基层处理..." }
-                    ]
-                },
-                 {
-                    name: "其他收费",
-                    items: [
-                        { id: 1, name: "工程远程费", unit: "项", price: 0, quantity: 1, total: 0, craft: "根据实际情况可能产生" },
-                        { id: 2, name: "其他服务费", unit: "项", price: 0, quantity: 1, total: 0, craft: "根据实际情况可能产生" },
-                        { id: 3, name: "税金", unit: "项", price: 12727.51095, quantity: 1, total: 12727.51, craft: "按基础装修总价3.85%计算" },
-                        { id: 4, name: "项目管理费", unit: "项", price: 33058.47, quantity: 1, total: 33058.47, craft: "按基础装修总价10%计算" }
-                    ]
-                }
-                // Add more areas and items as extracted from the document
-            ],
-            waterElectricityItems: [
-                { name: "Φ20mm PP-R管暗装", unit: "米", price: 95 },
-                { name: "Φ25mm PP-R管暗装", unit: "米", price: 110 },
-                { name: "Φ50mm 排水管", unit: "米", price: 150 },
-                { name: "洁具预埋件安装", unit: "个", price: 350 },
-                { name: "2.5平方线开槽", unit: "米", price: 45 },
-                { name: "4平方线开槽", unit: "米", price: 55 },
-                { name: "6平方线开槽", unit: "米", price: 60 },
-                { name: "弱电布线开槽", unit: "米", price: 45 },
-                { name: "开关、插座暗盒", unit: "个", price: 10 },
-                { name: "开关、插座安装(面板客户自购)", unit: "个", price: 6 },
-            ],
-            contractClauses: [
-                { title: "备注1：保修责任", content: "乙方自竣工验收合格、付清全部工程款项并办理相关手续后，履行两年保修。对甲方未与乙方通过正常手续而在同一工地自行增加、另外施工的项目，乙方不承担保修。 Implications: 自行采购或施工部分无保修，需明确责任边界。" },
-                { title: "备注2：图纸误差与增减项处理", content: "设计图纸尺寸若与施工现场有误差，以实际尺寸为准，误差项按增减项处理。 Implications: 可能导致预算与实际支出不符，施工前需精确测量核对。" },
-                { title: "备注3：水电项目预收款机制", content: "水电报价为估算后收取的预收费用，最终造价按实际发生数量和价目表计算。 Implications: 核心风险点！典型的“低开高走”陷阱，实际费用可能远超预估。" },
-                { title: "备注4：增减项管理与费用承担", content: "甲方提出变动，费用由甲方承担。如减项大于增项，甲方需支付差额部分的10%作为减项管理费。 Implications: 减项管理费不合理，限制客户调整。所有变更费用均由客户承担，责任划分不公。" },
-                { title: "备注5：乙方调整项目与费用承担", content: "乙方根据现场结构问题调整或增减项目，征得甲方同意后施工，相关费用由甲方承担。 Implications: 即使是房屋结构问题调整，费用也由客户承担，客户较被动。" },
-                { title: "备注6：其他未明确费用", content: "乙方除负责物业要求的出入证费用外，其余各类押金、手续费等由甲方承担。 Implications: 宽泛条款，可能涵盖物业管理费、垃圾清运费等多种未列明费用，需提前问清。" },
-                { title: "备注D (来自水电部分)：水电改造费用上限", content: "普通水电改造，平层的房屋水电改造不得超过200元/平米，跃层和别墅的房屋水电改造不得超过260元/平米。 Implications: 这是非常重要的一条！可作为与装修公司协商水电费用上限的依据，务必写入主合同。" }
-            ]
+            // Update active state of footer tabs if a footer is present
+            const activePage = document.getElementById(pageId);
+            const footer = activePage.querySelector('.footer');
+            if (footer) {
+                const tabButtons = footer.querySelectorAll('.tab-button');
+                tabButtons.forEach(button => {
+                    button.classList.remove('active');
+                    // Check if the button's onclick attribute targets the current pageId
+                    if (button.onclick && button.onclick.toString().includes(`showPage('${pageId}')`)) {
+                        button.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // Function to check the password for the initial overlay
+        function checkOverlayPassword() {
+            const passwordInput = document.getElementById('overlayPasswordInput');
+            const password = passwordInput.value;
+            const correctPassword = "123321"; // The required password
+
+            if (password === correctPassword) {
+                document.getElementById('password-overlay').style.display = 'none'; // Hide the overlay
+                showPage('login-page'); // Show the actual app's login page
+            } else {
+                alert('密码错误，请重试。'); // Show error if incorrect
+                passwordInput.value = ''; // Clear the input field
+            }
+        }
+
+        // Initialize shipper's cargo management tabs
+        function setupShipperCargoTabs() {
+            const tabsContainer = document.querySelector('#shipper-cargo-manage-page .tabs');
+            if (tabsContainer) {
+                const tabs = tabsContainer.querySelectorAll('.tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Remove active class from all tabs
+                        tabs.forEach(t => t.classList.remove('active'));
+                        // Add active class to clicked tab
+                        this.classList.add('active');
+
+                        // Hide all cargo content
+                        const allCargoContent = document.querySelectorAll('#shipper-cargo-manage-page .cargo-content');
+                        allCargoContent.forEach(content => {
+                            content.style.display = 'none';
+                            content.classList.remove('active');
+                        });
+
+                        // Show active cargo content
+                        const targetTab = this.dataset.tab;
+                        document.getElementById(`${targetTab}-cargo`).style.display = 'block';
+                        document.getElementById(`${targetTab}-cargo`).classList.add('active');
+                    });
+                });
+            }
+        }
+
+        // Initialize driver's cargo management tabs
+        function setupDriverCargoTabs() {
+            const tabsContainer = document.querySelector('#driver-cargo-manage-page .tabs');
+            if (tabsContainer) {
+                const tabs = tabsContainer.querySelectorAll('.tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Remove active class from all tabs
+                        tabs.forEach(t => t.classList.remove('active'));
+                        // Add active class to clicked tab
+                        this.classList.add('active');
+
+                        // Hide all cargo content
+                        const allCargoContent = document.querySelectorAll('#driver-cargo-manage-page .cargo-content');
+                        allCargoContent.forEach(content => {
+                            content.style.display = 'none';
+                            content.classList.remove('active');
+                        });
+
+                        // Show active cargo content
+                        const targetTab = this.dataset.tab;
+                        document.getElementById(`${targetTab}-cargo`).style.display = 'block';
+                        document.getElementById(`${targetTab}-cargo`).classList.add('active');
+                    });
+                });
+            }
+        }
+
+        // Initialize the app on window load
+        window.onload = function() {
+            // Initially, only the password overlay is visible.
+            // All other pages (including the original login-page) are hidden by default.
+            // The checkOverlayPassword function will handle showing the 'login-page' after successful authentication.
+            setupShipperCargoTabs();
+            setupDriverCargoTabs();
         };
 
-        // Populate Area Selector
-        budgetData.areas.forEach(area => {
-            const option = document.createElement('option');
-            option.value = area.name;
-            option.textContent = area.name;
-            areaSelector.appendChild(option);
-        });
-
-        function displayBudgetItems(areaName) {
-            const area = budgetData.areas.find(a => a.name === areaName);
-            if (!area) {
-                budgetItemsContainer.innerHTML = '<p>请选择一个区域查看详情。</p>';
+        // Basic alert polyfill to avoid blocking prompts in iframe
+        window.alert = (message) => {
+            const appScreen = document.querySelector('.app-screen');
+            if (!appScreen) {
+                console.log(message); // Fallback for environments without app-screen
                 return;
             }
 
-            let tableHTML = `
-                <table class="min-w-full divide-y divide-neutral-200 text-sm">
-                    <thead class="bg-stone-100">
-                        <tr>
-                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">序号</th>
-                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">项目名称</th>
-                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">单位</th>
-                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">单价(元)</th>
-                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">数量</th>
-                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">金额(元)</th>
-                            <th class="px-3 py-2 text-left font-medium text-neutral-500 uppercase tracking-wider">工艺做法及材料说明</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-neutral-200">`;
-
-            area.items.forEach(item => {
-                let craftCellContent = item.craft;
-                if (item.craft.includes("专用基础材料") || item.craft.includes("专用腻子")) {
-                    craftCellContent += ` <span class="tooltip text-red-500 font-bold cursor-pointer">⚠️<span class="tooltiptext">材料描述模糊，请要求明确品牌型号！</span></span>`;
-                }
-                 if (item.name.includes("石膏板") && (item.craft.includes("展开面积") || item.craft.includes("按展开面积计算"))) {
-                    craftCellContent += ` <span class="tooltip text-orange-500 font-bold cursor-pointer">⚠️<span class="tooltiptext">注意“展开面积”计价，可能远大于投影面积！</span></span>`;
-                }
-
-                tableHTML += `
-                    <tr>
-                        <td class="px-3 py-2 whitespace-nowrap">${item.id}</td>
-                        <td class="px-3 py-2">${item.name}</td>
-                        <td class="px-3 py-2 whitespace-nowrap">${item.unit}</td>
-                        <td class="px-3 py-2 whitespace-nowrap font-mono">${item.price.toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap font-mono">${item.quantity}</td>
-                        <td class="px-3 py-2 whitespace-nowrap font-mono text-amber-700 font-semibold">${item.total.toFixed(2)}</td>
-                        <td class="px-3 py-2 text-xs">${craftCellContent}</td>
-                    </tr>`;
-            });
-
-            tableHTML += `</tbody></table>`;
-            budgetItemsContainer.innerHTML = tableHTML;
-        }
-        
-        areaSelector.addEventListener('change', (event) => {
-            displayBudgetItems(event.target.value);
-        });
-        if (budgetData.areas.length > 0) {
-            displayBudgetItems(budgetData.areas[0].name); // Display first area by default
-        }
-
-
-        // Populate Contract Clauses
-        budgetData.contractClauses.forEach(clause => {
-            const div = document.createElement('div');
-            div.className = 'accordion-item bg-stone-50 p-3 rounded-lg shadow';
-            div.innerHTML = `
-                <button class="accordion-header w-full text-left text-md font-semibold text-neutral-700 flex justify-between items-center">
-                    <span>${clause.title}</span>
-                    <span class="arrow transform transition-transform duration-300">&#9660;</span>
-                </button>
-                <div class="accordion-content mt-2 text-neutral-600 text-sm">
-                    <p>${clause.content.replace("Implications:", "<strong>关键解读：</strong>")}</p>
-                </div>`;
-            contractClausesContainer.appendChild(div);
-        });
-        
-        // Populate Water and Electricity Prices
-        budgetData.waterElectricityItems.forEach(item => {
-            const row = waterElectricityPricesTableBody.insertRow();
-            row.innerHTML = `
-                <td class="px-2 py-1 whitespace-nowrap">${item.name}</td>
-                <td class="px-2 py-1 whitespace-nowrap">${item.unit}</td>
-                <td class="px-2 py-1 whitespace-nowrap font-mono">${item.price.toFixed(2)}</td>
+            // Create a simple modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
             `;
-        });
 
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background-color: #fff;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                max-width: 80%;
+                font-size: 16px;
+                color: #333;
+                animation: fadeIn 0.3s ease-out;
+                position: relative;
+                overflow: hidden;
+            `;
 
-        // Tab switching logic
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                const tabName = button.getAttribute('data-tab');
-                tabPanes.forEach(pane => {
-                    if (pane.id === tabName) {
-                        pane.classList.remove('hidden');
-                        pane.classList.add('active');
-                    } else {
-                        pane.classList.add('hidden');
-                        pane.classList.remove('active');
-                    }
-                });
-            });
-        });
+            const messageText = document.createElement('p');
+            messageText.textContent = message;
+            messageText.style.marginBottom = '25px';
+            messageText.style.fontWeight = 'bold';
+            messageText.style.lineHeight = '1.4';
 
-        // Accordion logic for risks and clauses
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const content = header.nextElementSibling;
-                const arrow = header.querySelector('.arrow');
-                if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-                    content.style.maxHeight = '0px';
-                    arrow.style.transform = 'rotate(0deg)';
-                } else {
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                    arrow.style.transform = 'rotate(180deg)';
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '确定';
+            closeButton.style.cssText = `
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 12px 25px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.2s ease, transform 0.2s ease;
+                box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+            `;
+            closeButton.onmouseover = () => closeButton.style.backgroundColor = '#0056b3';
+            closeButton.onmouseout = () => closeButton.style.backgroundColor = '#007bff';
+            closeButton.onclick = () => modal.remove();
+
+            modalContent.appendChild(messageText);
+            modalContent.appendChild(closeButton);
+            modal.appendChild(modalContent);
+            appScreen.appendChild(modal);
+
+            // Add a simple fadeIn animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-20px); }
+                    to { opacity: 1; transform: translateY(0); }
                 }
-            });
-        });
-        
-        // Chart.js: Cost Breakdown Chart
-        const ctx = document.getElementById('costBreakdownChart').getContext('2d');
-        // Simplified data for chart - in a real scenario, this would be calculated by summing up categories
-        const estimatedBaseWork = budgetData.totalBasePrice - budgetData.managementFee - budgetData.taxFee;
-        const chartData = {
-            labels: ['基础施工(估算)', '项目管理费', '税金', '其他收费(未分类)'],
-            datasets: [{
-                label: '费用构成',
-                data: [
-                    estimatedBaseWork, 
-                    budgetData.managementFee, 
-                    budgetData.taxFee, 
-                    budgetData.otherFees - budgetData.managementFee - budgetData.taxFee //工程远程费、其他服务费
-                ],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.7)', // Blue
-                    'rgba(255, 159, 64, 0.7)', // Orange
-                    'rgba(255, 99, 132, 0.7)',  // Red
-                    'rgba(75, 192, 192, 0.7)'  // Green
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-            }]
+            `;
+            document.head.appendChild(style);
         };
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 10,
-                            font: { size: 10 }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed !== null) {
-                                    label += new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(context.parsed);
-                                }
-                                const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                                const percentage = ((context.parsed / total) * 100).toFixed(2) + '%';
-                                label += ` (${percentage})`;
-                                return label;
-                            }
-                        }
-                    }
-                }
-            }
-        });
 
     </script>
 </body>
