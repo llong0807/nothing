@@ -949,6 +949,276 @@
             animation-play-state: paused;
         }
 
+        /* Cargo Detail Page Styles */
+        #cargo-detail-page {
+            display: flex;
+            flex-direction: column; /* Ensure content and footer stack */
+        }
+
+        #cargo-detail-page .detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        #cargo-detail-page .detail-header .back-arrow {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        #cargo-detail-page .detail-header .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #cargo-detail-page .detail-header .header-action-btn {
+            background-color: transparent;
+            color: #2196f3; /* Blue for share, red for delete */
+            border: none;
+            padding: 5px 10px;
+            font-size: 15px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        #cargo-detail-page .detail-header .header-action-btn.delete-btn {
+            color: #e63946; /* Red for delete */
+        }
+        #cargo-detail-page .detail-header .header-action-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        #cargo-detail-page .detail-content {
+            flex-grow: 1; /* Allows content to take available space and scroll */
+            overflow-y: auto;
+            padding: 15px; /* Reduced padding for sections to have their own padding */
+            background-color: #f9f9f9;
+            padding-bottom: 80px; /* Add padding to prevent content from being hidden by fixed footer */
+        }
+
+        #cargo-detail-page .detail-section {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Route Section - Adjusted for vertical display and left alignment */
+        #cargo-detail-page .route-section {
+            display: flex;
+            flex-direction: column; /* Stack vertically */
+            align-items: flex-start; /* Align items to the left */
+            gap: 10px; /* Space between the origin group, arrow, and destination group */
+        }
+
+        #cargo-detail-page .route-section .address-group {
+            display: flex;
+            align-items: flex-start;
+            width: 100%; /* Take full width to allow internal content to align */
+        }
+
+        #cargo-detail-page .route-section .address-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+        #cargo-detail-page .route-section .origin-icon {
+            color: #2196f3; /* Blue for origin */
+        }
+        #cargo-detail-page .route-section .destination-icon {
+            color: #ff9800; /* Orange for destination */
+        }
+
+
+        #cargo-detail-page .route-section .address-info {
+            flex-grow: 1;
+        }
+
+        /* Increased font sizes for elderly users */
+        #cargo-detail-page .route-section .address-district {
+            font-size: 22px; /* Increased from 20px */
+            font-weight: bold;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        #cargo-detail-page .route-section .address-detail {
+            font-size: 19px; /* Increased from 17px */
+            color: #666;
+            line-height: 1.3;
+        }
+
+        #cargo-detail-page .route-section .route-arrow {
+            font-size: 24px;
+            font-weight: bold;
+            color: #999;
+            /* To align with the left edge of the icons, considering icon size (24px) and its margin-right (8px) */
+            margin-left: 0; /* Align with the start of the address-group */
+            align-self: flex-start; /* Ensure it stays left-aligned within the column */
+            padding-left: 0; /* Remove previous padding */
+        }
+        /* Adjust the address-group to create the visual alignment for the arrow */
+        #cargo-detail-page .route-section .address-group {
+            padding-left: 0; /* Ensure no extra padding pushes icons right */
+        }
+        #cargo-detail-page .route-section .route-arrow {
+            margin-left: 0; /* Ensure it aligns with the start of the parent's content area */
+        }
+
+
+        /* Mileage Section Styles - Now inside route-section */
+        #cargo-detail-page .route-section .mileage-section {
+            background-color: #f0f8ff; /* Very light blue background */
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-top: 30px; /* Space from destination, as requested */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            width: calc(100% - 40px); /* Adjust for padding of parent detail-section (20px left/right) */
+        }
+        #cargo-detail-page .route-section .mileage-section:hover {
+            background-color: #e6f7ff;
+        }
+
+        #cargo-detail-page .mileage-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        #cargo-detail-page .mileage-value {
+            font-size: 16px; /* Decreased by 2px from 18px */
+            font-weight: bold;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        #cargo-detail-page .mileage-reference {
+            font-size: 11px; /* Decreased by 2px from 13px */
+            color: #888;
+            display: flex;
+            align-items: center;
+        }
+
+        #cargo-detail-page .mileage-reference .exclamation-icon {
+            font-size: 14px;
+            color: #ff9800; /* Orange exclamation */
+            margin-left: 5px;
+        }
+
+        #cargo-detail-page .map-link {
+            display: flex;
+            align-items: center;
+            color: #2196f3; /* Blue for map link */
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none; /* Remove underline */
+        }
+
+        #cargo-detail-page .map-link .map-icon {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+
+        /* Cargo Info and Fee Info Sections */
+        #cargo-detail-page .section-title { /* Unified class for section titles */
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: left; /* All section titles now left-aligned */
+        }
+
+        #cargo-detail-page .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline; /* Align text baselines */
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #eee; /* Subtle separator */
+        }
+        #cargo-detail-page .info-row:last-child {
+            border-bottom: none; /* No border for the last item */
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        #cargo-detail-page .info-label {
+            font-size: 14px;
+            color: #666;
+            flex-shrink: 0; /* Prevent label from shrinking */
+            margin-right: 15px; /* Space between label and value */
+        }
+
+        #cargo-detail-page .info-value {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+            flex-grow: 1; /* Allow value to take remaining space */
+            word-break: break-word; /* Allow long text to wrap */
+        }
+
+        /* Fixed Footer for Detail Page */
+        .detail-fixed-footer {
+            position: absolute; /* Position relative to the parent .page */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px; /* Consistent padding with other sections, 20px left/right */
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
+            gap: 10px; /* Space between buttons */
+            z-index: 15; /* Ensure it's above content */
+            flex-shrink: 0; /* Prevent footer from shrinking */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        /* Ensure buttons in fixed footer match cargo-actions buttons */
+        .detail-fixed-footer .action-btn {
+            background-color: #2196f3; /* Blue button */
+            color: #fff;
+            border: none;
+            border-radius: 8px; /* More rounded */
+            padding: 10px 15px; /* More padding */
+            font-size: 14px;
+            cursor: pointer;
+            /* margin-left: 10px; Removed as gap handles it */
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .detail-fixed-footer .action-btn:hover {
+            background-color: #1976d2;
+            transform: translateY(-1px);
+        }
+        .detail-fixed-footer .action-btn.secondary {
+            background-color: #9e9e9e; /* Grey secondary */
+        }
+        .detail-fixed-footer .action-btn.secondary:hover {
+            background-color: #757575;
+        }
+        .detail-fixed-footer .action-btn.primary { /* For "优先曝光" or "再次发布" */
+            background-color: #ff9800; /* Orange */
+        }
+        .detail-fixed-footer .action-btn.primary:hover {
+            background-color: #fb8c00;
+        }
     </style>
 </head>
 <body>
@@ -1043,7 +1313,7 @@
                 <!-- Content will dynamically change based on tab selection -->
                 <div id="published-cargo" class="cargo-content active">
                     <!-- Optimized Cargo Item 1 -->
-                    <div class="cargo-item">
+                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.published[0], 'published')">
                         <div class="item-header">
                             <span class="route-info">北京西城区到上海浦东新区</span>
                             <span class="publish-time">发布时间：6月27日</span>
@@ -1054,13 +1324,13 @@
                             <span class="dynamic-alert-text active">李师傅刚刚收藏了您的货源！</span>
                         </div>
                         <div class="cargo-actions">
-                            <button class="action-btn secondary" onclick="alert('撤销货源')">撤销</button>
-                            <button class="action-btn secondary" onclick="alert('修改货源')">修改</button>
-                            <button class="action-btn primary" onclick="alert('优先曝光货源')">优先曝光</button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); alert('撤销货源')">撤销</button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); alert('修改货源')">修改</button>
+                            <button class="action-btn primary" onclick="event.stopPropagation(); alert('优先曝光货源')">优先曝光</button>
                         </div>
                     </div>
                     <!-- Optimized Cargo Item 2 -->
-                    <div class="cargo-item">
+                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.published[1], 'published')">
                         <div class="item-header">
                             <span class="route-info">深圳南山区到广州天河区</span>
                             <span class="publish-time">发布时间：6月26日</span>
@@ -1071,13 +1341,13 @@
                             <span class="dynamic-alert-text active">已有意向车主，点击查看></span>
                         </div>
                         <div class="cargo-actions">
-                            <button class="action-btn secondary" onclick="alert('撤销货源')">撤销</button>
-                            <button class="action-btn secondary" onclick="alert('修改货源')">修改</button>
-                            <button class="action-btn primary" onclick="alert('优先曝光货源')">优先曝光</button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); alert('撤销货源')">撤销</button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); alert('修改货源')">修改</button>
+                            <button class="action-btn primary" onclick="event.stopPropagation(); alert('优先曝光货源')">优先曝光</button>
                         </div>
                     </div>
                     <!-- Original Cargo Item (for comparison, not fully optimized) -->
-                    <div class="cargo-item">
+                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.published[2], 'published')">
                         <div class="item-header">
                             <span class="route-info">成都武侯区到重庆渝北区</span>
                             <span class="publish-time">发布时间：6月25日</span>
@@ -1085,15 +1355,15 @@
                         <p class="cargo-details">货物: 家具, 10方, 4x2x2米</p>
                         <p class="load-time">装卸时间: 随到随装</p>
                         <div class="cargo-actions">
-                            <button class="action-btn secondary" onclick="alert('撤销货源')">撤销</button>
-                            <button class="action-btn secondary" onclick="alert('修改货源')">修改</button>
-                            <button class="action-btn primary" onclick="alert('优先曝光货源')">优先曝光</button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); alert('撤销货源')">撤销</button>
+                            <button class="action-btn secondary" onclick="event.stopPropagation(); alert('修改货源')">修改</button>
+                            <button class="action-btn primary" onclick="event.stopPropagation(); alert('优先曝光货源')">优先曝光</button>
                         </div>
                     </div>
                 </div>
                 <div id="found-car-cargo" class="cargo-content" style="display:none;">
                     <!-- Optimized "已找车" Cargo Item 1 -->
-                    <div class="cargo-item">
+                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData['found-car'][0], 'found-car')">
                         <div class="item-header">
                             <span class="route-info">广州番禺区到深圳宝安区</span>
                             <span class="publish-time">发布时间：6月24日</span>
@@ -1102,11 +1372,11 @@
                         <p class="load-time">装卸时间: 6月28日</p>
                         <!-- Dynamic alert removed as requested -->
                         <div class="cargo-actions">
-                            <button class="action-btn" onclick="alert('联系意向车主')">联系意向车主</button>
+                            <button class="action-btn" onclick="event.stopPropagation(); alert('联系意向车主')">联系意向车主</button>
                         </div>
                     </div>
                     <!-- Optimized "已找车" Cargo Item 2 -->
-                    <div class="cargo-item">
+                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData['found-car'][1], 'found-car')">
                         <div class="item-header">
                             <span class="route-info">上海静安区到杭州西湖区</span>
                             <span class="publish-time">发布时间：6月23日</span>
@@ -1115,13 +1385,13 @@
                         <p class="load-time">装卸时间: 随到随装</p>
                         <!-- Dynamic alert removed as requested -->
                         <div class="cargo-actions">
-                            <button class="action-btn" onclick="alert('联系意向车主')">联系意向车主</button>
+                            <button class="action-btn" onclick="event.stopPropagation(); alert('联系意向车主')">联系意向车主</button>
                         </div>
                     </div>
                 </div>
                 <div id="cancelled-cargo" class="cargo-content" style="display:none;">
                     <!-- Optimized "已作废" Cargo Item 1 -->
-                    <div class="cargo-item">
+                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.cancelled[0], 'cancelled')">
                         <div class="item-header">
                             <span class="route-info">成都武侯区到重庆渝北区</span>
                             <span class="publish-time">发布时间：6月22日</span>
@@ -1130,11 +1400,11 @@
                         <p class="load-time">装卸时间: 6月25日</p>
                         <!-- Dynamic alert removed as requested -->
                         <div class="cargo-actions">
-                            <button class="action-btn primary" onclick="alert('再次发布货源')">再次发布</button>
+                            <button class="action-btn primary" onclick="event.stopPropagation(); alert('再次发布货源')">再次发布</button>
                         </div>
                     </div>
                     <!-- Optimized "已作废" Cargo Item 2 -->
-                    <div class="cargo-item">
+                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.cancelled[1], 'cancelled')">
                         <div class="item-header">
                             <span class="route-info">北京朝阳区到天津滨海新区</span>
                             <span class="publish-time">发布时间：6月21日</span>
@@ -1143,7 +1413,7 @@
                         <p class="load-time">装卸时间: 随到随装</p>
                         <!-- Dynamic alert removed as requested -->
                         <div class="cargo-actions">
-                            <button class="action-btn primary" onclick="alert('再次发布货源')">再次发布</button>
+                            <button class="action-btn primary" onclick="event.stopPropagation(); alert('再次发布货源')">再次发布</button>
                         </div>
                     </div>
                 </div>
@@ -1233,7 +1503,7 @@
                 <div class="cargo-item">
                     <h4>货源ID: #C20250625002</h4>
                     <p><strong>路线:</strong> 北京 - 石家庄</p>
-                    <p><strong>货物:</strong> 农产品, 3吨</p>
+                    <p><strong>货物:</strong> 農產品, 3吨</p>
                     <p><strong>预估运费:</strong> ¥800</p>
                     <div class="cargo-actions">
                         <button onclick="alert('查看详情')">查看详情</button>
@@ -1388,15 +1658,225 @@
                 <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
                     <span class="icon">📦</span> 货源管理
                 </div>
-                <div class="tab-button active" onclick="showPage('driver-my-page')">
+                <div class="tab-button" onclick="showPage('driver-my-page')">
                     <span class="icon">👷</span> 我的
                 </div>
+            </div>
+        </div>
+
+        <!-- NEW: Cargo Detail Page -->
+        <div id="cargo-detail-page" class="page">
+            <div class="header detail-header">
+                <span class="back-arrow" onclick="showPage('shipper-cargo-manage-page')">←</span>
+                <span class="header-title">货物信息</span>
+                <button id="detail-action-btn" class="action-btn header-action-btn"></button>
+            </div>
+            <div class="content detail-content">
+                <!-- 货物信息区域 (路线) - Adjusted for vertical display and left alignment -->
+                <div class="detail-section route-section">
+                    <div class="address-group">
+                        <span class="address-icon origin-icon">📍</span>
+                        <div class="address-info">
+                            <div class="address-district" id="origin-district"></div>
+                            <div class="address-detail" id="origin-detail"></div>
+                        </div>
+                    </div>
+                    <!-- Arrow aligned with icons -->
+                    <span class="route-arrow">↓</span>
+                    <div class="address-group">
+                        <span class="address-icon destination-icon">📍</span>
+                        <div class="address-info">
+                            <div class="address-district" id="destination-district"></div>
+                            <div class="address-detail" id="destination-detail"></div>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Mileage Section - Now inside route-section -->
+                    <div class="mileage-section" onclick="alert('查看路线地图')">
+                        <div class="mileage-info">
+                            <span class="mileage-value" id="mileage-display">正在计算</span>
+                            <span class="mileage-reference">里程仅供参考 <span class="exclamation-icon">!</span></span>
+                        </div>
+                        <div class="map-link">
+                            <span class="map-icon">🗺️</span>
+                            <span>查看路线</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 货物信息区域 (详细属性) -->
+                <div class="detail-section cargo-info-section">
+                    <div class="section-title">货源信息</div>
+                    <div class="info-row">
+                        <span class="info-label">货物名称</span>
+                        <span class="info-value" id="cargo-name"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">货物参数</span>
+                        <span class="info-value" id="cargo-params"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">装卸时间</span>
+                        <span class="info-value" id="load-time-detail"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">联系电话</span>
+                        <span class="info-value" id="contact-phone"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">备注信息</span>
+                        <span class="info-value" id="remarks"></span>
+                    </div>
+                </div>
+
+                <!-- 费用信息区域 -->
+                <div class="detail-section fee-info-section">
+                    <div class="section-title">费用信息</div>
+                    <div class="info-row">
+                        <span class="info-label">运费</span>
+                        <span class="info-value" id="freight-cost"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Fixed Footer for Detail Page -->
+            <div class="detail-fixed-footer" id="cargo-detail-footer">
+                <!-- Buttons will be dynamically added here -->
             </div>
         </div>
 
     </div>
 
     <script>
+        // Sample Cargo Data (expanded for detail page)
+        const allCargoData = {
+            'published': [
+                {
+                    id: 'pub001',
+                    route: '北京西城区到上海浦东新区',
+                    publishTime: '6月27日',
+                    cargoName: '电子产品',
+                    cargoParams: '5吨, 3.2x2x1.5米',
+                    loadTime: '随到随装',
+                    contactPhone: '138****1234',
+                    remarks: '需恒温运输，易碎品，请小心搬运。',
+                    freightCost: '5000元',
+                    originDistrict: '北京市西城区',
+                    originDetail: '金融街18号',
+                    destinationDistrict: '上海市浦东新区',
+                    destinationDetail: '陆家嘴环路1000号',
+                    dynamicAlert: "李师傅刚刚收藏了您的货源！",
+                    mileage: '约1200公里'
+                },
+                {
+                    id: 'pub002',
+                    route: '深圳南山区到广州天河区',
+                    publishTime: '6月26日',
+                    cargoName: '生鲜蔬菜',
+                    cargoParams: '2吨, 2.5x1.8x1米',
+                    loadTime: '7月1日',
+                    contactPhone: '139****5678',
+                    remarks: '需冷藏，上午10点前送达。',
+                    freightCost: '面议',
+                    originDistrict: '深圳市南山区',
+                    originDetail: '科技园南区1号',
+                    destinationDistrict: '广州市天河区',
+                    destinationDetail: '珠江新城花城大道',
+                    dynamicAlert: "已有意向车主，点击查看>",
+                    mileage: '约100公里'
+                },
+                {
+                    id: 'pub003',
+                    route: '成都武侯区到重庆渝北区',
+                    publishTime: '6月25日',
+                    cargoName: '家具',
+                    cargoParams: '10方, 4x2x2米',
+                    loadTime: '随到随装',
+                    contactPhone: '130****9012',
+                    remarks: '拆卸后运输，需协助搬运上楼。',
+                    freightCost: '3500元',
+                    originDistrict: '成都市武侯区',
+                    originDetail: '武侯祠大街231号',
+                    destinationDistrict: '重庆市渝北区',
+                    destinationDetail: '解放碑街道民权路',
+                    dynamicAlert: null, // No dynamic alert for this one
+                    mileage: '约300公里'
+                }
+            ],
+            'found-car': [
+                {
+                    id: 'fc001',
+                    route: '广州番禺区到深圳宝安区',
+                    publishTime: '6月24日',
+                    cargoName: '服装',
+                    cargoParams: '2吨, 2x1.5x1米',
+                    loadTime: '6月28日',
+                    contactPhone: '131****3456',
+                    remarks: '已联系司机王师傅，等待确认。',
+                    freightCost: '1800元',
+                    originDistrict: '广州市番禺区',
+                    originDetail: '市桥街光明南路',
+                    destinationDistrict: '深圳市宝安区',
+                    destinationDetail: '新安街道宝安大道',
+                    dynamicAlert: null,
+                    mileage: '约80公里'
+                },
+                {
+                    id: 'fc002',
+                    route: '上海静安区到杭州西湖区',
+                    publishTime: '6月23日',
+                    cargoName: '电子设备',
+                    cargoParams: '3吨, 3x2x1.8米',
+                    loadTime: '随到随装',
+                    contactPhone: '132****7890',
+                    remarks: '已匹配司机李师傅，请尽快联系。',
+                    freightCost: '2500元',
+                    originDistrict: '上海市静安区',
+                    originDetail: '南京西路123号',
+                    destinationDistrict: '杭州市西湖区',
+                    destinationDetail: '西溪湿地文二西路',
+                    dynamicAlert: null,
+                    mileage: '约170公里'
+                }
+            ],
+            'cancelled': [
+                {
+                    id: 'can001',
+                    route: '成都武侯区到重庆渝北区',
+                    publishTime: '6月22日',
+                    cargoName: '家具',
+                    cargoParams: '10方, 4x2x2米',
+                    loadTime: '6月25日',
+                    contactPhone: '133****1122',
+                    remarks: '因货主临时有变，已取消。',
+                    freightCost: '3500元',
+                    originDistrict: '成都市武侯区',
+                    originDetail: '武侯祠大街231号',
+                    destinationDistrict: '重庆市渝北区',
+                    destinationDetail: '解放碑街道民权路',
+                    dynamicAlert: null,
+                    mileage: '约300公里'
+                },
+                {
+                    id: 'can002',
+                    route: '北京朝阳区到天津滨海新区',
+                    publishTime: '6月21日',
+                    cargoName: '建筑材料',
+                    cargoParams: '8吨, 3x2x1米',
+                    loadTime: '随到随装',
+                    contactPhone: '134****3344',
+                    remarks: '货源已过期，需重新发布。',
+                    freightCost: '2000元',
+                    originDistrict: '北京市朝阳区',
+                    originDetail: '望京SOHO',
+                    destinationDistrict: '天津市滨海新区',
+                    destinationDetail: '天津港保税区',
+                    dynamicAlert: null,
+                    mileage: '约140公里'
+                }
+            ]
+        };
+
         // Function to show a specific page and hide others
         function showPage(pageId) {
             const pages = document.querySelectorAll('.page');
@@ -1641,6 +2121,81 @@
                 });
             }
         }
+
+        // Function to populate and show the Cargo Detail Page
+        function showCargoDetailPage(cargoItem, status) {
+            // Populate route information
+            document.getElementById('origin-district').textContent = cargoItem.originDistrict;
+            document.getElementById('origin-detail').textContent = cargoItem.originDetail;
+            document.getElementById('destination-district').textContent = cargoItem.destinationDistrict;
+            document.getElementById('destination-detail').textContent = cargoItem.destinationDetail;
+
+            // Populate cargo details
+            document.getElementById('cargo-name').textContent = cargoItem.cargoName;
+            document.getElementById('cargo-params').textContent = cargoItem.cargoParams;
+            document.getElementById('load-time-detail').textContent = cargoItem.loadTime;
+            document.getElementById('contact-phone').textContent = cargoItem.contactPhone;
+            document.getElementById('remarks').textContent = cargoItem.remarks;
+
+            // Populate fee information
+            document.getElementById('freight-cost').textContent = cargoItem.freightCost;
+
+            // Populate mileage information
+            const mileageDisplay = document.getElementById('mileage-display');
+            mileageDisplay.textContent = '正在计算'; // Initial state
+            setTimeout(() => {
+                mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
+            }, 1000); // Simulate a 1-second calculation time
+
+
+            // Set header action button
+            const detailActionBtn = document.getElementById('detail-action-btn');
+            if (status === 'cancelled') {
+                detailActionBtn.textContent = '删除';
+                detailActionBtn.classList.add('delete-btn');
+                detailActionBtn.onclick = () => alert('删除货源: ' + cargoItem.id);
+            } else {
+                detailActionBtn.textContent = '分享';
+                detailActionBtn.classList.remove('delete-btn');
+                detailActionBtn.onclick = () => alert('分享货源: ' + cargoItem.id);
+            }
+
+            // Dynamically populate fixed footer buttons
+            const detailFooter = document.getElementById('cargo-detail-footer');
+            detailFooter.innerHTML = ''; // Clear existing buttons
+
+            let buttonsToCreate = [];
+            if (status === 'published') {
+                buttonsToCreate = [
+                    { text: '撤销', className: 'secondary', action: () => alert('撤销货源: ' + cargoItem.id) },
+                    { text: '修改', className: 'secondary', action: () => alert('修改货源: ' + cargoItem.id) },
+                    { text: '优先曝光', className: 'primary', action: () => alert('优先曝光货源: ' + cargoItem.id) }
+                ];
+            } else if (status === 'found-car') {
+                buttonsToCreate = [
+                    { text: '联系意向车主', className: '', action: () => alert('联系意向车主: ' + cargoItem.id) }
+                ];
+            } else if (status === 'cancelled') {
+                buttonsToCreate = [
+                    { text: '再次发布', className: 'primary', action: () => alert('再次发布货源: ' + cargoItem.id) }
+                ];
+            }
+
+            buttonsToCreate.forEach(btnInfo => {
+                const button = document.createElement('button');
+                button.textContent = btnInfo.text;
+                button.classList.add('action-btn');
+                if (btnInfo.className) {
+                    button.classList.add(btnInfo.className);
+                }
+                button.onclick = btnInfo.action;
+                detailFooter.appendChild(button);
+            });
+
+
+            showPage('cargo-detail-page'); // Show the detail page
+        }
+
 
         // Initialize the app on window load
         window.onload = function() {
