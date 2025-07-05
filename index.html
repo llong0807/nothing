@@ -573,6 +573,26 @@
             font-size: 15px;
             opacity: 0.9;
         }
+        /* Style for the new switch identity button */
+        #shipper-my-page .switch-identity-btn {
+            position: absolute;
+            top: 15px; /* Adjust as needed */
+            right: 15px; /* Adjust as needed */
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 15px; /* Rounded corners */
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #shipper-my-page .switch-identity-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
         #shipper-my-page .section-title {
             font-size: 17px;
             font-weight: bold;
@@ -819,6 +839,26 @@
             font-size: 15px;
             opacity: 0.9;
         }
+        /* Style for the new switch identity button */
+        #driver-my-page .switch-identity-btn {
+            position: absolute;
+            top: 15px; /* Adjust as needed */
+            right: 15px; /* Adjust as needed */
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 15px; /* Rounded corners */
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #driver-my-page .switch-identity-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
         #driver-my-page .section-title {
             font-size: 17px;
             font-weight: bold;
@@ -1356,7 +1396,16 @@
                     <span class="slogan">多快好省，如此简单！</span>
                 </button>
 
-              
+                <!-- NEW: Gemini API Powered Feature - Smart Shipping Tip -->
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="free-shipping-button" style="background: linear-gradient(45deg, #4CAF50, #81C784); box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);" onclick="generateSmartShippingTip()">
+                        <span class="main-text"><span class="icon">✨</span> 智能运货小贴士</span>
+                        <span class="slogan">点击获取专属建议！</span>
+                    </button>
+                    <div id="shippingTipDisplay" style="margin-top: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 12px; border: 1px solid #c8e6c9; color: #333; font-size: 15px; line-height: 1.6; text-align: left; min-height: 50px; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s ease-in-out;">
+                        点击上方按钮获取智能运货小贴士...
+                    </div>
+                </div>
             </div>
             <div class="footer">
                 <div class="tab-button active" onclick="showPage('shipper-home-page')">
@@ -1481,7 +1530,6 @@
                         </div>
                         <p class="cargo-details">货物: 建筑材料, 8吨, 3x2x1米</p>
                         <p class="load-time">装卸时间: 随到随装</p>
-                        <!-- Dynamic alert removed as requested -->
                         <div class="cargo-actions">
                             <button class="action-btn primary" onclick="event.stopPropagation(); alert('再次发布货源')">再次发布</button>
                         </div>
@@ -1508,6 +1556,8 @@
                 <div class="avatar">👤</div>
                 <div class="nickname">货主小王</div>
                 <div class="level-online">等级: 黄金会员 | 在线: 120小时</div>
+                <!-- NEW: Switch Identity Button -->
+                <button class="switch-identity-btn" onclick="showPage('identity-page')">切换身份</button>
             </div>
             <div class="content">
                 <div class="section-title">会员信息</div>
@@ -1562,21 +1612,21 @@
             <div class="cargo-list">
                 <!-- Driver Cargo Item 1 -->
                 <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[0])">
-                    <h4>北京 - 天津</h4>
+                    <h4>北京朝阳区 - 天津滨海新区</h4>
                     <p><strong>货物:</strong> 200挖机 25吨 长8米宽6米高4米</p>
                     <p><strong>装卸时间:</strong> 6.18日装</p>
                     <p><strong>预估运费:</strong> ¥1200</p>
                 </div>
                 <!-- Driver Cargo Item 2 -->
                 <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[1])">
-                    <h4>上海 - 杭州</h4>
+                    <h4>上海浦东新区 - 杭州西湖区</h4>
                     <p><strong>货物:</strong> 电子产品 5吨 3x2x1.5米</p>
                     <p><strong>装卸时间:</strong> 6.20日前卸</p>
                     <p><strong>预估运费:</strong> ¥1500</p>
                 </div>
                 <!-- Driver Cargo Item 3 -->
                 <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[2])">
-                    <h4>广州 - 深圳</h4>
+                    <h4>广州天河区 - 深圳南山区</h4>
                     <p><strong>货物:</strong> 生鲜水果 3吨 2.5x1.8x1米</p>
                     <p><strong>装卸时间:</strong> 随到随装</p>
                     <p><strong>预估运费:</strong> ¥800</p>
@@ -1681,6 +1731,8 @@
                 <div class="avatar">👨‍✈️</div>
                 <div class="nickname">司机老张</div>
                 <div class="level-online">等级: 白金司机 | 在线: 500小时</div>
+                <!-- NEW: Switch Identity Button -->
+                <button class="switch-identity-btn" onclick="showPage('identity-page')">切换身份</button>
             </div>
             <div class="content">
                 <div class="section-title">会员信息</div>
