@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路线地图</title>
+    <style>
+        /* Base styles for the map page */
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light grey background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        /* App screen wrapper similar to the main app for consistency */
+        .app-screen {
+            width: 375px; /* Standard mobile width */
+            height: 812px; /* Standard mobile height */
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header style */
+        .header {
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header .back-arrow {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .header .header-title {
+            flex-grow: 1; /* Allow title to take available space */
+            text-align: center;
+            margin-right: 34px; /* Compensate for back-arrow width + padding */
+        }
+
+        /* Map container */
+        .map-container {
+            flex-grow: 1;
+            background-color: #e0f0ff; /* Light blue to simulate a map */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #e63946; /* Red marker */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transform: translate(-50%, -50%); /* Center the marker on its coordinates */
+            z-index: 5;
+        }
+
+        .map-marker.origin {
+            background-color: #2196f3; /* Blue for origin */
+        }
+
+        .map-marker.destination {
+            background-color: #ff9800; /* Orange for destination */
+        }
+
+        .route-line {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.3);
+            height: 4px;
+            border-radius: 2px;
+            z-index: 4;
+        }
+
+        .map-info {
+            position: absolute;
+            bottom: 20px;
+            width: calc(100% - 40px);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            font-size: 14px;
+            color: #333;
+            z-index: 10;
+        }
+        .map-info p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+        .map-info strong {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-screen">
+        <div class="header">
+            <span class="back-arrow" onclick="window.history.back()">←</span>
+            <span class="header-title">路线地图</span>
+            <span></span> <!-- Placeholder for alignment -->
+        </div>
+        <div class="map-container" id="mapContainer">
+            <!-- Map markers and route line will be dynamically added here -->
+            <div class="map-info">
+                <p><strong>出发地:</strong> <span id="originAddress"></span></p>
+                <p><strong>目的地:</strong> <span id="destinationAddress"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to parse URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        window.onload = function() {
+            const origin = getUrlParameter('origin');
+            const destination = getUrlParameter('destination');
+
+            document.getElementById('originAddress').textContent = origin || '未知';
+            document.getElementById('destinationAddress').textContent = destination || '未知';
+
+            const mapContainer = document.getElementById('mapContainer');
+            const mapWidth = mapContainer.offsetWidth;
+            const mapHeight = mapContainer.offsetHeight;
+
+            // Simple "random" positioning for prototype markers
+            // These values are arbitrary to visually separate markers on the "map"
+            const originX = Math.floor(mapWidth * 0.25);
+            const originY = Math.floor(mapHeight * 0.35);
+            const destX = Math.floor(mapWidth * 0.75);
+            const destY = Math.floor(mapHeight * 0.65);
+
+            // Create origin marker
+            const originMarker = document.createElement('div');
+            originMarker.classList.add('map-marker', 'origin');
+            originMarker.textContent = '起';
+            originMarker.style.left = `${originX}px`;
+            originMarker.style.top = `${originY}px`;
+            mapContainer.appendChild(originMarker);
+
+            // Create destination marker
+            const destMarker = document.createElement('div');
+            destMarker.classList.add('map-marker', 'destination');
+            destMarker.textContent = '终';
+            destMarker.style.left = `${destX}px`;
+            destMarker.style.top = `${destY}px`;
+            mapContainer.appendChild(destMarker);
+
+            // Create route line (simple straight line for prototype)
+            const routeLine = document.createElement('div');
+            routeLine.classList.add('route-line');
+            const dx = destX - originX;
+            const dy = destY - originY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+            routeLine.style.width = `${distance}px`;
+            routeLine.style.transform = `rotate(${angle}deg)`;
+            routeLine.style.transformOrigin = '0 0'; // Rotate from the origin marker's position
+            routeLine.style.left = `${originX}px`;
+            routeLine.style.top = `${originY}px`;
+            mapContainer.appendChild(routeLine);
+        };
+    </script>
+</body>
+</html>
