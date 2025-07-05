@@ -1540,7 +1540,7 @@
                 <div class="tab-button" onclick="showPage('shipper-home-page')">
                     <span class="icon">🏠</span> 首页
                 </div>
-                <div class="tab-button active" onclick="showPage('shipper-cargo-manage-page')">
+                <div class="tab-button" onclick="showPage('shipper-cargo-manage-page')">
                     <span class="icon">📋</span> 货源管理
                 </div>
                 <div class="tab-button" onclick="showPage('shipper-my-page')">
@@ -1621,7 +1621,7 @@
                 <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[1])">
                     <h4>上海浦东新区 - 杭州西湖区</h4>
                     <p><strong>货物:</strong> 电子产品 5吨 3x2x1.5米</p>
-                    <p><strong>装卸时间:</strong> 6.20日前卸</p>
+                    <p><strong>装卸时间:</strong> 6月20日前卸</p>
                     <p><strong>预估运费:</strong> ¥1500</p>
                 </div>
                 <!-- Driver Cargo Item 3 -->
@@ -1805,7 +1805,7 @@
                     </div>
 
                     <!-- NEW: Mileage Section - Now inside route-section -->
-                    <div class="mileage-section" onclick="alert('查看路线地图')">
+                    <div class="mileage-section" id="shipper-map-link-container">
                         <div class="mileage-info">
                             <span class="mileage-value" id="mileage-display">正在计算</span>
                             <span class="mileage-reference">里程仅供参考 <span class="exclamation-icon">!</span></span>
@@ -1896,7 +1896,7 @@
                     </div>
 
                     <!-- Mileage Section -->
-                    <div class="mileage-section" onclick="alert('查看路线地图')">
+                    <div class="mileage-section" id="driver-map-link-container">
                         <div class="mileage-info">
                             <span class="mileage-value" id="driver-mileage-display">正在计算</span>
                             <span class="mileage-reference">里程仅供参考 <span class="exclamation-icon">!</span></span>
@@ -2423,6 +2423,15 @@
                 mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
             }, 1000); // Simulate a 1-second calculation time
 
+            // Set up the "查看路线" link for shipper
+            const shipperMapLinkContainer = document.getElementById('shipper-map-link-container');
+            shipperMapLinkContainer.onclick = () => {
+                const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
+                const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
+                window.open(`map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`, '_blank');
+            };
+
+
             // Populate and conditionally display Cargo Messages section
             const cargoMessagesSection = document.getElementById('cargo-messages-section');
             const cargoMessagesList = document.getElementById('cargo-messages-list');
@@ -2521,6 +2530,15 @@
             setTimeout(() => {
                 mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
             }, 1000); // Simulate a 1-second calculation time
+
+            // Set up the "查看路线" link for driver
+            const driverMapLinkContainer = document.getElementById('driver-map-link-container');
+            driverMapLinkContainer.onclick = () => {
+                const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
+                const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
+                window.open(`map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`, '_blank');
+            };
+
 
             // Set header action button (e.g., Share for driver, or specific driver action)
             const driverDetailActionBtn = document.getElementById('driver-detail-action-btn');
