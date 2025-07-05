@@ -675,6 +675,7 @@
             margin-bottom: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: transform 0.2s ease-in-out;
+            cursor: pointer; /* Make the whole item clickable */
         }
         #driver-find-cargo-page .cargo-item:hover {
             transform: translateY(-3px);
@@ -691,26 +692,8 @@
             color: #555;
             line-height: 1.5;
         }
-        #driver-find-cargo-page .cargo-actions {
-            text-align: right;
-            margin-top: 15px;
-        }
-        #driver-find-cargo-page .cargo-actions button {
-            background-color: #ff9800; /* Orange button */
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        #driver-find-cargo-page .cargo-actions button:hover {
-            background-color: #fb8c00;
-            transform: translateY(-1px);
-        }
+        /* Removed cargo-actions styles as buttons are removed */
+
         /* Driver Cargo Management Page */
         #driver-cargo-manage-page .header {
             color: #ff9800; /* Orange header */
@@ -950,12 +933,12 @@
         }
 
         /* Cargo Detail Page Styles */
-        #cargo-detail-page {
+        #cargo-detail-page, #driver-cargo-detail-page { /* Apply to both shipper and driver detail pages */
             display: flex;
             flex-direction: column; /* Ensure content and footer stack */
         }
 
-        #cargo-detail-page .detail-header {
+        #cargo-detail-page .detail-header, #driver-cargo-detail-page .detail-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -966,7 +949,7 @@
             flex-shrink: 0; /* Prevent header from shrinking */
         }
 
-        #cargo-detail-page .detail-header .back-arrow {
+        #cargo-detail-page .detail-header .back-arrow, #driver-cargo-detail-page .detail-header .back-arrow {
             font-size: 24px;
             font-weight: bold;
             color: #333;
@@ -974,13 +957,13 @@
             padding: 5px;
         }
 
-        #cargo-detail-page .detail-header .header-title {
+        #cargo-detail-page .detail-header .header-title, #driver-cargo-detail-page .detail-header .header-title {
             font-size: 18px;
             font-weight: bold;
             color: #333;
         }
 
-        #cargo-detail-page .detail-header .header-action-btn {
+        #cargo-detail-page .detail-header .header-action-btn, #driver-cargo-detail-page .detail-header .header-action-btn {
             background-color: transparent;
             color: #2196f3; /* Blue for share, red for delete */
             border: none;
@@ -990,14 +973,14 @@
             border-radius: 8px;
             transition: background-color 0.2s ease;
         }
-        #cargo-detail-page .detail-header .header-action-btn.delete-btn {
+        #cargo-detail-page .detail-header .header-action-btn.delete-btn, #driver-cargo-detail-page .detail-header .header-action-btn.delete-btn {
             color: #e63946; /* Red for delete */
         }
-        #cargo-detail-page .detail-header .header-action-btn:hover {
+        #cargo-detail-page .detail-header .header-action-btn:hover, #driver-cargo-detail-page .detail-header .header-action-btn:hover {
             background-color: #f0f0f0;
         }
 
-        #cargo-detail-page .detail-content {
+        #cargo-detail-page .detail-content, #driver-cargo-detail-page .detail-content {
             flex-grow: 1; /* Allows content to take available space and scroll */
             overflow-y: auto;
             padding: 15px; /* Reduced padding for sections to have their own padding */
@@ -1005,7 +988,7 @@
             padding-bottom: 80px; /* Add padding to prevent content from being hidden by fixed footer */
         }
 
-        #cargo-detail-page .detail-section {
+        #cargo-detail-page .detail-section, #driver-cargo-detail-page .detail-section {
             background-color: #fff;
             border-radius: 12px;
             padding: 20px;
@@ -1014,50 +997,50 @@
         }
 
         /* Route Section - Adjusted for vertical display and left alignment */
-        #cargo-detail-page .route-section {
+        #cargo-detail-page .route-section, #driver-cargo-detail-page .route-section {
             display: flex;
             flex-direction: column; /* Stack vertically */
             align-items: flex-start; /* Align items to the left */
             gap: 10px; /* Space between the origin group, arrow, and destination group */
         }
 
-        #cargo-detail-page .route-section .address-group {
+        #cargo-detail-page .route-section .address-group, #driver-cargo-detail-page .route-section .address-group {
             display: flex;
             align-items: flex-start;
             width: 100%; /* Take full width to allow internal content to align */
         }
 
-        #cargo-detail-page .route-section .address-icon {
+        #cargo-detail-page .route-section .address-icon, #driver-cargo-detail-page .route-section .address-icon {
             font-size: 24px;
             margin-right: 8px;
         }
-        #cargo-detail-page .route-section .origin-icon {
+        #cargo-detail-page .route-section .origin-icon, #driver-cargo-detail-page .route-section .origin-icon {
             color: #2196f3; /* Blue for origin */
         }
-        #cargo-detail-page .route-section .destination-icon {
+        #cargo-detail-page .route-section .destination-icon, #driver-cargo-detail-page .route-section .destination-icon {
             color: #ff9800; /* Orange for destination */
         }
 
 
-        #cargo-detail-page .route-section .address-info {
+        #cargo-detail-page .route-section .address-info, #driver-cargo-detail-page .route-section .address-info {
             flex-grow: 1;
         }
 
         /* Increased font sizes for elderly users */
-        #cargo-detail-page .route-section .address-district {
+        #cargo-detail-page .route-section .address-district, #driver-cargo-detail-page .route-section .address-district {
             font-size: 22px; /* Increased from 20px */
             font-weight: bold;
             color: #333;
             line-height: 1.3;
         }
 
-        #cargo-detail-page .route-section .address-detail {
+        #cargo-detail-page .route-section .address-detail, #driver-cargo-detail-page .route-section .address-detail {
             font-size: 19px; /* Increased from 17px */
             color: #666;
             line-height: 1.3;
         }
 
-        #cargo-detail-page .route-section .route-arrow {
+        #cargo-detail-page .route-section .route-arrow, #driver-cargo-detail-page .route-section .route-arrow {
             font-size: 24px;
             font-weight: bold;
             color: #999;
@@ -1071,7 +1054,7 @@
         }
 
         /* Mileage Section Styles - Now inside route-section */
-        #cargo-detail-page .route-section .mileage-section {
+        #cargo-detail-page .route-section .mileage-section, #driver-cargo-detail-page .route-section .mileage-section {
             background-color: #f0f8ff; /* Very light blue background */
             border-radius: 12px;
             padding: 15px 20px;
@@ -1084,37 +1067,37 @@
             transition: background-color 0.2s ease;
             width: calc(100% - 40px); /* Adjust for padding of parent detail-section (20px left/right) */
         }
-        #cargo-detail-page .route-section .mileage-section:hover {
+        #cargo-detail-page .route-section .mileage-section:hover, #driver-cargo-detail-page .route-section .mileage-section:hover {
             background-color: #e6f7ff;
         }
 
-        #cargo-detail-page .mileage-info {
+        #cargo-detail-page .mileage-info, #driver-cargo-detail-page .mileage-info {
             display: flex;
             align-items: center;
             flex-grow: 1;
         }
 
-        #cargo-detail-page .mileage-value {
+        #cargo-detail-page .mileage-value, #driver-cargo-detail-page .mileage-value {
             font-size: 14px; /* Decreased by 2px from 16px */
             font-weight: bold;
             color: #333;
             margin-right: 10px;
         }
 
-        #cargo-detail-page .mileage-reference {
+        #cargo-detail-page .mileage-reference, #driver-cargo-detail-page .mileage-reference {
             font-size: 9px; /* Decreased by 2px from 11px */
             color: #888;
             display: flex;
             align-items: center;
         }
 
-        #cargo-detail-page .mileage-reference .exclamation-icon {
+        #cargo-detail-page .mileage-reference .exclamation-icon, #driver-cargo-detail-page .mileage-reference .exclamation-icon {
             font-size: 14px;
             color: #ff9800; /* Orange exclamation */
             margin-left: 5px;
         }
 
-        #cargo-detail-page .map-link {
+        #cargo-detail-page .map-link, #driver-cargo-detail-page .map-link {
             display: flex;
             align-items: center;
             color: #2196f3; /* Blue for map link */
@@ -1123,7 +1106,7 @@
             text-decoration: none; /* Remove underline */
         }
 
-        #cargo-detail-page .map-link .map-icon {
+        #cargo-detail-page .map-link .map-icon, #driver-cargo-detail-page .map-link .map-icon {
             font-size: 20px;
             margin-right: 5px;
         }
@@ -1220,7 +1203,7 @@
 
 
         /* Cargo Info and Fee Info Sections */
-        #cargo-detail-page .section-title { /* Unified class for section titles */
+        #cargo-detail-page .section-title, #driver-cargo-detail-page .section-title { /* Unified class for section titles */
             font-size: 16px;
             font-weight: bold;
             color: #333;
@@ -1228,7 +1211,7 @@
             text-align: left; /* All section titles now left-aligned */
         }
 
-        #cargo-detail-page .info-row {
+        #cargo-detail-page .info-row, #driver-cargo-detail-page .info-row {
             display: flex;
             justify-content: space-between;
             align-items: baseline; /* Align text baselines */
@@ -1236,20 +1219,20 @@
             padding-bottom: 5px;
             border-bottom: 1px dashed #eee; /* Subtle separator */
         }
-        #cargo-detail-page .info-row:last-child {
+        #cargo-detail-page .info-row:last-child, #driver-cargo-detail-page .info-row:last-child {
             border-bottom: none; /* No border for the last item */
             margin-bottom: 0;
             padding-bottom: 0;
         }
 
-        #cargo-detail-page .info-label {
+        #cargo-detail-page .info-label, #driver-cargo-detail-page .info-label {
             font-size: 14px;
             color: #666;
             flex-shrink: 0; /* Prevent label from shrinking */
             margin-right: 15px; /* Space between label and value */
         }
 
-        #cargo-detail-page .info-value {
+        #cargo-detail-page .info-value, #driver-cargo-detail-page .info-value {
             font-size: 15px;
             color: #333;
             font-weight: 500;
@@ -1372,6 +1355,8 @@
                     <span class="main-text"><span class="icon">✨</span> 免费发货</span>
                     <span class="slogan">多快好省，如此简单！</span>
                 </button>
+
+              
             </div>
             <div class="footer">
                 <div class="tab-button active" onclick="showPage('shipper-home-page')">
@@ -1575,35 +1560,26 @@
                 <button onclick="alert('展开地区选择')">选择区域 ›</button>
             </div>
             <div class="cargo-list">
-                <div class="cargo-item">
-                    <h4>货源ID: #C20250625001</h4>
-                    <p><strong>路线:</strong> 北京 - 天津</p>
-                    <p><strong>货物:</strong> 建筑材料, 10吨</p>
+                <!-- Driver Cargo Item 1 -->
+                <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[0])">
+                    <h4>北京 - 天津</h4>
+                    <p><strong>货物:</strong> 200挖机 25吨 长8米宽6米高4米</p>
+                    <p><strong>装卸时间:</strong> 6.18日装</p>
                     <p><strong>预估运费:</strong> ¥1200</p>
-                    <div class="cargo-actions">
-                        <button onclick="alert('查看详情')">查看详情</button>
-                        <button onclick="alert('抢单')">抢单</button>
-                    </div>
                 </div>
-                <div class="cargo-item">
-                    <h4>货源ID: #C20250625002</h4>
-                    <p><strong>路线:</strong> 北京 - 石家庄</p>
-                    <p><strong>货物:</strong> 農產品, 3吨</p>
-                    <p><strong>预估运费:</strong> ¥800</p>
-                    <div class="cargo-actions">
-                        <button onclick="alert('查看详情')">查看详情</button>
-                        <button onclick="alert('抢单')">抢单</button>
-                    </div>
-                </div>
-                <div class="cargo-item">
-                    <h4>货源ID: #C20250625003</h4>
-                    <p><strong>路线:</strong> 天津 - 济南</p>
-                    <p><strong>货物:</strong> 电子设备, 5方</p>
+                <!-- Driver Cargo Item 2 -->
+                <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[1])">
+                    <h4>上海 - 杭州</h4>
+                    <p><strong>货物:</strong> 电子产品 5吨 3x2x1.5米</p>
+                    <p><strong>装卸时间:</strong> 6.20日前卸</p>
                     <p><strong>预估运费:</strong> ¥1500</p>
-                    <div class="cargo-actions">
-                        <button onclick="alert('查看详情')">查看详情</button>
-                        <button onclick="alert('抢单')">抢单</button>
-                    </div>
+                </div>
+                <!-- Driver Cargo Item 3 -->
+                <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[2])">
+                    <h4>广州 - 深圳</h4>
+                    <p><strong>货物:</strong> 生鲜水果 3吨 2.5x1.8x1米</p>
+                    <p><strong>装卸时间:</strong> 随到随装</p>
+                    <p><strong>预估运费:</strong> ¥800</p>
                 </div>
             </div>
             <div class="footer">
@@ -1749,7 +1725,7 @@
             </div>
         </div>
 
-        <!-- NEW: Cargo Detail Page -->
+        <!-- NEW: Cargo Detail Page (Shipper's) -->
         <div id="cargo-detail-page" class="page">
             <div class="header detail-header">
                 <span class="back-arrow" onclick="showPage('shipper-cargo-manage-page')">←</span>
@@ -1836,6 +1812,86 @@
             </div>
             <!-- Fixed Footer for Detail Page -->
             <div class="detail-fixed-footer" id="cargo-detail-footer">
+                <!-- Buttons will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- NEW: Driver's Cargo Detail Page -->
+        <div id="driver-cargo-detail-page" class="page">
+            <div class="header detail-header">
+                <span class="back-arrow" onclick="showPage('driver-find-cargo-page')">←</span>
+                <span class="header-title">货源详情</span>
+                <button id="driver-detail-action-btn" class="action-btn header-action-btn"></button>
+            </div>
+            <div class="content detail-content">
+                <!-- 货物信息区域 (路线) - Adjusted for vertical display and left alignment -->
+                <div class="detail-section route-section">
+                    <div class="address-group">
+                        <span class="address-icon origin-icon">📍</span>
+                        <div class="address-info">
+                            <div class="address-district" id="driver-origin-district"></div>
+                            <div class="address-detail" id="driver-origin-detail"></div>
+                        </div>
+                    </div>
+                    <!-- Arrow aligned with icons -->
+                    <span class="route-arrow">↓</span>
+                    <div class="address-group">
+                        <span class="address-icon destination-icon">📍</span>
+                        <div class="address-info">
+                            <div class="address-district" id="driver-destination-district"></div>
+                            <div class="address-detail" id="driver-destination-detail"></div>
+                        </div>
+                    </div>
+
+                    <!-- Mileage Section -->
+                    <div class="mileage-section" onclick="alert('查看路线地图')">
+                        <div class="mileage-info">
+                            <span class="mileage-value" id="driver-mileage-display">正在计算</span>
+                            <span class="mileage-reference">里程仅供参考 <span class="exclamation-icon">!</span></span>
+                        </div>
+                        <div class="map-link">
+                            <span class="map-icon">🗺️</span>
+                            <span>查看路线</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 货物信息区域 (详细属性) -->
+                <div class="detail-section cargo-info-section">
+                    <div class="section-title">货源信息</div>
+                    <div class="info-row">
+                        <span class="info-label">货物名称</span>
+                        <span class="info-value" id="driver-cargo-name"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">货物参数</span>
+                        <span class="info-value" id="driver-cargo-params"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">装卸时间</span>
+                        <span class="info-value" id="driver-load-time-detail"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">联系电话</span>
+                        <span class="info-value" id="driver-contact-phone"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">备注信息</span>
+                        <span class="info-value" id="driver-remarks"></span>
+                    </div>
+                </div>
+
+                <!-- 费用信息区域 -->
+                <div class="detail-section fee-info-section">
+                    <div class="section-title">费用信息</div>
+                    <div class="info-row">
+                        <span class="info-label">运费</span>
+                        <span class="info-value" id="driver-freight-cost"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Fixed Footer for Driver Detail Page -->
+            <div class="detail-fixed-footer" id="driver-cargo-detail-footer">
                 <!-- Buttons will be dynamically added here -->
             </div>
         </div>
@@ -1985,6 +2041,65 @@
                 }
             ]
         };
+
+        // Sample Cargo Data for Drivers
+        const driverCargoData = {
+            'findCargo': [
+                {
+                    id: 'D001',
+                    routeDisplay: '北京朝阳区 - 天津滨海新区', // For list item H4
+                    cargoDisplay: '200挖机 25吨 长8米宽6米高4米', // For list item first P
+                    loadTimeDisplay: '6月18日装', // For list item second P
+                    originDistrict: '北京市',
+                    originDetail: '朝阳区望京SOHO',
+                    destinationDistrict: '天津市',
+                    destinationDetail: '滨海新区天津港保税区',
+                    cargoName: '200挖机',
+                    cargoParams: '25吨, 长8米宽6米高4米',
+                    loadTime: '2025年6月18日装货',
+                    contactPhone: '138****5678',
+                    remarks: '工地急用，需尽快运输，有吊装设备。',
+                    freightCost: '¥1200',
+                    mileage: '约140公里'
+                },
+                {
+                    id: 'D002',
+                    routeDisplay: '上海浦东新区 - 杭州西湖区',
+                    cargoDisplay: '电子产品 5吨 3x2x1.5米',
+                    loadTimeDisplay: '6月20日前卸',
+                    originDistrict: '上海市',
+                    originDetail: '浦东新区陆家嘴环路1000号',
+                    destinationDistrict: '杭州市',
+                    destinationDetail: '西湖区西溪湿地文二西路',
+                    cargoName: '电子产品',
+                    cargoParams: '5吨, 3x2x1.5米',
+                    loadTime: '2025年6月20日前卸货',
+                    contactPhone: '139****1234',
+                    remarks: '易碎品，需轻拿轻放，有保温要求。',
+                    freightCost: '¥1500',
+                    mileage: '约170公里'
+                },
+                {
+                    id: 'D003',
+                    routeDisplay: '广州天河区 - 深圳南山区',
+                    cargoDisplay: '生鲜水果 3吨 2.5x1.8x1米',
+                    loadTimeDisplay: '随到随装',
+                    originDistrict: '广州市',
+                    originDetail: '天河区珠江新城花城大道',
+                    destinationDistrict: '深圳市',
+                    destinationDetail: '南山区科技园南区1号',
+                    cargoName: '生鲜水果',
+                    cargoParams: '3吨, 2.5x1.8x1米',
+                    loadTime: '随到随装',
+                    contactPhone: '130****9876',
+                    remarks: '需冷链运输，请确保温度。',
+                    freightCost: '¥800',
+                    mileage: '约100公里'
+                }
+            ],
+            // Other driver cargo management tabs data can be added here if needed in the future
+        };
+
 
         // Function to show a specific page and hide others
         function showPage(pageId) {
@@ -2231,7 +2346,7 @@
             }
         }
 
-        // Function to populate and show the Cargo Detail Page
+        // Function to populate and show the Cargo Detail Page (Shipper)
         function showCargoDetailPage(cargoItem, status) {
             // Populate route information
             document.getElementById('origin-district').textContent = cargoItem.originDistrict;
@@ -2328,6 +2443,122 @@
 
 
             showPage('cargo-detail-page'); // Show the detail page
+        }
+
+        // Function to populate and show the Cargo Detail Page (Driver)
+        function showDriverCargoDetailPage(cargoItem) {
+            // Populate route information
+            document.getElementById('driver-origin-district').textContent = cargoItem.originDistrict;
+            document.getElementById('driver-origin-detail').textContent = cargoItem.originDetail;
+            document.getElementById('driver-destination-district').textContent = cargoItem.destinationDistrict;
+            document.getElementById('driver-destination-detail').textContent = cargoItem.destinationDetail;
+
+            // Populate cargo details
+            document.getElementById('driver-cargo-name').textContent = cargoItem.cargoName;
+            document.getElementById('driver-cargo-params').textContent = cargoItem.cargoParams;
+            document.getElementById('driver-load-time-detail').textContent = cargoItem.loadTime;
+            document.getElementById('driver-contact-phone').textContent = cargoItem.contactPhone;
+            document.getElementById('driver-remarks').textContent = cargoItem.remarks;
+
+            // Populate fee information
+            document.getElementById('driver-freight-cost').textContent = cargoItem.freightCost;
+
+            // Populate mileage information
+            const mileageDisplay = document.getElementById('driver-mileage-display');
+            mileageDisplay.textContent = '正在计算'; // Initial state
+            setTimeout(() => {
+                mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
+            }, 1000); // Simulate a 1-second calculation time
+
+            // Set header action button (e.g., Share for driver, or specific driver action)
+            const driverDetailActionBtn = document.getElementById('driver-detail-action-btn');
+            driverDetailActionBtn.textContent = '分享'; // Default action for driver detail
+            driverDetailActionBtn.classList.remove('delete-btn'); // Ensure no delete style
+            driverDetailActionBtn.onclick = () => alert('分享货源: ' + cargoItem.id);
+
+
+            // Dynamically populate fixed footer buttons for driver
+            const driverDetailFooter = document.getElementById('driver-cargo-detail-footer');
+            driverDetailFooter.innerHTML = ''; // Clear existing buttons
+
+            const buttonsToCreate = [
+                { text: '联系货主', className: '', action: () => alert('联系货主: ' + cargoItem.id) },
+                { text: '立即抢单', className: 'primary', action: () => alert('立即抢单: ' + cargoItem.id) }
+            ];
+
+            buttonsToCreate.forEach(btnInfo => {
+                const button = document.createElement('button');
+                button.textContent = btnInfo.text;
+                button.classList.add('action-btn');
+                if (btnInfo.className) {
+                    button.classList.add(btnInfo.className);
+                }
+                button.onclick = btnInfo.action;
+                driverDetailFooter.appendChild(button);
+            });
+
+            showPage('driver-cargo-detail-page'); // Show the driver detail page
+        }
+
+
+        // Function to generate smart shipping tip using Gemini API
+        async function generateSmartShippingTip() {
+            const tipDisplay = document.getElementById('shippingTipDisplay');
+            tipDisplay.style.opacity = 0; // Fade out current text
+            tipDisplay.textContent = '正在生成小贴士...'; // Show loading message
+            tipDisplay.style.backgroundColor = '#e0f7fa'; // Change background for loading
+            tipDisplay.style.border = '1px solid #a7d9e2';
+            tipDisplay.style.opacity = 1; // Fade in loading message
+
+            try {
+                let chatHistory = [];
+                const prompt = "请为物流App的用户生成一个简短、实用且积极的运货小贴士，例如关于如何打包、选择路线、与司机沟通等。长度在50字以内。";
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        temperature: 0.7, // Adjust creativity
+                        maxOutputTokens: 100 // Limit output length
+                    }
+                };
+
+                const apiKey = ""; // Canvas will automatically provide the API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} - ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    tipDisplay.textContent = text;
+                    tipDisplay.style.backgroundColor = '#e8f5e9'; // Reset background
+                    tipDisplay.style.border = '1px solid #c8e6c9';
+                } else {
+                    tipDisplay.textContent = '未能生成小贴士，请稍后再试。';
+                    tipDisplay.style.backgroundColor = '#ffebee'; // Error background
+                    tipDisplay.style.border = '1px solid #ef9a9a';
+                }
+            } catch (error) {
+                console.error("Error generating shipping tip:", error);
+                tipDisplay.textContent = `生成小贴士时出错: ${error.message}`;
+                tipDisplay.style.backgroundColor = '#ffebee'; // Error background
+                tipDisplay.style.border = '1px solid #ef9a9a';
+            } finally {
+                tipDisplay.style.opacity = 1; // Ensure it's visible after content is set
+            }
         }
 
 
