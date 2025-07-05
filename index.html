@@ -2423,12 +2423,15 @@
                 mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
             }, 1000); // Simulate a 1-second calculation time
 
+          
             // Set up the "查看路线" link for shipper
             const shipperMapLinkContainer = document.getElementById('shipper-map-link-container');
             shipperMapLinkContainer.onclick = () => {
                 const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
                 const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
-                window.open(`map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`, '_blank');
+                
+                // 使用绝对路径
+                window.open(`https://llong0807.github.io/nothing/map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`);
             };
 
 
@@ -2536,8 +2539,11 @@
             driverMapLinkContainer.onclick = () => {
                 const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
                 const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
-                window.open(`map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`, '_blank');
+                
+                // 使用绝对路径
+                window.open(`https://llong0807.github.io/nothing/map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`);
             };
+            
 
 
             // Set header action button (e.g., Share for driver, or specific driver action)
