@@ -138,7 +138,7 @@
         <div id="main-page" class="page active">
             <!-- 头部 -->
             <header class="header">
-                <button class="back-arrow p-2">
+                <button id="back-to-previous-app-btn" class="back-arrow p-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </button>
                 <h1 class="header-title">编辑地址</h1>
@@ -368,6 +368,7 @@
             };
 
             // --- 导航按钮 ---
+            const backToPreviousAppBtn = document.getElementById('back-to-previous-app-btn'); // 主页左上角返回按钮
             const backToMainBtn = document.getElementById('back-to-main-btn'); // from edit-page
             const backToMainFromAddressBookBtn = document.getElementById('back-to-main-from-address-book-btn'); // from address-book-page
             const backToPreviousPageFromMapBtn = document.getElementById('back-to-previous-page-from-map-btn'); // from map-location-page
@@ -423,6 +424,14 @@
                 targetPage.classList.add('active');
                 currentPage = targetPage;
                 console.log(`当前页面已更新为：${currentPage.id}`); // Debug log
+            }
+
+            // 主页左上角返回按钮：返回浏览器上一页
+            if (backToPreviousAppBtn) {
+                backToPreviousAppBtn.addEventListener('click', () => {
+                    console.log('点击了主页左上角返回按钮，执行 window.history.back()');
+                    window.history.back();
+                });
             }
 
             // 从主页进入编辑详细地址页
