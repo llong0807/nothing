@@ -277,13 +277,9 @@
                 <!-- 地址卡片将由JS动态插入 -->
             </div>
 
-            <!-- 底部定位按钮 (地址簿页面内部的定位按钮) -->
+            <!-- 底部区域，现在不包含定位按钮 -->
             <footer class="bg-white p-4 border-t border-gray-200 flex justify-center items-center flex-shrink-0">
-                <button id="address-book-map-location-btn" class="flex flex-col items-center text-blue-500 text-sm font-medium py-2 px-4 rounded-full">
-                    <!-- 定位图标 -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"></path></svg>
-                    <span class="mt-1">定位</span>
-                </button>
+                <!-- 地址簿页面内部的定位按钮已删除 -->
             </footer>
         </div>
 
@@ -355,7 +351,7 @@
 
             // --- 地址簿页元素 ---
             const addressBookList = document.getElementById('address-book-list');
-            const addressBookMapLocationBtn = document.getElementById('address-book-map-location-btn'); // 地址簿页面内部的定位按钮
+            // const addressBookMapLocationBtn = document.getElementById('address-book-map-location-btn'); // 地址簿页面内部的定位按钮 - 已删除
 
             // --- 地图定位页元素 ---
             const confirmMapLocationBtn = document.getElementById('confirm-map-location-btn');
@@ -418,6 +414,7 @@
             // 页面切换逻辑
             // =================================================
             function showPage(targetPage) {
+                console.log(`切换页面：从 ${currentPage.id} 到 ${targetPage.id}`); // Debug log
                 if (currentPage) {
                     currentPage.classList.remove('active');
                     currentPage.classList.add('hidden');
@@ -425,6 +422,7 @@
                 targetPage.classList.remove('hidden');
                 targetPage.classList.add('active');
                 currentPage = targetPage;
+                console.log(`当前页面已更新为：${currentPage.id}`); // Debug log
             }
 
             // 从主页进入编辑详细地址页
@@ -446,6 +444,7 @@
             // 从主页进入地址簿页 (通用处理，根据点击的按钮确定类型)
             openAddressBookBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    console.log('点击了地址簿按钮'); // Debug log
                     currentEditingAddressType = btn.closest('.address-group').dataset.addressType;
                     renderAddressBook(); // 渲染地址簿内容
                     showPage(addressBookPage);
@@ -455,6 +454,7 @@
             // 从主页进入地图定位页 (通用处理，根据点击的按钮确定类型)
             openMapLocationBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    console.log('点击了主页定位按钮'); // Debug log
                     currentEditingAddressType = btn.closest('.address-group').dataset.addressType;
                     previousPageFromMap = mainPage; // 记录是从主页进入地图
                     showPage(mapLocationPage);
@@ -466,16 +466,9 @@
                 showPage(mainPage);
             });
 
-            // 从地址簿页进入地图定位页 (地址簿内部的定位按钮)
-            addressBookMapLocationBtn.addEventListener('click', () => {
-                // currentEditingAddressType 应该已经从主页进入地址簿时设置
-                previousPageFromMap = addressBookPage; // 记录是从地址簿进入地图
-                showPage(mapLocationPage);
-            });
-
-
             // 从地图定位页返回上一页 (可能是主页或地址簿页)
             backToPreviousPageFromMapBtn.addEventListener('click', () => {
+                console.log('点击了地图页返回按钮'); // Debug log
                 if (previousPageFromMap) {
                     showPage(previousPageFromMap);
                 } else {
@@ -485,6 +478,7 @@
 
             // 模拟地图定位确认，并回填数据到主页
             confirmMapLocationBtn.addEventListener('click', () => {
+                console.log('点击了地图页确认定位按钮'); // Debug log
                 // 模拟地图定位回传的地址信息
                 const simulatedMapAddress = {
                     region: "上海市 浦东新区",
@@ -593,6 +587,70 @@
                         addressSuggestionsContainer.innerHTML = ''; // Clear suggestions
                     });
                 });
+            }
+
+            // =================================================
+            // 地址簿页面逻辑
+            // =================================================
+            function renderAddressBook() {
+                addressBookList.innerHTML = ''; // 清空现有列表
+                if (mockAddressBookData.length === 0) {
+                    addressBookList.innerHTML = '<p class="text-center text-gray-500 mt-8">地址簿为空</p>';
+                    return;
+                }
+
+                mockAddressBookData.forEach(addr => {
+                    const card = document.createElement('div');
+                    card.className = 'address-card'; // 使用新的地址卡片样式
+                    card.dataset.id = addr.id; // 将ID存储在数据属性中
+                    card.innerHTML = `
+                        <p class="font-semibold text-gray-800">${addr.region}</p>
+                        <p class="text-sm text-gray-600 mt-1">${addr.detail}</p>
+                        <button class="delete-btn" data-id="${addr.id}">删除</button>
+                    `;
+                    addressBookList.appendChild(card);
+                });
+
+                // 为整个地址卡片添加点击事件监听器（选择功能）
+                document.querySelectorAll('.address-card').forEach(card => {
+                    card.addEventListener('click', (event) => {
+                        // 确保点击删除按钮时不会触发选择功能
+                        if (event.target.classList.contains('delete-btn')) {
+                            return;
+                        }
+                        const idToSelect = card.dataset.id;
+                        const selectedAddr = mockAddressBookData.find(addr => addr.id === idToSelect);
+                        if (selectedAddr && currentEditingAddressType) {
+                            const regionDisplay = document.querySelector(`.address-region-display[data-target-id="${currentEditingAddressType}-region"]`);
+                            const detailDisplay = document.querySelector(`.address-detail-display[data-target-id="${currentEditingAddressType}-detail"]`);
+                            
+                            if (regionDisplay) {
+                                regionDisplay.textContent = selectedAddr.region;
+                                regionDisplay.classList.remove('text-gray-400');
+                                regionDisplay.classList.add('text-gray-800', 'font-bold');
+                            }
+                            if (detailDisplay) {
+                                detailDisplay.textContent = selectedAddr.detail;
+                                detailDisplay.classList.remove('text-gray-400');
+                                detailDisplay.classList.add('text-gray-800', 'font-semibold');
+                            }
+                        }
+                        showPage(mainPage); // 选择后返回主页
+                    });
+                });
+
+                // 添加删除按钮事件监听器
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const idToDelete = event.target.dataset.id;
+                        deleteAddress(idToDelete);
+                    });
+                });
+            }
+
+            function deleteAddress(id) {
+                mockAddressBookData = mockAddressBookData.filter(addr => addr.id !== id);
+                renderAddressBook(); // 重新渲染地址簿
             }
 
             // =================================================
