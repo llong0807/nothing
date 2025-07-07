@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑地址 - 高级交互版</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 自定义基础样式 */
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; /* 字体与参考代码一致 */
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light grey background 与参考代码一致 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* 隐藏超出视口的内容 */
+            color: #333; /* 基础字体颜色 */
+            box-sizing: border-box; /* 边框和内边距包含在元素的总宽度和高度内 */
+        }
+
+        /* 模拟移动设备屏幕容器 (参照 app-screen 样式) */
+        .mobile-container {
+            width: 375px; /* 标准手机宽度 */
+            height: 812px; /* 标准手机高度 */
+            background-color: #fff; /* 背景色与参考代码一致 */
+            border-radius: 20px; /* 圆角与参考代码一致 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* 阴影与参考代码一致 */
+            overflow: hidden; /* 隐藏超出容器的内容，特别是滑动页面 */
+            display: flex; /* 使其成为 flex 容器 */
+            flex-direction: column; /* 内部元素垂直堆叠 */
+            position: relative; /* 为内部绝对定位的页面提供参考 */
+        }
+
+        /* 所有可切换页面的基础样式 */
+        .page {
+            transition: transform 0.3s ease-in-out;
+            position: absolute; /* 绝对定位，相对于 mobile-container */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff; /* 确保页面有背景色覆盖 */
+            z-index: 1; /* 默认层级 */
+        }
+        /* 隐藏页面时向右滑出 */
+        .page.hidden {
+            transform: translateX(100%);
+        }
+        /* 当前显示页面的层级更高 */
+        .page.active {
+            z-index: 2;
+            transform: translateX(0);
+        }
+
+        /* 头部样式调整，以匹配参考代码 */
+        .header {
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0; /* 防止头部被内容挤压 */
+        }
+        .header .back-arrow {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .header .header-title {
+            flex-grow: 1; /* Allow title to take available space */
+            text-align: center;
+            margin-right: 34px; /* Compensate for back-arrow width + padding */
+        }
+
+        /* 地址簿卡片样式 */
+        .address-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer; /* 使整个卡片可点击 */
+            transition: transform 0.2s ease-in-out;
+            position: relative; /* 用于删除按钮定位 */
+        }
+        .address-card:hover {
+            transform: translateY(-2px);
+        }
+        .address-card .delete-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #fce7e7; /* red-100 */
+            color: #ef4444; /* red-500 */
+            border-radius: 9999px; /* full rounded */
+            padding: 6px 12px; /* py-1.5 px-3 */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 500; /* font-medium */
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        /* Custom extra-extra-small text size for location button */
+        .text-xxs {
+            font-size: 0.6rem; /* Approximately 9.6px */
+            line-height: 1rem; /* Adjust line-height for better visual */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+
+        <!-- =================================================================== -->
+        <!-- Page 1: 编辑地址 (主页) -->
+        <!-- =================================================================== -->
+        <div id="main-page" class="page active">
+            <!-- 头部 -->
+            <header class="header">
+                <button class="back-arrow p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <h1 class="header-title">编辑地址</h1>
+                <span></span>
+            </header>
+
+            <!-- 主要内容区域 -->
+            <main class="flex-1 p-4 overflow-y-auto">
+                <!-- 地址信息卡片 -->
+                <div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+                    <!-- 装货地址 -->
+                    <div class="address-group" data-address-type="loading">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-orange-500 font-bold text-lg">装</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <div class="address-region-display text-gray-400 cursor-pointer py-1" data-target-id="loading-region">省市区</div>
+                                    <!-- 地址簿按钮 - 缩小0.7倍 -->
+                                    <button class="open-address-book-btn text-blue-500 text-xs font-medium py-0.5 px-2 rounded-full border border-blue-500">地址簿</button>
+                                </div>
+                                <div class="border-t border-gray-100 my-2"></div>
+                                <!-- 详细地址和定位按钮在同一行 -->
+                                <div class="flex items-center justify-between">
+                                    <div class="address-detail-display text-gray-400 cursor-pointer py-1" data-target-id="loading-detail">详细地址（例如**街**号）</div>
+                                    <!-- 定位按钮 - 缩小0.7倍，无边框 -->
+                                    <button class="open-map-location-btn flex flex-col items-center text-blue-500 text-xxs font-medium py-0 px-1 rounded-full">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"></path></svg>
+                                        <span>定位</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 分割线 -->
+                    <div class="border-t border-gray-100 my-5"></div>
+                    <!-- 卸货地址 -->
+                    <div class="address-group" data-address-type="unloading">
+                         <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-blue-500 font-bold text-lg">卸</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <div class="address-region-display text-gray-400 cursor-pointer py-1" data-target-id="unloading-region">省市区</div>
+                                    <!-- 地址簿按钮 - 缩小0.7倍 -->
+                                    <button class="open-address-book-btn text-blue-500 text-xs font-medium py-0.5 px-2 rounded-full border border-blue-500">地址簿</button>
+                                </div>
+                                <div class="border-t border-gray-100 my-2"></div>
+                                <!-- 详细地址和定位按钮在同一行 -->
+                                <div class="flex items-center justify-between">
+                                    <div class="address-detail-display text-gray-400 cursor-pointer py-1" data-target-id="unloading-detail">详细地址（例如**街**号）</div>
+                                    <!-- 定位按钮 - 缩小0.7倍，无边框 -->
+                                    <button class="open-map-location-btn flex flex-col items-center text-blue-500 text-xxs font-medium py-0 px-1 rounded-full">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"></path></svg>
+                                        <span>定位</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 时间选择卡片 -->
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="flex items-center justify-between p-5">
+                        <p class="font-bold text-gray-800 text-base">装货时间</p>
+                        <div class="flex items-center space-x-3">
+                            <button class="bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full">选择日期</button>
+                            <button class="bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full">选择时间</button>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-100"></div>
+                    <div class="flex items-center justify-between p-5">
+                        <p class="font-bold text-gray-800 text-base">卸货时间</p>
+                        <div class="flex items-center space-x-3">
+                            <button class="bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full">选择日期</button>
+                            <button class="bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full">选择时间</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 底部按钮 -->
+            <footer class="bg-white p-4 flex items-center space-x-4 border-t border-gray-200 mt-auto flex-shrink-0">
+                <button class="flex-1 bg-orange-100 text-orange-500 font-bold py-3.5 rounded-full">取消</button>
+                <button class="flex-1 bg-gray-200 text-gray-400 font-bold py-3.5 rounded-full">下一步</button>
+            </footer>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- Page 2: 编辑详细地址 -->
+        <!-- =================================================================== -->
+        <div id="edit-page" class="page hidden">
+            <!-- 头部 -->
+            <header class="header">
+                <button id="back-to-main-btn" class="back-arrow p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <h1 class="header-title">编辑详细地址</h1>
+                <span></span>
+            </header>
+
+            <!-- 文本编辑区域 -->
+            <div class="p-4 flex-shrink-0">
+                <div class="relative">
+                    <textarea id="address-textarea" maxlength="100" class="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none" placeholder="详细地址（例如**街**号）"></textarea>
+                    <div id="editor-buttons" class="absolute bottom-3 right-3 flex items-center space-x-2">
+                        <!-- 按钮将由JS动态插入 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 匹配地址区域 -->
+            <div id="address-suggestions" class="flex-1 bg-gray-50 overflow-y-auto">
+                <!-- 匹配的地址列表将由JS动态插入 -->
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- Page 3: 地址簿页面 -->
+        <!-- =================================================================== -->
+        <div id="address-book-page" class="page hidden">
+            <!-- 头部 -->
+            <header class="header">
+                <button id="back-to-main-from-address-book-btn" class="back-arrow p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <h1 class="header-title">地址簿</h1>
+                <span></span>
+            </header>
+
+            <!-- 地址列表区域 -->
+            <div id="address-book-list" class="flex-1 p-4 overflow-y-auto bg-gray-100">
+                <!-- 地址卡片将由JS动态插入 -->
+            </div>
+
+            <!-- 底部定位按钮 (地址簿页面内部的定位按钮) -->
+            <footer class="bg-white p-4 border-t border-gray-200 flex justify-center items-center flex-shrink-0">
+                <button id="address-book-map-location-btn" class="flex flex-col items-center text-blue-500 text-sm font-medium py-2 px-4 rounded-full">
+                    <!-- 定位图标 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"></path></svg>
+                    <span class="mt-1">定位</span>
+                </button>
+            </footer>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- Page 4: 地图定位页面 -->
+        <!-- =================================================================== -->
+        <div id="map-location-page" class="page hidden">
+            <!-- 头部 -->
+            <header class="header">
+                <button id="back-to-previous-page-from-map-btn" class="back-arrow p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <h1 class="header-title">地图定位</h1>
+                <span></span>
+            </header>
+
+            <!-- 地图模拟区域 -->
+            <div class="flex-1 flex items-center justify-center bg-blue-100 text-gray-500 text-lg">
+                <p>这里是地图定位模拟区域</p>
+                <!-- 模拟地图选择后的确认按钮 -->
+                <button id="confirm-map-location-btn" class="absolute bottom-10 bg-blue-500 text-white font-bold py-3 px-6 rounded-full shadow-lg">
+                    确认定位
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- Modal: 省市区选择 -->
+    <!-- =================================================================== -->
+    <div id="region-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end hidden" style="z-index: 100;">
+        <!-- 弹窗内容宽度与 mobile-container 保持一致 -->
+        <div class="bg-white w-full max-w-[375px] rounded-t-2xl">
+            <div class="p-4 flex justify-between items-center border-b">
+                <h2 class="font-bold text-lg">选择地区</h2>
+                <button id="close-modal-btn" class="text-gray-500">&times;</button>
+            </div>
+            <div class="flex p-2 border-b">
+                <div id="province-tab" class="px-4 py-2 cursor-pointer font-semibold text-blue-600 border-b-2 border-blue-600">请选择</div>
+                <div id="city-tab" class="px-4 py-2 cursor-pointer text-gray-500 hidden"></div>
+                <div id="district-tab" class="px-4 py-2 cursor-pointer text-gray-500 hidden"></div>
+            </div>
+            <div id="region-lists" class="h-64 overflow-y-auto">
+                <!-- 地区列表将由JS动态插入 -->
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 页面元素 ---
+            const mainPage = document.getElementById('main-page');
+            const editPage = document.getElementById('edit-page');
+            const addressBookPage = document.getElementById('address-book-page');
+            const mapLocationPage = document.getElementById('map-location-page');
+
+            const addressDetailDisplays = document.querySelectorAll('.address-detail-display');
+            // 使用 querySelectorAll 获取所有地址簿和定位按钮
+            const openAddressBookBtns = document.querySelectorAll('.open-address-book-btn');
+            const openMapLocationBtns = document.querySelectorAll('.open-map-location-btn');
+
+
+            // --- 编辑详细地址页元素 ---
+            const addressTextarea = document.getElementById('address-textarea');
+            const editorButtonsContainer = document.getElementById('editor-buttons');
+            const addressSuggestionsContainer = document.getElementById('address-suggestions');
+
+            // --- 地址簿页元素 ---
+            const addressBookList = document.getElementById('address-book-list');
+            const addressBookMapLocationBtn = document.getElementById('address-book-map-location-btn'); // 地址簿页面内部的定位按钮
+
+            // --- 地图定位页元素 ---
+            const confirmMapLocationBtn = document.getElementById('confirm-map-location-btn');
+
+            // --- 地区选择弹窗元素 ---
+            const regionModal = document.getElementById('region-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const addressRegionDisplays = document.querySelectorAll('.address-region-display');
+            const regionListsContainer = document.getElementById('region-lists');
+            const tabs = {
+                province: document.getElementById('province-tab'),
+                city: document.getElementById('city-tab'),
+                district: document.getElementById('district-tab'),
+            };
+
+            // --- 导航按钮 ---
+            const backToMainBtn = document.getElementById('back-to-main-btn'); // from edit-page
+            const backToMainFromAddressBookBtn = document.getElementById('back-to-main-from-address-book-btn'); // from address-book-page
+            const backToPreviousPageFromMapBtn = document.getElementById('back-to-previous-page-from-map-btn'); // from map-location-page
+
+
+            // --- 状态变量 ---
+            let currentEditingAddressType = null; // 'loading' or 'unloading'
+            let currentEditingRegionTarget = null;
+            let selectedRegion = { province: '', city: '', district: '' };
+            let currentPage = mainPage; // Keep track of the current active page
+            let previousPageFromMap = null; // To track which page to return to from map
+
+
+            // --- 模拟数据 ---
+            const mockAddressData = [
+                { name: '天安门广场', detail: '北京市东城区东长安街' },
+                { name: '东方明珠广播电视塔', detail: '上海市浦东新区世纪大道1号' },
+                { name: '西湖', detail: '浙江省杭州市西湖区龙井路1号' },
+                { name: '故宫博物院', detail: '北京市东城区景山前街4号' },
+                { name: '外滩', 'detail': '上海市黄浦区中山东一路' },
+                { name: '阿里巴巴西溪园区', detail: '浙江省杭州市余杭区文一西路969号' },
+                { name: '哈哈大厦', detail: '北京市朝阳区哈哈路88号' }
+            ];
+
+            // 模拟地址簿数据，带ID
+            let mockAddressBookData = [
+                { id: 'ab1', region: '北京市 北京市', detail: '东城区东长安街天安门广场' },
+                { id: 'ab2', region: '上海市 上海市', detail: '浦东新区世纪大道1号东方明珠' },
+                { id: 'ab3', region: '浙江省 杭州市', detail: '西湖区龙井路1号西湖' },
+                { id: 'ab4', region: '北京市 北京市', detail: '朝阳区哈哈路88号哈哈大厦' },
+                { id: 'ab5', region: '广东省 深圳市', detail: '南山区科技园深南大道1000号' },
+                { id: 'ab6', region: '四川省 成都市', detail: '武侯区天府大道北段2000号' }
+            ];
+
+            const mockRegionData = {
+                "北京市": { "北京市": ["东城区", "西城区", "朝阳区", "海淀区"] },
+                "上海市": { "上海市": ["黄浦区", "徐汇区", "长宁区", "静安区", "浦东新区"] },
+                "浙江省": { "杭州市": ["上城区", "拱墅区", "西湖区", "余杭区"], "宁波市": ["海曙区", "江北区", "镇海区"] },
+                "广东省": { "深圳市": ["福田区", "罗湖区", "南山区", "宝安区"] },
+                "四川省": { "成都市": ["锦江区", "青羊区", "金牛区", "武侯区"] }
+            };
+
+            // =================================================
+            // 页面切换逻辑
+            // =================================================
+            function showPage(targetPage) {
+                if (currentPage) {
+                    currentPage.classList.remove('active');
+                    currentPage.classList.add('hidden');
+                }
+                targetPage.classList.remove('hidden');
+                targetPage.classList.add('active');
+                currentPage = targetPage;
+            }
+
+            // 从主页进入编辑详细地址页
+            addressDetailDisplays.forEach(el => {
+                el.addEventListener('click', () => {
+                    currentEditingAddressType = el.closest('.address-group').dataset.addressType;
+                    showPage(editPage);
+                    addressTextarea.value = ''; // 清空上次内容
+                    addressTextarea.dispatchEvent(new Event('input')); // 触发输入事件以更新按钮状态
+                    addressSuggestionsContainer.innerHTML = '';
+                });
+            });
+
+            // 从编辑详细地址页返回主页
+            backToMainBtn.addEventListener('click', () => {
+                showPage(mainPage);
+            });
+
+            // 从主页进入地址簿页 (通用处理，根据点击的按钮确定类型)
+            openAddressBookBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentEditingAddressType = btn.closest('.address-group').dataset.addressType;
+                    renderAddressBook(); // 渲染地址簿内容
+                    showPage(addressBookPage);
+                });
+            });
+
+            // 从主页进入地图定位页 (通用处理，根据点击的按钮确定类型)
+            openMapLocationBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentEditingAddressType = btn.closest('.address-group').dataset.addressType;
+                    previousPageFromMap = mainPage; // 记录是从主页进入地图
+                    showPage(mapLocationPage);
+                });
+            });
+
+            // 从地址簿页返回主页
+            backToMainFromAddressBookBtn.addEventListener('click', () => {
+                showPage(mainPage);
+            });
+
+            // 从地址簿页进入地图定位页 (地址簿内部的定位按钮)
+            addressBookMapLocationBtn.addEventListener('click', () => {
+                // currentEditingAddressType 应该已经从主页进入地址簿时设置
+                previousPageFromMap = addressBookPage; // 记录是从地址簿进入地图
+                showPage(mapLocationPage);
+            });
+
+
+            // 从地图定位页返回上一页 (可能是主页或地址簿页)
+            backToPreviousPageFromMapBtn.addEventListener('click', () => {
+                if (previousPageFromMap) {
+                    showPage(previousPageFromMap);
+                } else {
+                    showPage(mainPage); // 默认返回主页
+                }
+            });
+
+            // 模拟地图定位确认，并回填数据到主页
+            confirmMapLocationBtn.addEventListener('click', () => {
+                // 模拟地图定位回传的地址信息
+                const simulatedMapAddress = {
+                    region: "上海市 浦东新区",
+                    detail: "世纪大道100号 (模拟地图定位)"
+                };
+
+                if (currentEditingAddressType) {
+                    const regionDisplay = document.querySelector(`.address-region-display[data-target-id="${currentEditingAddressType}-region"]`);
+                    const detailDisplay = document.querySelector(`.address-detail-display[data-target-id="${currentEditingAddressType}-detail"]`);
+                    
+                    if (regionDisplay) {
+                        regionDisplay.textContent = simulatedMapAddress.region;
+                        regionDisplay.classList.remove('text-gray-400');
+                        regionDisplay.classList.add('text-gray-800', 'font-bold');
+                    }
+                    if (detailDisplay) {
+                        detailDisplay.textContent = simulatedMapAddress.detail;
+                        detailDisplay.classList.remove('text-gray-400');
+                        detailDisplay.classList.add('text-gray-800', 'font-semibold');
+                    }
+                }
+                showPage(mainPage); // 回填后返回主页
+            });
+
+
+            // =================================================
+            // 编辑详细地址页面逻辑
+            // =================================================
+            addressTextarea.addEventListener('input', () => {
+                const text = addressTextarea.value.trim();
+                updateEditorButtons(text);
+                if (text.length >= 2) {
+                    renderAddressSuggestions(text);
+                } else {
+                    addressSuggestionsContainer.innerHTML = '';
+                }
+            });
+
+            function updateEditorButtons(text) {
+                editorButtonsContainer.innerHTML = ''; // 清空现有按钮
+                if (text.length > 0) {
+                    // 显示 "清空" 和 "确认"
+                    const clearBtn = document.createElement('button');
+                    clearBtn.textContent = '清空';
+                    clearBtn.className = 'py-1 px-3 border border-gray-400 text-gray-600 rounded-full text-sm';
+                    clearBtn.onclick = () => {
+                        addressTextarea.value = '';
+                        addressTextarea.focus();
+                        addressTextarea.dispatchEvent(new Event('input'));
+                    };
+
+                    const confirmBtn = document.createElement('button');
+                    confirmBtn.textContent = '确认';
+                    confirmBtn.className = 'py-1 px-3 bg-blue-500 text-white rounded-full text-sm';
+                    confirmBtn.onclick = confirmAddress;
+
+                    editorButtonsContainer.append(clearBtn, confirmBtn);
+                } else {
+                    // 显示 "取消"
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.textContent = '取消';
+                    cancelBtn.className = 'py-1 px-3 bg-gray-200 text-gray-700 rounded-full text-sm';
+                    cancelBtn.onclick = () => showPage(mainPage); // 点击取消返回主页
+                    editorButtonsContainer.appendChild(cancelBtn);
+                }
+            }
+            
+            function confirmAddress() {
+                const detailText = addressTextarea.value.trim();
+                if (detailText) {
+                    const targetDisplay = document.querySelector(`.address-detail-display[data-target-id="${currentEditingAddressType}-detail"]`);
+                    targetDisplay.textContent = detailText;
+                    targetDisplay.classList.remove('text-gray-400');
+                    targetDisplay.classList.add('text-gray-800', 'font-semibold');
+                }
+                showPage(mainPage); // 点击确认后关闭页面
+            }
+
+            function highlightText(text, query) {
+                if (!query) return text;
+                const regex = new RegExp(query, 'gi'); 
+                return text.replace(regex, match => `<span class="text-blue-500 font-bold">${match}</span>`);
+            }
+
+            function renderAddressSuggestions(query) {
+                const filtered = mockAddressData.filter(addr => 
+                    addr.name.includes(query) || addr.detail.includes(query)
+                );
+                
+                addressSuggestionsContainer.innerHTML = filtered.map(addr => {
+                    const highlightedName = highlightText(addr.name, query);
+                    const highlightedDetail = highlightText(addr.detail, query);
+                    return `
+                        <div class="suggestion-item p-4 border-b border-gray-200 cursor-pointer hover:bg-gray-100">
+                            <p class="font-semibold text-gray-800">${highlightedName}</p>
+                            <p class="text-sm text-gray-500 mt-1">${highlightedDetail}</p>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.querySelectorAll('.suggestion-item').forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        const selectedAddr = filtered[index];
+                        addressTextarea.value = `${selectedAddr.name} ${selectedAddr.detail}`;
+                        addressTextarea.dispatchEvent(new Event('input')); // Trigger input to update buttons
+                        addressSuggestionsContainer.innerHTML = ''; // Clear suggestions
+                    });
+                });
+            }
+
+            // =================================================
+            // 地区选择弹窗逻辑
+            // =================================================
+            addressRegionDisplays.forEach(el => {
+                el.addEventListener('click', () => {
+                    currentEditingRegionTarget = el;
+                    resetAndShowModal();
+                });
+            });
+
+            closeModalBtn.addEventListener('click', () => regionModal.classList.add('hidden'));
+
+            function resetAndShowModal() {
+                selectedRegion = { province: '', city: '', district: '' };
+                updateTabs('province');
+                renderList(Object.keys(mockRegionData), 'province');
+                regionModal.classList.remove('hidden');
+            }
+
+            function renderList(items, level) {
+                regionListsContainer.innerHTML = items.map(item => 
+                    `<div class="region-item p-3 cursor-pointer hover:bg-gray-100" data-level="${level}" data-value="${item}">${item}</div>`
+                ).join('');
+
+                document.querySelectorAll('.region-item').forEach(item => {
+                    item.addEventListener('click', handleRegionSelection);
+                });
+            }
+
+            function handleRegionSelection(event) {
+                const { level, value } = event.target.dataset;
+                selectedRegion[level] = value;
+
+                if (level === 'province') {
+                    const cities = Object.keys(mockRegionData[value]);
+                    updateTabs('city', value);
+                    renderList(cities, 'city');
+                } else if (level === 'city') {
+                    const districts = mockRegionData[selectedRegion.province][value];
+                    updateTabs('district', value);
+                    renderList(districts, 'district');
+                } else if (level === 'district') {
+                    // Final selection
+                    const fullRegion = `${selectedRegion.province} ${selectedRegion.city} ${selectedRegion.district}`;
+                    currentEditingRegionTarget.textContent = fullRegion;
+                    currentEditingRegionTarget.classList.remove('text-gray-400');
+                    currentEditingRegionTarget.classList.add('text-gray-800', 'font-bold');
+                    regionModal.classList.add('hidden'); // 选择区后关闭弹窗
+                }
+                // Important: Do not close the modal here if level is province or city.
+                // The modal should only close when a district is selected or close button is clicked.
+            }
+            
+            function updateTabs(activeLevel, value) {
+                // Reset styles
+                Object.values(tabs).forEach(tab => {
+                    tab.className = 'px-4 py-2 cursor-pointer text-gray-500';
+                    if(activeLevel !== 'province') tab.classList.remove('hidden');
+                });
+
+                if (activeLevel === 'province') {
+                    tabs.province.textContent = '请选择';
+                    tabs.city.classList.add('hidden');
+                    tabs.district.classList.add('hidden');
+                } else if (activeLevel === 'city') {
+                    tabs.province.textContent = selectedRegion.province;
+                    tabs.city.textContent = '请选择';
+                    tabs.district.classList.add('hidden');
+                } else if (activeLevel === 'district') {
+                    tabs.city.textContent = selectedRegion.city;
+                    tabs.district.textContent = '请选择';
+                }
+                
+                tabs[activeLevel].className = 'px-4 py-2 cursor-pointer font-semibold text-blue-600 border-b-2 border-blue-600';
+            }
+
+            // --- 初始化 ---
+            updateEditorButtons(''); // 初始化编辑页按钮
+            showPage(mainPage); // 确保初始显示主页面
+        });
+    </script>
+
+</body>
+</html>
