@@ -96,7 +96,8 @@
         .address-card {
             background-color: #fff;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            /* 增强阴影 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             padding: 16px;
             margin-bottom: 12px;
             cursor: pointer; /* 使整个卡片可点击 */
@@ -126,6 +127,28 @@
             font-size: 0.6rem; /* Approximately 9.6px */
             line-height: 1rem; /* Adjust line-height for better visual */
         }
+
+        /* Time selection button active state */
+        .time-option-btn.active {
+            background-color: #e0f2fe; /* blue-100 */
+            color: #2563eb; /* blue-600 */
+            border-color: #2563eb; /* blue-600 */
+        }
+
+        /* Time selection modal specific styles */
+        .time-modal-content {
+            height: 300px; /* Fixed height for scrollable lists */
+        }
+        .time-list-item {
+            padding: 10px 0;
+            text-align: center;
+            cursor: pointer;
+        }
+        .time-list-item.selected {
+            background-color: #e0f2fe; /* blue-100 */
+            color: #2563eb; /* blue-600 */
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -146,9 +169,9 @@
             </header>
 
             <!-- 主要内容区域 -->
-            <main class="flex-1 p-4 overflow-y-auto">
+            <main class="flex-1 p-4 overflow-y-auto bg-gray-50"> <!-- Added bg-gray-50 for subtle background -->
                 <!-- 地址信息卡片 -->
-                <div class="bg-white rounded-xl shadow-sm p-5 mb-4">
+                <div class="bg-white rounded-xl shadow-md p-5 mb-4"> <!-- Adjusted shadow to md -->
                     <!-- 装货地址 -->
                     <div class="address-group" data-address-type="loading">
                         <div class="flex items-start">
@@ -157,18 +180,20 @@
                             </div>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <div class="address-region-display text-gray-400 cursor-pointer py-1" data-target-id="loading-region">省市区</div>
+                                    <!-- 调整提示文案 -->
+                                    <div class="address-region-display text-gray-400 cursor-pointer py-1" data-target-id="loading-region">请选择省份/城市/区县</div>
                                     <!-- 地址簿按钮 - 缩小0.7倍 -->
                                     <button class="open-address-book-btn text-blue-500 text-xs font-medium py-0.5 px-2 rounded-full border border-blue-500">地址簿</button>
                                 </div>
                                 <div class="border-t border-gray-100 my-2"></div>
                                 <!-- 详细地址和定位按钮在同一行 -->
                                 <div class="flex items-center justify-between">
-                                    <div class="address-detail-display text-gray-400 cursor-pointer py-1" data-target-id="loading-detail">详细地址（例如**街**号）</div>
+                                    <!-- 详细地址显示，增加 flex-grow 使其占据更多空间 -->
+                                    <div class="address-detail-display flex-grow text-gray-400 cursor-pointer py-1" data-target-id="loading-detail">详细地址（例如**街**号）</div>
                                     <!-- 定位按钮 - 缩小0.7倍，无边框 -->
                                     <button class="open-map-location-btn flex flex-col items-center text-blue-500 text-xxs font-medium py-0 px-1 rounded-full">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"></path></svg>
-                                        <span>定位</span>
+                                        <span class="whitespace-nowrap">定位</span>
                                     </button>
                                 </div>
                             </div>
@@ -184,18 +209,20 @@
                             </div>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <div class="address-region-display text-gray-400 cursor-pointer py-1" data-target-id="unloading-region">省市区</div>
+                                    <!-- 调整提示文案 -->
+                                    <div class="address-region-display text-gray-400 cursor-pointer py-1" data-target-id="unloading-region">请选择省份/城市/区县</div>
                                     <!-- 地址簿按钮 - 缩小0.7倍 -->
                                     <button class="open-address-book-btn text-blue-500 text-xs font-medium py-0.5 px-2 rounded-full border border-blue-500">地址簿</button>
                                 </div>
                                 <div class="border-t border-gray-100 my-2"></div>
                                 <!-- 详细地址和定位按钮在同一行 -->
                                 <div class="flex items-center justify-between">
-                                    <div class="address-detail-display text-gray-400 cursor-pointer py-1" data-target-id="unloading-detail">详细地址（例如**街**号）</div>
+                                    <!-- 详细地址显示，增加 flex-grow 使其占据更多空间 -->
+                                    <div class="address-detail-display flex-grow text-gray-400 cursor-pointer py-1" data-target-id="unloading-detail">详细地址（例如**街**号）</div>
                                     <!-- 定位按钮 - 缩小0.7倍，无边框 -->
                                     <button class="open-map-location-btn flex flex-col items-center text-blue-500 text-xxs font-medium py-0 px-1 rounded-full">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path><path d="M12 22s-8-4-8-10a8 8 0 0 1 16 0c0 6-8 10-8 10z"></path></svg>
-                                        <span>定位</span>
+                                        <span class="whitespace-nowrap">定位</span>
                                     </button>
                                 </div>
                             </div>
@@ -204,20 +231,26 @@
                 </div>
 
                 <!-- 时间选择卡片 -->
-                <div class="bg-white rounded-xl shadow-sm">
-                    <div class="flex items-center justify-between p-5">
-                        <p class="font-bold text-gray-800 text-base">装货时间</p>
-                        <div class="flex items-center space-x-3">
-                            <button class="bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full">选择日期</button>
-                            <button class="bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full">选择时间</button>
+                <div class="bg-white rounded-xl shadow-md p-5 mb-4"> <!-- Adjusted shadow to md -->
+                    <div class="flex flex-col">
+                        <p class="font-bold text-gray-800 text-base mb-2">期望装货时间</p>
+                        <div class="flex justify-end items-center space-x-3">
+                            <button class="select-time-btn time-option-btn bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full border border-gray-200" data-time-type="loading">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar inline-block mr-1"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span>选择时间</span>
+                            </button>
+                            <button class="anytime-btn time-option-btn bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full border border-gray-200 active" data-time-type="loading">随到随装</button>
                         </div>
                     </div>
-                    <div class="border-t border-gray-100"></div>
-                    <div class="flex items-center justify-between p-5">
-                        <p class="font-bold text-gray-800 text-base">卸货时间</p>
-                        <div class="flex items-center space-x-3">
-                            <button class="bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full">选择日期</button>
-                            <button class="bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full">选择时间</button>
+                    <div class="border-t border-gray-100 my-5"></div>
+                    <div class="flex flex-col">
+                        <p class="font-bold text-gray-800 text-base mb-2">期望卸货时间</p>
+                        <div class="flex justify-end items-center space-x-3">
+                            <button class="select-time-btn time-option-btn bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full border border-gray-200" data-time-type="unloading">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar inline-block mr-1"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                <span>选择时间</span>
+                            </button>
+                            <button class="anytime-btn time-option-btn bg-gray-100 text-gray-700 text-sm font-medium py-2.5 px-5 rounded-full border border-gray-200 active" data-time-type="unloading">随到随卸</button>
                         </div>
                     </div>
                 </div>
@@ -226,7 +259,7 @@
             <!-- 底部按钮 -->
             <footer class="bg-white p-4 flex items-center space-x-4 border-t border-gray-200 mt-auto flex-shrink-0">
                 <button class="flex-1 bg-orange-100 text-orange-500 font-bold py-3.5 rounded-full">取消</button>
-                <button class="flex-1 bg-gray-200 text-gray-400 font-bold py-3.5 rounded-full">下一步</button>
+                <button class="flex-1 bg-blue-500 text-white font-bold py-3.5 rounded-full">下一步</button> <!-- Changed to blue primary button -->
             </footer>
         </div>
 
@@ -323,8 +356,32 @@
                 <div id="city-tab" class="px-4 py-2 cursor-pointer text-gray-500 hidden"></div>
                 <div id="district-tab" class="px-4 py-2 cursor-pointer text-gray-500 hidden"></div>
             </div>
-            <div id="region-lists" class="h-64 overflow-y-auto">
+            <!-- 调整高度以显示更多行 -->
+            <div id="region-lists" class="h-96 overflow-y-auto">
                 <!-- 地区列表将由JS动态插入 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- Modal: 时间选择弹窗 -->
+    <!-- =================================================================== -->
+    <div id="time-selection-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end hidden" style="z-index: 100;">
+        <div class="bg-white w-full max-w-[375px] rounded-t-2xl">
+            <div class="p-4 flex justify-between items-center border-b">
+                <h2 id="time-modal-title" class="font-bold text-lg text-left flex-grow">期望装货时间</h2>
+                <button id="close-time-modal-btn" class="text-gray-500 text-2xl">&times;</button>
+            </div>
+            <div class="flex time-modal-content">
+                <div id="month-list" class="flex-1 overflow-y-auto border-r border-gray-200">
+                    <!-- Months will be dynamically inserted here -->
+                </div>
+                <div id="day-list" class="flex-1 overflow-y-auto">
+                    <!-- Days will be dynamically inserted here -->
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200">
+                <button id="confirm-time-selection-btn" class="w-full bg-blue-500 text-white font-bold py-3 rounded-full">确定</button>
             </div>
         </div>
     </div>
@@ -343,7 +400,6 @@
             const openAddressBookBtns = document.querySelectorAll('.open-address-book-btn');
             const openMapLocationBtns = document.querySelectorAll('.open-map-location-btn');
 
-
             // --- 编辑详细地址页元素 ---
             const addressTextarea = document.getElementById('address-textarea');
             const editorButtonsContainer = document.getElementById('editor-buttons');
@@ -351,7 +407,6 @@
 
             // --- 地址簿页元素 ---
             const addressBookList = document.getElementById('address-book-list');
-            // const addressBookMapLocationBtn = document.getElementById('address-book-map-location-btn'); // 地址簿页面内部的定位按钮 - 已删除
 
             // --- 地图定位页元素 ---
             const confirmMapLocationBtn = document.getElementById('confirm-map-location-btn');
@@ -367,19 +422,33 @@
                 district: document.getElementById('district-tab'),
             };
 
+            // --- 时间选择相关元素 ---
+            const selectTimeBtns = document.querySelectorAll('.select-time-btn');
+            const anytimeBtns = document.querySelectorAll('.anytime-btn');
+            const timeSelectionModal = document.getElementById('time-selection-modal');
+            const closeTimeModalBtn = document.getElementById('close-time-modal-btn');
+            const timeModalTitle = document.getElementById('time-modal-title');
+            const monthList = document.getElementById('month-list');
+            const dayList = document.getElementById('day-list');
+            const confirmTimeSelectionBtn = document.getElementById('confirm-time-selection-btn');
+
+
             // --- 导航按钮 ---
-            // const backToPreviousAppBtn = document.getElementById('back-to-previous-app-btn'); // 主页左上角返回按钮 - 已改为inline onclick
             const backToMainBtn = document.getElementById('back-to-main-btn'); // from edit-page
             const backToMainFromAddressBookBtn = document.getElementById('back-to-main-from-address-book-btn'); // from address-book-page
             const backToPreviousPageFromMapBtn = document.getElementById('back-to-previous-page-from-map-btn'); // from map-location-page
 
 
             // --- 状态变量 ---
-            let currentEditingAddressType = null; // 'loading' or 'unloading'
+            let currentEditingAddressType = null; // 'loading' or 'unloading' (for address details)
+            let currentEditingTimeType = null; // 'loading' or 'unloading' (for time selection)
             let currentEditingRegionTarget = null;
             let selectedRegion = { province: '', city: '', district: '' };
             let currentPage = mainPage; // Keep track of the current active page
             let previousPageFromMap = null; // To track which page to return to from map
+
+            let selectedMonth = null;
+            let selectedDay = null;
 
 
             // --- 模拟数据 ---
@@ -425,8 +494,6 @@
                 currentPage = targetPage;
                 console.log(`当前页面已更新为：${currentPage.id}`); // Debug log
             }
-
-            // 主页左上角返回按钮：现在直接在HTML中通过onclick="window.history.back()"实现，无需JS监听
 
             // 从主页进入编辑详细地址页
             addressDetailDisplays.forEach(el => {
@@ -730,6 +797,193 @@
                 }
                 
                 tabs[activeLevel].className = 'px-4 py-2 cursor-pointer font-semibold text-blue-600 border-b-2 border-blue-600';
+            }
+
+            // =================================================
+            // 时间选择弹窗逻辑
+            // =================================================
+
+            // Initialize default selected state for time buttons
+            anytimeBtns.forEach(btn => {
+                btn.classList.add('active'); // Default selected
+                // Find the corresponding select-time-btn and reset its text
+                const selectBtn = btn.previousElementSibling;
+                if (selectBtn && selectBtn.classList.contains('select-time-btn')) {
+                    selectBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar inline-block mr-1"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span>选择时间</span>`;
+                    selectBtn.classList.remove('active');
+                }
+            });
+
+
+            selectTimeBtns.forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    currentEditingTimeType = event.currentTarget.dataset.timeType;
+                    const titleText = currentEditingTimeType === 'loading' ? '期望装货时间' : '期望卸货时间';
+                    timeModalTitle.textContent = titleText;
+                    timeSelectionModal.classList.remove('hidden');
+                    initializeTimePicker();
+                });
+            });
+
+            anytimeBtns.forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    const type = event.currentTarget.dataset.timeType;
+                    // Deactivate all time options for this type
+                    document.querySelectorAll(`.time-option-btn[data-time-type="${type}"]`).forEach(b => {
+                        b.classList.remove('active');
+                        b.classList.remove('border-blue-600');
+                        b.classList.remove('bg-blue-100');
+                        b.classList.remove('text-blue-600');
+                        b.classList.add('bg-gray-100');
+                        b.classList.add('text-gray-700');
+                        b.classList.add('border-gray-200'); /* Added border-gray-200 */
+                    });
+                    // Activate clicked button
+                    event.currentTarget.classList.add('active');
+                    event.currentTarget.classList.remove('bg-gray-100');
+                    event.currentTarget.classList.remove('text-gray-700');
+                    event.currentTarget.classList.remove('border-gray-200'); /* Removed border-gray-200 */
+                    event.currentTarget.classList.add('bg-blue-100');
+                    event.currentTarget.classList.add('text-blue-600');
+                    event.currentTarget.classList.add('border-blue-600');
+
+                    // Reset corresponding select-time-btn text
+                    const selectBtn = document.querySelector(`.select-time-btn[data-time-type="${type}"]`);
+                    if (selectBtn) {
+                        selectBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar inline-block mr-1"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span>选择时间</span>`;
+                        selectBtn.classList.remove('active');
+                        selectBtn.classList.remove('border-blue-600');
+                        selectBtn.classList.remove('bg-blue-100');
+                        selectBtn.classList.remove('text-blue-600');
+                        selectBtn.classList.add('bg-gray-100');
+                        selectBtn.classList.add('text-gray-700');
+                        selectBtn.classList.add('border-gray-200'); /* Added border-gray-200 */
+                    }
+                });
+            });
+
+            closeTimeModalBtn.addEventListener('click', () => {
+                timeSelectionModal.classList.add('hidden');
+            });
+
+            confirmTimeSelectionBtn.addEventListener('click', () => {
+                if (selectedMonth !== null && selectedDay !== null) {
+                    const date = new Date();
+                    date.setMonth(selectedMonth);
+                    date.setDate(selectedDay);
+
+                    const monthText = date.getMonth() + 1; // getMonth is 0-indexed
+                    const dayText = date.getDate();
+                    const formattedDate = `${monthText}月${dayText}日前`;
+
+                    const targetBtn = document.querySelector(`.select-time-btn[data-time-type="${currentEditingTimeType}"]`);
+                    if (targetBtn) {
+                        targetBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar inline-block mr-1"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span>${formattedDate}</span>`;
+                        
+                        // Set select-time-btn as active, deactivate anytime-btn
+                        targetBtn.classList.add('active');
+                        targetBtn.classList.remove('bg-gray-100');
+                        targetBtn.classList.remove('text-gray-700');
+                        targetBtn.classList.remove('border-gray-200'); /* Removed border-gray-200 */
+                        targetBtn.classList.add('bg-blue-100');
+                        targetBtn.classList.add('text-blue-600');
+                        targetBtn.classList.add('border-blue-600');
+
+                        const anytimeBtn = document.querySelector(`.anytime-btn[data-time-type="${currentEditingTimeType}"]`);
+                        if (anytimeBtn) {
+                            anytimeBtn.classList.remove('active');
+                            anytimeBtn.classList.remove('border-blue-600');
+                            anytimeBtn.classList.remove('bg-blue-100');
+                            anytimeBtn.classList.remove('text-blue-600');
+                            anytimeBtn.classList.add('bg-gray-100');
+                            anytimeBtn.classList.add('text-gray-700');
+                            anytimeBtn.classList.add('border-gray-200'); /* Added border-gray-200 */
+                        }
+                    }
+                }
+                timeSelectionModal.classList.add('hidden');
+            });
+
+            function initializeTimePicker() {
+                const today = new Date();
+                selectedMonth = today.getMonth(); // 0-indexed
+                selectedDay = today.getDate(); // 1-indexed
+
+                renderMonths(today.getFullYear(), selectedMonth);
+                renderDays(today.getFullYear(), selectedMonth, selectedDay);
+            }
+
+            function renderMonths(year, currentMonthIndex) {
+                monthList.innerHTML = '';
+                const today = new Date();
+                const startMonth = today.getMonth(); // Current month (0-indexed)
+                const startYear = today.getFullYear();
+
+                for (let i = 0; i < 12; i++) { // Render 12 months
+                    const monthDate = new Date(startYear, startMonth + i, 1);
+                    const monthNum = monthDate.getMonth();
+                    const yearNum = monthDate.getFullYear();
+                    
+                    const monthItem = document.createElement('div');
+                    monthItem.classList.add('time-list-item', 'py-2', 'cursor-pointer', 'hover:bg-gray-100');
+                    monthItem.textContent = `${yearNum}年${monthNum + 1}月`;
+                    monthItem.dataset.monthIndex = monthNum;
+                    monthItem.dataset.year = yearNum;
+
+                    if (monthNum === currentMonthIndex && yearNum === year) {
+                        monthItem.classList.add('selected');
+                    }
+
+                    monthItem.addEventListener('click', () => {
+                        selectedMonth = parseInt(monthItem.dataset.monthIndex);
+                        renderDays(parseInt(monthItem.dataset.year), selectedMonth, 1); // Reset day to 1st of new month
+                        
+                        // Update selected class for months
+                        monthList.querySelectorAll('.time-list-item').forEach(item => item.classList.remove('selected'));
+                        monthItem.classList.add('selected');
+                    });
+                    monthList.appendChild(monthItem);
+                }
+                // Scroll to selected month
+                const selectedMonthElement = monthList.querySelector('.time-list-item.selected');
+                if (selectedMonthElement) {
+                    selectedMonthElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
+            function renderDays(year, monthIndex, currentDay) {
+                dayList.innerHTML = '';
+                const daysInMonth = new Date(year, monthIndex + 1, 0).getDate(); // Get last day of month
+                const today = new Date();
+                const currentYear = today.getFullYear();
+                const currentMonth = today.getMonth();
+                const currentDayOfMonth = today.getDate();
+
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayItem = document.createElement('div');
+                    dayItem.classList.add('time-list-item', 'py-2', 'cursor-pointer', 'hover:bg-gray-100');
+                    dayItem.textContent = `${i}日`;
+                    dayItem.dataset.day = i;
+
+                    // Highlight current day or selected day
+                    if (year === currentYear && monthIndex === currentMonth && i === currentDayOfMonth) {
+                        dayItem.classList.add('selected'); // Highlight today's date
+                    } else if (i === currentDay && monthIndex === selectedMonth) {
+                         dayItem.classList.add('selected'); // Highlight selected day
+                    }
+
+                    dayItem.addEventListener('click', () => {
+                        selectedDay = parseInt(dayItem.dataset.day);
+                        dayList.querySelectorAll('.time-list-item').forEach(item => item.classList.remove('selected'));
+                        dayItem.classList.add('selected');
+                    });
+                    dayList.appendChild(dayItem);
+                }
+                // Scroll to selected day
+                const selectedDayElement = dayList.querySelector('.time-list-item.selected');
+                if (selectedDayElement) {
+                    selectedDayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
 
             // --- 初始化 ---
