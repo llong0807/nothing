@@ -161,7 +161,7 @@
         <div id="main-page" class="page active">
             <!-- 头部 -->
             <header class="header">
-                <button class="back-arrow p-2" onclick="window.history.back()">
+                <button class="back-arrow p-2" on="window.history.back()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </button>
                 <h1 class="header-title">编辑地址</h1>
@@ -543,7 +543,7 @@
 
             // 从主页进入编辑详细地址页
             addressDetailDisplays.forEach(el => {
-                el.addEventListener('click', () => {
+                el.addEventListener('', () => {
                     currentEditingAddressType = el.closest('.address-group').dataset.addressType;
                     showPage(editPage);
                     addressTextarea.value = ''; // 清空上次内容
@@ -553,13 +553,13 @@
             });
 
             // 从编辑详细地址页返回主页
-            backToMainBtn.addEventListener('click', () => {
+            backToMainBtn.addEventListener('', () => {
                 showPage(mainPage);
             });
 
             // 从主页进入地址簿页 (通用处理，根据点击的按钮确定类型)
             openAddressBookBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('', () => {
                     console.log('点击了地址簿按钮'); // Debug log
                     currentEditingAddressType = btn.closest('.address-group').dataset.addressType;
                     renderAddressBook(); // 渲染地址簿内容
@@ -569,7 +569,7 @@
 
             // 从主页进入地图定位页 (通用处理，根据点击的按钮确定类型)
             openMapLocationBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('', () => {
                     console.log('点击了主页定位按钮'); // Debug log
                     currentEditingAddressType = btn.closest('.address-group').dataset.addressType;
                     previousPageFromMap = mainPage; // 记录是从主页进入地图
@@ -578,12 +578,12 @@
             });
 
             // 从地址簿页返回主页
-            backToMainFromAddressBookBtn.addEventListener('click', () => {
+            backToMainFromAddressBookBtn.addEventListener('', () => {
                 showPage(mainPage);
             });
 
             // 从地图定位页返回上一页 (可能是主页或地址簿页)
-            backToPreviousPageFromMapBtn.addEventListener('click', () => {
+            backToPreviousPageFromMapBtn.addEventListener('', () => {
                 console.log('点击了地图页返回按钮'); // Debug log
                 if (previousPageFromMap) {
                     showPage(previousPageFromMap);
@@ -593,7 +593,7 @@
             });
 
             // 模拟地图定位确认，并回填数据到主页
-            confirmMapLocationBtn.addEventListener('click', () => {
+            confirmMapLocationBtn.addEventListener('', () => {
                 console.log('点击了地图页确认定位按钮'); // Debug log
                 // 模拟地图定位回传的地址信息
                 const simulatedMapAddress = {
@@ -640,7 +640,7 @@
                     const clearBtn = document.createElement('button');
                     clearBtn.textContent = '清空';
                     clearBtn.className = 'py-1 px-3 border border-gray-400 text-gray-600 rounded-full text-sm';
-                    clearBtn.onclick = () => {
+                    clearBtn.on = () => {
                         addressTextarea.value = '';
                         addressTextarea.focus();
                         addressTextarea.dispatchEvent(new Event('input'));
@@ -649,7 +649,7 @@
                     const confirmBtn = document.createElement('button');
                     confirmBtn.textContent = '确认';
                     confirmBtn.className = 'py-1 px-3 bg-blue-500 text-white rounded-full text-sm';
-                    confirmBtn.onclick = confirmAddress;
+                    confirmBtn.on = confirmAddress;
 
                     editorButtonsContainer.append(clearBtn, confirmBtn);
                 } else {
@@ -657,7 +657,7 @@
                     const cancelBtn = document.createElement('button');
                     cancelBtn.textContent = '取消';
                     cancelBtn.className = 'py-1 px-3 bg-gray-200 text-gray-700 rounded-full text-sm';
-                    cancelBtn.onclick = () => showPage(mainPage); // 点击取消返回主页
+                    cancelBtn.on = () => showPage(mainPage); // 点击取消返回主页
                     editorButtonsContainer.appendChild(cancelBtn);
                 }
             }
@@ -696,7 +696,7 @@
                 }).join('');
                 
                 document.querySelectorAll('.suggestion-item').forEach((item, index) => {
-                    item.addEventListener('click', () => {
+                    item.addEventListener('', () => {
                         const selectedAddr = filtered[index];
                         addressTextarea.value = `${selectedAddr.name} ${selectedAddr.detail}`;
                         addressTextarea.dispatchEvent(new Event('input')); // Trigger input to update buttons
@@ -729,7 +729,7 @@
 
                 // 为整个地址卡片添加点击事件监听器（选择功能）
                 document.querySelectorAll('.address-card').forEach(card => {
-                    card.addEventListener('click', (event) => {
+                    card.addEventListener('', (event) => {
                         // 确保点击删除按钮时不会触发选择功能
                         if (event.target.classList.contains('delete-btn')) {
                             return;
@@ -757,7 +757,7 @@
 
                 // 添加删除按钮事件监听器
                 document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', (event) => {
+                    button.addEventListener('', (event) => {
                         const idToDelete = event.target.dataset.id;
                         deleteAddress(idToDelete);
                     });
@@ -773,13 +773,13 @@
             // 地区选择弹窗逻辑
             // =================================================
             addressRegionDisplays.forEach(el => {
-                el.addEventListener('click', () => {
+                el.addEventListener('', () => {
                     currentEditingRegionTarget = el;
                     resetAndShowModal();
                 });
             });
 
-            closeModalBtn.addEventListener('click', () => regionModal.classList.add('hidden'));
+            closeModalBtn.addEventListener('', () => regionModal.classList.add('hidden'));
 
             function resetAndShowModal() {
                 selectedRegion = { province: '', city: '', district: '' };
@@ -794,7 +794,7 @@
                 ).join('');
 
                 document.querySelectorAll('.region-item').forEach(item => {
-                    item.addEventListener('click', handleRegionSelection);
+                    item.addEventListener('', handleRegionSelection);
                 });
             }
 
@@ -819,7 +819,7 @@
                     regionModal.classList.add('hidden'); // 选择区后关闭弹窗
                 }
                 // Important: Do not close the modal here if level is province or city.
-                // The modal should only close when a district is selected or close button is clicked.
+                // The modal should only close when a district is selected or close button is ed.
             }
             
             function updateTabs(activeLevel, value) {
@@ -862,7 +862,7 @@
 
 
             selectTimeBtns.forEach(btn => {
-                btn.addEventListener('click', (event) => {
+                btn.addEventListener('', (event) => {
                     currentEditingTimeType = event.currentTarget.dataset.timeType;
                     const titleText = currentEditingTimeType === 'loading' ? '期望装货时间' : '期望卸货时间';
                     timeModalTitle.textContent = titleText;
@@ -872,7 +872,7 @@
             });
 
             anytimeBtns.forEach(btn => {
-                btn.addEventListener('click', (event) => {
+                btn.addEventListener('', (event) => {
                     const type = event.currentTarget.dataset.timeType;
                     // Deactivate all time options for this type
                     document.querySelectorAll(`.time-option-btn[data-time-type="${type}"]`).forEach(b => {
@@ -884,7 +884,7 @@
                         b.classList.add('text-gray-700');
                         b.classList.add('border-gray-300');
                     });
-                    // Activate clicked button
+                    // Activate ed button
                     event.currentTarget.classList.add('active');
                     event.currentTarget.classList.remove('bg-gray-100');
                     event.currentTarget.classList.remove('text-gray-700');
@@ -908,11 +908,11 @@
                 });
             });
 
-            closeTimeModalBtn.addEventListener('click', () => {
+            closeTimeModalBtn.addEventListener('', () => {
                 timeSelectionModal.classList.add('hidden');
             });
 
-            confirmTimeSelectionBtn.addEventListener('click', () => {
+            confirmTimeSelectionBtn.addEventListener('', () => {
                 if (selectedMonth !== null && selectedDay !== null) {
                     const date = new Date();
                     date.setMonth(selectedMonth);
@@ -980,7 +980,7 @@
                         monthItem.classList.add('selected');
                     }
 
-                    monthItem.addEventListener('click', () => {
+                    monthItem.addEventListener('', () => {
                         selectedMonth = parseInt(monthItem.dataset.monthIndex);
                         renderDays(parseInt(monthItem.dataset.year), selectedMonth, 1); // Reset day to 1st of new month
                         
@@ -1018,7 +1018,7 @@
                          dayItem.classList.add('selected'); // Highlight selected day
                     }
 
-                    dayItem.addEventListener('click', () => {
+                    dayItem.addEventListener('', () => {
                         selectedDay = parseInt(dayItem.dataset.day);
                         dayList.querySelectorAll('.time-list-item').forEach(item => item.classList.remove('selected'));
                         dayItem.classList.add('selected');
@@ -1135,12 +1135,12 @@
             // =================================================
 
             // “暂时离开”按钮点击事件
-            temporaryLeaveBtn.addEventListener('click', () => {
+            temporaryLeaveBtn.addEventListener('', () => {
                 temporaryLeaveConfirmDialog.classList.remove('hidden'); // 显示确认对话框
             });
 
             // “暂时离开”开发人员提示对话框 - 确定按钮
-            confirmDevLeaveBtn.addEventListener('click', () => {
+            confirmDevLeaveBtn.addEventListener('', () => {
                 savePageState(); // 保存当前页面数据
                 temporaryLeaveConfirmDialog.classList.add('hidden'); // 隐藏确认对话框
                 window.history.back(); // 调用关闭页面的代码
@@ -1150,7 +1150,9 @@
             // “下一步”按钮点击事件
             nextStepBtn.addEventListener('click', () => {
                 console.log('“下一步”按钮被点击了！');
-                nextStepDialog.classList.remove('hidden'); // 显示自定义对话框
+                nextStepDialog.classList.remove('hidden'); 
+            // 执行页面跳转
+                window.location.href = 'https://llong0807.github.io/nothing/publish_2.html';
             });
 
             // 关闭“下一步”对话框按钮
