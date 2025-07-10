@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>手机物流App原型</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Base styles for the app screen wrapper */
         body {
@@ -245,7 +249,7 @@
             background-color: #fff3e0; /* Light orange */
             color: #ff9800; /* Orange */
             border: 2px solid #ff9800;
-        }
+            }
 
         /* Shipper Home Page */
         #shipper-home-page .header {
@@ -471,13 +475,6 @@
             color: #888;
             flex-shrink: 0; /* Prevent shrinking */
         }
-        #shipper-cargo-manage-page .cargo-item .cargo-details,
-        #shipper-cargo-manage-page .cargo-item .load-time {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 6px;
-            line-height: 1.5;
-        }
         #shipper-cargo-manage-page .cargo-item .dynamic-alert {
             margin-top: 12px;
             padding: 8px 12px;
@@ -538,114 +535,207 @@
         }
 
 
-        /* Shipper My Page */
-        #shipper-my-page .header {
-            color: #2196f3; /* Blue header */
-        }
-        #shipper-my-page .profile-header {
-            background: linear-gradient(135deg, #2196f3, #64b5f6); /* Blue gradient */
-            color: #fff;
-            padding: 35px 20px; /* More padding */
-            text-align: center;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        /* Shipper My Page - New Styles for the embedded content */
+        /* 头部背景已移除 */
+        #shipper-my-page .profile-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 12px 20px; /* 调整内边距，垂直方向更紧凑 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            margin-top: 25px; /* 距离 app-screen 顶部 25px */
+            margin-left: 20px;
+            margin-right: 20px;
+            flex-shrink: 0; /* 不收缩 */
+            z-index: 10; /* 确保在其他元素之上 */
         }
         #shipper-my-page .avatar {
-            width: 90px; /* Larger avatar */
-            height: 90px;
-            background-color: #fff;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            margin: 0 auto 15px; /* More space */
+            background-color: #e0e0e0;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 50px; /* Larger icon */
-            color: #2196f3; /* Blue icon color */
-            border: 4px solid #fff; /* Thicker border */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            align-items: center;
+            font-size: 24px;
+            color: #666;
+            border: 3px solid #fff; /* 头像白色边框 */
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.5); /* 头像外层光晕 */
+            flex-shrink: 0;
+            margin-right: 16px;
         }
-        #shipper-my-page .nickname {
-            font-size: 24px; /* Larger font */
-            font-weight: bold;
-            margin-bottom: 8px; /* More space */
+        #shipper-my-page .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 10px;
         }
-        #shipper-my-page .level-online {
-            font-size: 15px;
-            opacity: 0.9;
+        #shipper-my-page .progress-bar {
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(to right, #6a82fb, #fc5c7d);
+            border-radius: 10px;
         }
-        /* Style for the new switch identity button */
-        #shipper-my-page .switch-identity-btn {
-            position: absolute;
-            top: 15px; /* Adjust as needed */
-            right: 15px; /* Adjust as needed */
-            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+        #shipper-my-page .content-area { /* 新增内容区域，用于包裹所有可滚动卡片 */
+            flex-grow: 1; /* 允许这个区域填充剩余空间 */
+            overflow-y: auto; /* 允许垂直滚动 */
+            padding: 0 20px 20px 20px; /* 整体卡片区域的左右底部内边距，顶部无内边距 */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        #shipper-my-page .section-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 20px; /* 调整垂直内边距，使其内容紧凑且能填满空间 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0; /* 不允许卡片在 flex 容器中收缩 */
+        }
+        /* 调整第一个 section-card 的顶部外边距，以控制与 profile-card 的间隙 */
+        #shipper-my-page .content-area .section-card:first-child {
+            margin-top: 20px; /* 个人信息卡片与会员权益卡片之间的间隙 */
+        }
+        #shipper-my-page .section-card:not(:last-child) {
+            margin-bottom: 16px; /* 卡片之间的间隙，稍微增加以增加呼吸感 */
+        }
+        /* 为帮助与反馈卡片添加特定样式 */
+        #shipper-my-page .help-feedback-card {
+            margin-top: 50px; /* 距离上方卡片 50px 的高度 */
+        }
+        #shipper-my-page .login-management-link {
+            color: #888; /* 红灰色 */
+            font-size: 0.75rem; /* text-xs 小字号 */
+            text-align: center;
+            margin-top: 10px; /* 距离上方帮助与反馈卡片的间距 */
+            margin-bottom: 10px; /* 距离页面底部的间距 */
+            display: block; /* 确保占据整行 */
+            text-decoration: none; /* 移除下划线 */
+        }
+        #shipper-my-page .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #6a82fb;
+        }
+        #shipper-my-page .sign-in-day {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+        }
+        #shipper-my-page .sign-in-day.active {
+            background: linear-gradient(to right, #6a82fb, #fc5c7d);
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 15px; /* Rounded corners */
-            padding: 8px 12px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        #shipper-my-page .switch-identity-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
         }
 
-        #shipper-my-page .section-title {
-            font-size: 17px;
+        /* 需求说明按钮的样式 (现在是绝对定位在 app-screen 内部) */
+        #shipper-my-page .demand-button {
+            position: absolute; /* 相对于 app-screen 定位 */
+            top: 5px; /* 距离 app-screen 顶部 */
+            left: 5px; /* 距离 app-screen 左侧 */
+            background-color: #EF4444; /* Tailwind red-500 */
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem; /* text-sm */
             font-weight: bold;
-            color: #424242;
-            padding: 18px 20px 12px; /* More padding */
-            border-bottom: 1px solid #eee;
-            background-color: #fcfcfc;
-        }
-        #shipper-my-page .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 18px 20px;
-            border-bottom: 1px solid #f5f5f5; /* Lighter border */
-            color: #555;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        #shipper-my-page .menu-item:last-of-type {
-            border-bottom: none;
-        }
-        #shipper-my-page .menu-item:hover {
-            background-color: #f5f5f5;
-        }
-        #shipper-my-page .menu-item .icon {
-            margin-right: 18px;
-            font-size: 22px;
-            color: #2196f3; /* Blue icon color */
-        }
-        #shipper-my-page .menu-item .arrow {
-            margin-left: auto;
-            color: #bbb;
-            font-size: 18px;
-        }
-        #shipper-my-page .settings-button {
-            width: 90%;
-            padding: 18px;
-            background-color: #e0e0e0;
-            color: #333;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
             text-align: center;
             cursor: pointer;
-            margin: 30px auto 20px;
-            display: block;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: background-color 0.2s ease, transform 0.2s ease;
+            width: fit-content; /* 根据内容调整宽度 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s ease;
+            z-index: 100; /* 确保在 profile-card 上方 */
         }
-        #shipper-my-page .settings-button:hover {
-            background-color: #bdbdbd;
-            transform: translateY(-1px);
+        #shipper-my-page .demand-button:hover {
+            background-color: #DC2626; /* 更深的红色 */
         }
+
+        /* 会员按钮的自定义样式 */
+        #shipper-my-page .member-button {
+            background: linear-gradient(to right, #FF6B6B, #4ECDC4); /* 明快渐变色 */
+            text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); /* 文字效果 */
+            transition: all 0.3s ease; /* 过渡效果 */
+        }
+        #shipper-my-page .member-button:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); /* 悬停阴影 */
+            transform: translateY(-2px); /* 悬停上浮效果 */
+        }
+
+        /* 模态对话框样式 */
+        #shipper-my-page .modal-overlay {
+            position: absolute; /* 相对于父级 .page 定位 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* 默认隐藏 */
+            justify-content: center;
+            align-items: center;
+            z-index: 2000; /* 确保在所有内容之上 */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #shipper-my-page .modal-overlay.show {
+            display: flex; /* 显示时使用 flex */
+            opacity: 1;
+        }
+        #shipper-my-page .modal-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 320px; /* 适应手机屏幕宽度 */
+            width: 90%;
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        #shipper-my-page .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        #shipper-my-page .modal-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            padding: 5px;
+        }
+        #shipper-my-page .modal-content h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        #shipper-my-page .modal-content p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        #shipper-my-page .modal-content p:last-child {
+            margin-bottom: 0;
+        }
+
 
         /* Driver Find Cargo Page */
         #driver-find-cargo-page .header {
@@ -1390,14 +1480,11 @@
                     </div>
                 </div>
 
-              
-                 <!-- Optimized Free Shipping Button -->
+                <!-- Optimized Free Shipping Button -->
                 <button class="free-shipping-button" onclick="window.location.href = 'https://llong0807.github.io/nothing/publish_1.html'">
                     <span class="main-text"><span class="icon">✨</span> 免费发货</span>
                     <span class="slogan">多快好省，如此简单！</span>
                 </button>
-
-              
             </div>
             <div class="footer">
                 <div class="tab-button active" onclick="showPage('shipper-home-page')">
@@ -1544,42 +1631,145 @@
         <!-- 5. Shipper's "My" Page -->
         <div id="shipper-my-page" class="page">
             <div class="header">我的 (货方)</div>
-            <div class="profile-header">
-                <div class="avatar">👤</div>
-                <div class="nickname">货主小王</div>
-                <div class="level-online">等级: 黄金会员 | 在线: 120小时</div>
-                <!-- NEW: Switch Identity Button -->
-                <button class="switch-identity-btn" onclick="showPage('identity-page')">切换身份</button>
+            <!-- 需求说明按钮 (现在位于 app-screen 内部，绝对定位) -->
+            <button id="demandInfoButton" class="demand-button">
+                需求说明
+            </button>
+
+            <!-- 个人信息卡片 -->
+            <div class="profile-card">
+                <!-- 第一行：头像、用户名和切换身份按钮 -->
+                <div class="flex items-start w-full mb-3">
+                    <!-- 头像 -->
+                    <div class="avatar">
+                        <i data-lucide="user" class="w-10 h-10 text-gray-500"></i>
+                    </div>
+                    <!-- 用户名和切换身份按钮 -->
+                    <div class="flex-grow flex flex-col mt-[15px]">
+                        <div class="flex justify-between items-center w-full">
+                            <h2 class="text-base font-bold text-gray-600">这里是用户名称</h2>
+                            <button class="text-xs text-blue-500 font-medium flex items-center" onclick="showPage('identity-page')">
+                                切换身份 <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                            </button>
+                        </div>
+                        <!-- 称号显示 -->
+                        <p class="text-gray-500 text-sm mt-1">称号显示</p>
+                    </div>
+                </div>
+
+                <!-- 第二行：已在线时间、下一级称号 -->
+                <div class="flex justify-between items-center text-sm text-gray-600 mb-0">
+                    <span>已在线 30分钟</span>
+                    <span>下一级称号：无名小卒</span>
+                </div>
+
+                <!-- 第三行：进度条及加速 -->
+                <div class="flex justify-between items-center text-sm text-gray-600 mb-1">
+                    <span>进度条</span>
+                    <span>加速 <i data-lucide="zap" class="w-4 h-4 inline-block ml-1 text-yellow-500"></i></span>
+                </div>
+                <div class="progress-bar-container mb-2">
+                    <div class="progress-bar"></div>
+                </div>
+
+                <!-- 第四行：注册时间及陪伴天数 -->
+                <div class="flex justify-between items-center text-xs text-gray-400">
+                    <span>注册时间</span>
+                    <span>已陪伴223天</span>
+                </div>
+                <span class="text-sm text-gray-700 font-medium block">2025/2/22 13:33</span>
             </div>
-            <div class="content">
-                <div class="section-title">会员信息</div>
-                <div class="menu-item" onclick="alert('查看会员等级详情')">
-                    <span class="icon">⭐</span>
-                    <span>会员等级: 黄金会员</span>
-                    <span class="arrow">›</span>
+
+            <!-- 可滚动内容区域 -->
+            <div class="content-area">
+                <!-- 会员权益区域 -->
+                <div class="section-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex flex-col">
+                            <h3 class="text-lg font-semibold text-gray-800">获取会员权益</h3>
+                            <p class="text-gray-500 text-sm">畅享尊贵体验</p>
+                        </div>
+                        <button class="member-button text-white px-4 py-2 rounded-full shadow-md flex items-center justify-center">
+                            加入货方会员 <i data-lucide="star" class="w-4 h-4 ml-2 fill-current text-yellow-300"></i>
+                        </button>
+                    </div>
+                    <div class="flex justify-around text-center mt-6">
+                        <div class="flex flex-col items-center">
+                            <div class="icon-circle">
+                                <i data-lucide="truck" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-600">货源随心发</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="icon-circle">
+                                <i data-lucide="award" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-600">货源优先展示</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="icon-circle">
+                                <i data-lucide="eye" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-600">醒目货源</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="menu-item" onclick="alert('查看会员有效期详情')">
-                    <span class="icon">📅</span>
-                    <span>会员有效期: 2026-12-31</span>
-                    <span class="arrow">›</span>
+
+                <!-- 签到领积分区域 -->
+                <div class="section-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">签到领积分</h3>
+                        <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            积分兑换
+                        </button>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <p class="text-gray-500 text-sm">规则说明xxxx</p>
+                        <span class="text-gray-500 text-sm">积分：100</span>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day active">10</div>
+                            <span class="text-xs text-gray-500 mt-1">第1天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">15</div>
+                            <span class="text-xs text-gray-500 mt-1">第2天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">20</div>
+                            <span class="text-xs text-gray-500 mt-1">第3天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">25</div>
+                            <span class="text-xs text-gray-500 mt-1">第4天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">35</div>
+                            <span class="text-xs text-gray-500 mt-1">第5天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">40</div>
+                            <span class="text-xs text-gray-500 mt-1">第6天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">38</div>
+                            <span class="text-xs text-gray-500 mt-1">第7天</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="section-title">我的服务</div>
-                <div class="menu-item" onclick="alert('进入我的钱包')">
-                    <span class="icon">💰</span>
-                    <span>我的钱包</span>
-                    <span class="arrow">›</span>
+
+                <!-- 帮助与反馈 -->
+                <div class="section-card help-feedback-card">
+                    <button class="text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                        帮助与反馈 <i data-lucide="message-circle" class="w-5 h-5 ml-2"></i>
+                    </button>
                 </div>
-                <div class="menu-item" onclick="alert('进入我的订单')">
-                    <span class="icon">📜</span>
-                    <span>我的订单</span>
-                    <span class="arrow">›</span>
-                </div>
-                <div class="menu-item" onclick="alert('进入我的优惠券')">
-                    <span class="icon">🎁</span>
-                    <span>我的优惠券</span>
-                    <span class="arrow">›</span>
-                </div>
-                <button class="settings-button" onclick="alert('进入设置页面')">设置</button>
+
+                <!-- 登录管理入口 -->
+                <a href="#" class="login-management-link">
+                    登录管理
+                </a>
             </div>
             <div class="footer">
                 <div class="tab-button" onclick="showPage('shipper-home-page')">
@@ -1590,6 +1780,18 @@
                 </div>
                 <div class="tab-button active" onclick="showPage('shipper-my-page')">
                     <span class="icon">👤</span> 我的
+                </div>
+            </div>
+
+            <!-- 模态对话框 -->
+            <div id="modalOverlay" class="modal-overlay">
+                <div class="modal-content">
+                    <button id="modalCloseButton" class="modal-close-button">&times;</button>
+                    <h3>这个页面需求说明：</h3>
+                    <p>1. 在线时长这东西没有实际上的业务意义，只能是用户的一种心理交互。在线时长达到要求就升级所谓的“称号”。称号拓展，比如雷达或者其他地方可以见到，未来是不是点击称号可以给个排行榜？想要称号加速，可以成为会员或积分换取时间，简单翻译， 就是要么花钱要么花时间，这个小小的设计主要是提高在线留存和转化。</p>
+                    <p>2. 签到，提高留存和转化，对于不太愿意花钱的的用户，积分可以兑换发货次数，积累到一个比较高的积分额度，在用积分打折吸引买会员等等。</p>
+                    <p>3. 会员权益部分，页面不会做太多说明，点进去会做会员分级。</p>
+                    <p>4. 待续</p>
                 </div>
             </div>
         </div>
@@ -1606,7 +1808,7 @@
                 <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[0])">
                     <h4>北京朝阳区 - 天津滨海新区</h4>
                     <p><strong>货物:</strong> 200挖机 25吨 长8米宽6米高4米</p>
-                    <p><strong>装卸时间:</strong> 6.18日装</p>
+                    <p><strong>装卸时间:</strong> 6月18日装</p>
                     <p><strong>预估运费:</strong> ¥1200</p>
                 </div>
                 <!-- Driver Cargo Item 2 -->
@@ -1942,7 +2144,24 @@
 
     </div>
 
+    <!-- 引入 Lucide Icons 的脚本，确保在调用其函数前已加载 -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
     <script>
+        // Function to check the password for the initial overlay
+        function checkOverlayPassword() {
+            const passwordInput = document.getElementById('overlayPasswordInput');
+            const password = passwordInput.value;
+            const correctPassword = "123321"; // The required password has been updated to "123321"
+
+            if (password === correctPassword) {
+                document.getElementById('password-overlay').style.display = 'none'; // Hide the overlay
+                showPage('login-page'); // Show the actual app's login page
+            } else {
+                alert('密码错误，请重试。'); // Show error if incorrect
+                passwordInput.value = ''; // Clear the input field
+            }
+        }
+
         // Sample Cargo Data (expanded for detail page)
         const allCargoData = {
             'published': [
@@ -2165,21 +2384,6 @@
                         button.classList.add('active');
                     }
                 });
-            }
-        }
-
-        // Function to check the password for the initial overlay
-        function checkOverlayPassword() {
-            const passwordInput = document.getElementById('overlayPasswordInput');
-            const password = passwordInput.value;
-            const correctPassword = "123321"; // The required password has been updated to "123321"
-
-            if (password === correctPassword) {
-                document.getElementById('password-overlay').style.display = 'none'; // Hide the overlay
-                showPage('login-page'); // Show the actual app's login page
-            } else {
-                alert('密码错误，请重试。'); // Show error if incorrect
-                passwordInput.value = ''; // Clear the input field
             }
         }
 
@@ -2415,16 +2619,13 @@
                 mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
             }, 1000); // Simulate a 1-second calculation time
 
-          
             // Set up the "查看路线" link for shipper
             const shipperMapLinkContainer = document.getElementById('shipper-map-link-container');
             shipperMapLinkContainer.onclick = () => {
                 const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
                 const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
-                
-                // 使用绝对路径
-                window.location.href =`https://llong0807.github.io/nothing/map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`
-                 };
+                window.open(`map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`, '_blank');
+            };
 
 
             // Populate and conditionally display Cargo Messages section
@@ -2531,11 +2732,8 @@
             driverMapLinkContainer.onclick = () => {
                 const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
                 const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
-                
-                // 使用绝对路径
-                window.location.href =`https://llong0807.github.io/nothing/map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`
+                window.open(`map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`, '_blank');
             };
-            
 
 
             // Set header action button (e.g., Share for driver, or specific driver action)
@@ -2569,7 +2767,65 @@
         }
 
 
-       
+        // Function to generate smart shipping tip using Gemini API
+        async function generateSmartShippingTip() {
+            const tipDisplay = document.getElementById('shippingTipDisplay');
+            tipDisplay.style.opacity = 0; // Fade out current text
+            tipDisplay.textContent = '正在生成小贴士...'; // Show loading message
+            tipDisplay.style.backgroundColor = '#e0f7fa'; // Change background for loading
+            tipDisplay.style.border = '1px solid #a7d9e2';
+            tipDisplay.style.opacity = 1; // Fade in loading message
+
+            try {
+                let chatHistory = [];
+                const prompt = "请为物流App的用户生成一个简短、实用且积极的运货小贴士，例如关于如何打包、选择路线、与司机沟通等。长度在50字以内。";
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        temperature: 0.7, // Adjust creativity
+                        maxOutputTokens: 100 // Limit output length
+                    }
+                };
+
+                const apiKey = ""; // Canvas will automatically provide the API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} - ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    tipDisplay.textContent = text;
+                    tipDisplay.style.backgroundColor = '#e8f5e9'; // Reset background
+                    tipDisplay.style.border = '1px solid #c8e6c9';
+                } else {
+                    tipDisplay.textContent = '未能生成小贴士，请稍后再试。';
+                    tipDisplay.style.backgroundColor = '#ffebee'; // Error background
+                    tipDisplay.style.border = '1px solid #ef9a9a';
+                }
+            } catch (error) {
+                console.error("Error generating shipping tip:", error);
+                tipDisplay.textContent = `生成小贴士时出错: ${error.message}`;
+                tipDisplay.style.backgroundColor = '#ffebee'; // Error background
+                tipDisplay.style.border = '1px solid #ef9a9a';
+            } finally {
+                tipDisplay.style.opacity = 1; // Ensure it's visible after content is set
+            }
+        }
 
 
         // Initialize the app on window load
@@ -2582,6 +2838,39 @@
             // Start dynamic alerts for cargo management page
             setInterval(() => updateDynamicCargoAlert('dynamicAlert-item1'), 4000); // Update every 4 seconds
             setInterval(() => updateDynamicCargoAlert('dynamicAlert-item2'), 5000); // Update every 5 seconds
+
+            // Shipper My Page specific JS initialization
+            const demandInfoButton = document.getElementById('demandInfoButton');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalCloseButton = document.getElementById('modalCloseButton');
+            
+            // Ensure elements exist before adding listeners
+            if (demandInfoButton && modalOverlay && modalCloseButton) {
+                // Button click to show modal
+                demandInfoButton.addEventListener('click', () => {
+                    console.log('需求说明按钮被点击了！'); // Add debug log
+                    modalOverlay.classList.add('show');
+                });
+
+                // Close modal
+                modalCloseButton.addEventListener('click', () => {
+                    modalOverlay.classList.remove('show');
+                });
+
+                // Close modal on outside click
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        modalOverlay.classList.remove('show');
+                    }
+                });
+            }
+
+            // Initialize Lucide Icons after DOM is loaded and elements are present
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            } else {
+                console.error("Lucide icons library not loaded or not available.");
+            }
         };
 
         // Basic alert polyfill to avoid blocking prompts in iframe
