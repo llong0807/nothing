@@ -2024,19 +2024,6 @@
             // Other driver cargo management tabs data can be added here if needed in the future
         };
 
-        window.addEventListener('message', function(event) {
-             console.log(`Navigating to page: ${pageName}`);
-            // 确保消息来自信任的源
-            if (event.origin !== 'https://llong0807.github.io') {  // 替换成你的实际源
-                return;
-            }
-        
-            // 根据消息的内容执行相应的操作
-            const data = event.data;
-            if (data.action === 'showPage') {
-                showPage(data.pageId);
-            }
-        }, false);
 
 
         // Function to show a specific page and hide others
@@ -2621,6 +2608,27 @@
             `;
             document.head.appendChild(style);
         };
+
+         // This is the message listener for the main page (parent)
+        // It listens for messages coming from iframes embedded within it.
+        window.addEventListener('message', function(event) {
+            // Ensure the message comes from a trusted origin.
+            // Replace 'https://llong0807.github.io' with the actual domain where your iframe content is hosted.
+            // For local development, this might be 'http://localhost:port' or similar.
+            if (event.origin !== 'https://llong0807.github.io') {
+                console.warn('Received message from untrusted origin:', event.origin);
+                return;
+            }
+
+            const data = event.data;
+            console.log(`Main page received message from iframe, attempting to navigate to page: ${data.pageId}`);
+
+            // If the action is 'showPage' and a pageId is provided, call the main page's showPage function.
+            if (data.action === 'showPage' && data.pageId) {
+                // Directly call showPage as it's defined in the global scope of the parent window.
+                showPage(data.pageId);
+            }
+        }, false);
 
     </script>
 </body>
