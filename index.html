@@ -2024,6 +2024,20 @@
             // Other driver cargo management tabs data can be added here if needed in the future
         };
 
+        window.addEventListener('message', function(event) {
+             console.log(`Navigating to page: ${pageName}`);
+            // 确保消息来自信任的源
+            if (event.origin !== 'https://llong0807.github.io') {  // 替换成你的实际源
+                return;
+            }
+        
+            // 根据消息的内容执行相应的操作
+            const data = event.data;
+            if (data.action === 'showPage') {
+                showPage(data.pageId);
+            }
+        }, false);
+
 
         // Function to show a specific page and hide others
         function showPage(pageId) {
