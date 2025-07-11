@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>货方个人中心</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 确保html和body占据整个视口，并允许垂直滚动 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Ensure full viewport height */
+            width: 100%; /* Ensure full viewport width */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-y: auto; /* Allow vertical scrolling */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Page background color */
+            box-sizing: border-box; /* Changed to border-box for consistent padding calculation */
+            min-height: 100vh; /* Ensure body takes at least full viewport height */
+            padding: 10px 0; /* Reduced top/bottom padding for the page */
+        }
+        /* The main container simulating a phone screen */
+        .app-screen {
+            width: 375px; /* Standard mobile width */
+            height: 812px; /* Fixed height for standard mobile height, no stretching */
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Softer, larger shadow as requested */
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Keep relative positioning for absolute child buttons */
+            z-index: 1; /* Ensure it's above other elements */
+            overflow: hidden; /* Hide content overflowing app-screen corners */
+            margin: 0 auto; /* Horizontally center app-screen */
+        }
+        /* Header background removed */
+        .profile-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 10px 18px; /* Adjusted padding, more compact */
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07); /* Softer shadow */
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px; /* 20px from app-screen top */
+            margin-left: 18px;
+            margin-right: 18px;
+            margin-bottom: 20px; /* Adjusted: Increased bottom margin to create more space below it */
+            flex-shrink: 0; /* Do not shrink */
+            z-index: 10; /* Ensure it's above other elements */
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #666;
+            border: 3px solid #fff; /* White border for avatar */
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.5); /* Outer glow for avatar */
+            flex-shrink: 0;
+            margin-right: 16px;
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(to right, #6a82fb, #fc5c7d);
+            border-radius: 10px;
+        }
+        .content-area { /* New content area, wraps all scrollable cards */
+            flex-grow: 1; /* Allow this area to fill remaining space */
+            overflow-y: auto; /* Allow vertical scrolling */
+            padding: 0 18px 18px 18px; /* Left/right/bottom padding for card area, no top padding, more compact */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .section-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 18px; /* Adjusted vertical padding, compact content */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); /* Softer shadow */
+            flex-shrink: 0; /* Prevent card from shrinking in flex container */
+        }
+        /* Adjust top margin of the first section-card to control gap with profile-card */
+        /* Removed margin-top here, as profile-card now handles the spacing with margin-bottom */
+        /* .content-area .section-card:first-child {
+            margin-top: 40px;
+        } */
+        .section-card:not(:last-child) {
+            margin-bottom: 14px; /* Gap between cards, slightly increased for breathing room */
+        }
+        /* Specific styles for Help & Feedback card */
+        .help-feedback-card {
+            margin-top: 40px; /* 40px height from the card above */
+        }
+        .login-management-link {
+            color: #888; /* Red-gray color */
+            font-size: 0.75rem; /* text-xs small font size */
+            text-align: center;
+            margin-top: 10px; /* Spacing from the Help & Feedback card above */
+            margin-bottom: 10px; /* Spacing from the bottom of the page */
+            display: block; /* Ensure it takes full width */
+            text-decoration: none; /* Remove underline */
+        }
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #6a82fb;
+        }
+        .sign-in-day {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+        }
+        .sign-in-day.active {
+            background: linear-gradient(to right, #6a82fb, #fc5c7d);
+            color: #fff;
+        }
+
+        /* Demand Description button style (now absolutely positioned inside app-screen) */
+        .demand-button {
+            position: absolute; /* Position relative to app-screen */
+            top: 5px; /* Distance from app-screen top */
+            left: 5px; /* Distance from app-screen left */
+            background-color: #EF4444; /* Tailwind red-500 */
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            width: fit-content; /* Adjust width based on content */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s ease;
+            z-index: 100; /* Ensure it's above profile-card */
+        }
+        .demand-button:hover {
+            background-color: #DC2626; /* Darker red */
+        }
+
+        /* Custom style for Member button */
+        .member-button {
+            background: linear-gradient(to right, #FF6B6B, #4ECDC4); /* Bright gradient colors */
+            text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); /* Text effect */
+            transition: all 0.3s ease; /* Transition effect */
+            display: flex; /* Use flex to center content */
+            align-items: center;
+            justify-content: center; /* Center text */
+            padding: 8px 16px; /* Adjust padding */
+        }
+        .member-button:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); /* Hover shadow */
+            transform: translateY(-2px); /* Hover lift effect */
+        }
+
+        /* Modal dialog styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 2000; /* Ensure it's above all content */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-overlay.show {
+            display: flex; /* Display as flex when shown */
+            opacity: 1;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 320px; /* Adapt to mobile screen width */
+            width: 90%;
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .modal-content h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .modal-content p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .modal-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Member Benefits Details Card Styles */
+        .member-details-card {
+            /* Matching the sign-in-day active button's gradient */
+            background: linear-gradient(to right, #6a82fb, #fc5c7d); /* Blue to Pink/Red gradient */
+            color: #ffffff;
+            border-radius: 15px;
+            padding: 11px 13px 5px 13px; /* Adjusted: top 11px, horizontal 13px, bottom 5px */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+            margin-bottom: 14px; /* Adjusted: Reduced margin-bottom from 16px to 14px */
+            animation: fadeIn 0.5s ease-out; /* Fade-in animation */
+            position: relative;
+        }
+
+        .member-details-card .member-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Vertically center align text and star logo */
+            margin-bottom: 15px;
+        }
+
+        .member-details-card .member-type-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Left align */
+            flex-grow: 1; /* Allow to take remaining space */
+        }
+
+        .member-details-card .member-type-text {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: bold; /* Bold */
+            color: #ffffff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Soft shadow */
+            line-height: 1.2; /* Adjust line height */
+            display: flex; /* Allow star icon and text to be side-by-side */
+            align-items: center; /* Vertically center align icon and text */
+        }
+
+        .member-type-text .crown-icon { /* Custom class for the inline SVG crown */
+            margin-right: 6px; /* Spacing between icon and text */
+            width: 20px; /* Icon size */
+            height: 20px;
+            color: #FFD700; /* Bright yellow/gold color for visibility */
+            fill: #FFD700; /* Fill color */
+        }
+
+        .member-details-card .expiry-date {
+            font-size: 0.75rem; /* text-xs */
+            color: rgba(255, 255, 255, 0.8); /* Slightly brighter */
+            margin-top: 4px; /* Small spacing below member type */
+            text-align: left; /* Ensure it's left-aligned with member type text */
+        }
+
+        .star-logo-button {
+            width: 55px; /* Adjusted size */
+            height: 55px;
+            background-color: transparent; /* Transparent background */
+            border: 2px solid rgba(255, 255, 255, 0.5); /* Semi-transparent white border for hollow effect */
+            border-radius: 50%; /* Circular */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Softer shadow */
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            flex-shrink: 0; /* Do not shrink */
+            margin-left: 15px; /* Spacing from left text */
+        }
+        .star-logo-button:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly visible on hover */
+        }
+        .star-logo-button .lucide { /* Targeting Lucide icon inside the button */
+            color: rgba(255, 255, 255, 0.8); /* White star icon color for hollow effect */
+            width: 28px; /* Icon size */
+            height: 28px;
+        }
+
+        .member-rights-grid {
+            display: flex;
+            overflow-x: auto; /* Allow horizontal scrolling */
+            padding-bottom: 10px; /* Spacing for scrollbar */
+            -webkit-overflow-scrolling: touch; /* Improve scrolling experience on iOS */
+            gap: 15px; /* Gap between rights items */
+            margin-top: 15px; /* Spacing from info above */
+            padding-top: 15px; /* Top padding */
+            border-top: 1px solid rgba(255, 255, 255, 0.3); /* Layered separator line */
+        }
+
+        .member-rights-item-grid {
+            flex: 0 0 auto; /* No stretching, no shrinking, based on content width */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 70px; /* Fixed width to ensure icon and text alignment */
+            cursor: pointer; /* Clickable */
+        }
+        .member-rights-item-grid .icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.25); /* Softer background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #ffffff; /* Icon color */
+            font-size: 1.1rem; /* Adjust number size */
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .member-rights-item-grid.disabled .icon-wrapper {
+            background-color: rgba(255, 255, 255, 0.08); /* Disabled state background */
+            color: #999; /* Disabled state icon color */
+        }
+        .member-rights-item-grid span {
+            font-size: 0.75rem; /* text-xs */
+            color: #ffffff; /* Bright text color */
+        }
+        .member-rights-item-grid.disabled span {
+            color: #999; /* Disabled state text color */
+        }
+
+        /* Purchase Success Modal Styles */
+        .purchase-success-modal {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+        .purchase-success-modal h3 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .purchase-success-modal button {
+            background-color: #6a82fb;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .purchase-success-modal button:hover {
+            background-color: #566ee6;
+        }
+
+        /* Upgrade Prompt Modal Styles */
+        .upgrade-modal {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+        .upgrade-modal h3 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .upgrade-modal p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .upgrade-modal .button-group {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+        .upgrade-modal button {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .upgrade-modal .cancel-button {
+            background-color: #e0e0e0;
+            color: #555;
+        }
+        .upgrade-modal .cancel-button:hover {
+            background-color: #d0d0d0;
+        }
+        .upgrade-modal .confirm-button {
+            background-color: #6a82fb;
+            color: white;
+        }
+        .upgrade-modal .confirm-button:hover {
+            background-color: #566ee6;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-screen">
+        <!-- Demand Description button (now absolutely positioned inside app-screen) -->
+        <button id="demandInfoButton" class="demand-button">
+            需求说明
+        </button>
+
+        <!-- User Profile Card -->
+        <div class="profile-card">
+            <!-- First row: Avatar, Username, and Switch Identity button -->
+            <div class="flex items-start w-full mb-3">
+                <!-- Avatar -->
+                <div class="avatar">
+                    <i data-lucide="user" class="w-10 h-10 text-gray-500"></i>
+                </div>
+                <!-- Username and Switch Identity button -->
+                <div class="flex-grow flex flex-col mt-[15px]">
+                    <div class="flex justify-between items-center w-full">
+                        <h2 class="text-base font-bold text-gray-600">这里是用户名称</h2>
+                        <button class="text-xs text-blue-500 font-medium flex items-center">
+                            切换身份 <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                        </button>
+                    </div>
+                    <!-- Title Display -->
+                    <p class="text-gray-500 text-sm mt-1">无名小卒</p>
+                </div>
+            </div>
+
+            <!-- Second row: Online time, next title -->
+            <div class="flex justify-between items-center text-sm text-gray-600 mb-0">
+                <span>已在线 30分钟</span>
+                <span>下一级称号：街头货郎(2级)</span>
+            </div>
+
+            <!-- Third row: Progress bar and acceleration -->
+            <div class="flex justify-between items-center text-sm text-gray-600 mb-1">
+                <span>进度条</span>
+                <!-- 加速按钮：使用内联SVG，并确保flex居中 -->
+                <button class="text-blue-500 font-medium text-sm flex items-center justify-center px-2 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    加速
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 text-yellow-500">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="progress-bar-container mb-2">
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Fourth row: Registration time and companion days -->
+            <div class="flex justify-between items-center text-xs text-gray-400">
+                <span>注册时间</span>
+                <span>已陪伴223天</span>
+            </div>
+            <span class="text-sm text-gray-700 font-medium block">2025/2/22 13:33</span>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="content-area">
+            <!-- Member Benefits Area (Non-member state) -->
+            <div id="nonMemberCard" class="section-card">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex flex-col">
+                        <h3 class="text-lg font-semibold text-gray-800">获取会员权益</h3>
+                        <p class="text-gray-500 text-sm">畅享尊贵体验</p>
+                    </div>
+                    <!-- 加入货方会员按钮：使用内联SVG，并确保flex居中 -->
+                    <button id="joinMemberButton" class="member-button text-white px-4 py-2 rounded-full shadow-md">
+                        加入货方会员
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="ml-2 text-yellow-300">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex justify-around text-center mt-6">
+                    <div class="flex flex-col items-center">
+                        <div class="icon-circle">
+                            <i data-lucide="truck" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">货源随心发</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="icon-circle">
+                            <i data-lucide="award" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">货源优先展示</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="icon-circle">
+                            <i data-lucide="eye" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">醒目货源</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member Benefits Area (Member state) - Optimized Style -->
+            <div id="memberDetailsCard" class="section-card member-details-card hidden">
+                <div class="member-header">
+                    <div class="member-type-group">
+                        <span class="member-type-text">
+                            <!-- Inline SVG for Crown Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="crown-icon">
+                                <path d="m12 5 4 4 5-5-2 11-4 5-5-2-5 2-4-5-2-11 5 5 4-4z"/>
+                            </svg>
+                            PLUS 年卡会员
+                        </span>
+                        <span class="expiry-date">2026.06.18到期 ></span>
+                    </div>
+                    <div class="star-logo-button" id="renewStarLogo">
+                        <i data-lucide="star" class="w-8 h-8 lucide"></i>
+                    </div>
+                </div>
+                
+                <div class="member-rights-grid">
+                    <!-- Benefit Item Examples -->
+                    <div class="member-rights-item-grid">
+                        <div class="icon-wrapper">
+                            <span>5/10</span>
+                        </div>
+                        <span>免费发货</span>
+                    </div>
+                    <div class="member-rights-item-grid">
+                        <div class="icon-wrapper">
+                            <span>1/5</span>
+                        </div>
+                        <span>醒目发货</span>
+                    </div>
+                    <div class="member-rights-item-grid">
+                        <div class="icon-wrapper">
+                            <span>2/3</span>
+                        </div>
+                        <span>置顶曝光</span>
+                    </div>
+                    <div class="member-rights-item-grid">
+                        <div class="icon-wrapper">
+                            <span>5</span>
+                        </div>
+                        <span>签到加分</span>
+                    </div>
+                    <!-- Inactive Benefit Example -->
+                    <div class="member-rights-item-grid disabled" data-status="inactive">
+                        <div class="icon-wrapper disabled">
+                            <i data-lucide="phone" class="w-6 h-6 lucide"></i>
+                        </div>
+                        <span>专属客服</span>
+                    </div>
+                    <div class="member-rights-item-grid disabled" data-status="inactive">
+                        <div class="icon-wrapper disabled">
+                            <i data-lucide="gem" class="w-6 h-6 lucide"></i>
+                        </div>
+                        <span>生日特权</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sign-in for Points Area -->
+            <div class="section-card">
+                <div class="flex justify-between items-start mb-2"> <!-- Adjusted mb-4 to mb-2 to move text up -->
+                    <h3 class="text-lg font-semibold text-gray-800">签到领积分</h3>
+                    <div class="flex gap-2"> <!-- Added a flex container for buttons -->
+                        <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            积分兑换
+                        </button>
+                        <!-- Added "我的兑换" button -->
+                        <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            我的兑换
+                        </button>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mb-2"> <!-- Adjusted mb-4 to mb-2 to move text up -->
+                    <p class="text-gray-500 text-sm">规则说明xxxx</p>
+                    <span class="text-gray-500 text-sm">积分：100</span>
+                </div>
+                <div class="grid grid-cols-7 gap-2 text-center">
+                    <div class="flex flex-col items-center">
+                        <div class="sign-in-day active">10</div>
+                        <span class="text-xs text-gray-500 mt-1">第1天</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="sign-in-day">15</div>
+                        <span class="text-xs text-gray-500 mt-1">第2天</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="sign-in-day">20</div>
+                        <span class="text-xs text-gray-500 mt-1">第3天</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="sign-in-day">25</div>
+                        <span class="text-xs text-gray-500 mt-1">第4天</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="sign-in-day">35</div>
+                        <span class="text-xs text-gray-500 mt-1">第5天</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="sign-in-day">40</div>
+                        <span class="text-xs text-gray-500 mt-1">第6天</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="sign-in-day">38</div>
+                        <span class="text-xs text-gray-500 mt-1">第7天</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help and Feedback -->
+            <div class="section-card help-feedback-card">
+                <button class="text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                    帮助与反馈 <i data-lucide="message-circle" class="w-5 h-5 lucide"></i>
+                </button>
+            </div>
+
+            <!-- Login Management Entry -->
+            <a href="#" class="login-management-link">
+                登录管理
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal Dialog (Demand Description) -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modalCloseButton" class="modal-close-button">&times;</button>
+            <h3>这个页面需求说明：</h3>
+            <p>1. 在线时长这东西没有实际上的业务意义，只能是用户的一种心理交互。在线时长达到要求就升级所谓的“称号”。称号拓展，比如雷达或者其他地方可以见到，未来是不是点击称号可以给个排行榜？想要称号加速，可以成为会员或积分换取时间，简单翻译， 就是要么花钱要么花时间，这个小小的设计主要是提高在线留存和转化。</p>
+            <p>2. 签到，提高留存和转化，对于不太愿意花钱的的用户，积分可以兑换发货次数，积累到一个比较高的积分额度，在用积分打折吸引买会员等等。</p>
+            <p>3. 会员权益部分，页面不会做太多说明，点进去会做会员分级。</p>
+            <p>4. 待续</p>
+        </div>
+    </div>
+
+    <!-- Modal Dialog (Purchase Member Success) -->
+    <div id="purchaseSuccessModalOverlay" class="modal-overlay">
+        <div class="purchase-success-modal">
+            <h3>权益页面设计中</h3>
+            <button id="purchaseConfirmButton">确认</button>
+        </div>
+    </div>
+
+    <!-- Modal Dialog (Upgrade Prompt) -->
+    <div id="upgradeModalOverlay" class="modal-overlay">
+        <div class="upgrade-modal">
+            <h3>此权益未开通</h3>
+            <p>升级会员可解锁更多专属权益！</p>
+            <div class="button-group">
+                <button class="cancel-button" id="upgradeCancelButton">取消</button>
+                <button class="confirm-button" id="upgradeConfirmButton">去升级</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Lucide Icons script, ensure loaded before calling its functions -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
+    <script>
+        // Ensure execution after DOM content is fully loaded
+        window.onload = function() {
+            // Initialize Lucide Icons
+            // This ensures the Lucide library is fully loaded before trying to create icons
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            } else {
+                console.error("Lucide icons library not loaded or not available.");
+            }
+
+            const demandInfoButton = document.getElementById('demandInfoButton');
+            const modalOverlay = document.getElementById('modalOverlay'); // Demand description modal
+            const modalCloseButton = document.getElementById('modalCloseButton');
+
+            const joinMemberButton = document.getElementById('joinMemberButton');
+            const purchaseSuccessModalOverlay = document.getElementById('purchaseSuccessModalOverlay'); // Purchase success modal
+            const purchaseConfirmButton = document.getElementById('purchaseConfirmButton');
+            const renewStarLogo = document.getElementById('renewStarLogo'); // Renew star icon
+
+            const nonMemberCard = document.getElementById('nonMemberCard');
+            const memberDetailsCard = document.getElementById('memberDetailsCard');
+
+            const upgradeModalOverlay = document.getElementById('upgradeModalOverlay'); // Upgrade prompt modal
+            const upgradeCancelButton = document.getElementById('upgradeCancelButton');
+            const upgradeConfirmButton = document.getElementById('upgradeConfirmButton');
+
+            let isMember = false; // Simulate member status
+
+            // Initial display state
+            function updateMemberCardDisplay() {
+                if (isMember) {
+                    nonMemberCard.classList.add('hidden');
+                    memberDetailsCard.classList.remove('hidden');
+                } else {
+                    nonMemberCard.classList.remove('hidden');
+                    memberDetailsCard.classList.add('hidden');
+                }
+            }
+            updateMemberCardDisplay(); // Call once on page load
+
+            // Demand Description button click to show modal
+            demandInfoButton.addEventListener('click', () => {
+                console.log('Demand Description button clicked!');
+                modalOverlay.classList.add('show');
+            });
+
+            // Close Demand Description modal
+            modalCloseButton.addEventListener('click', () => {
+                modalOverlay.classList.remove('show');
+            });
+
+            // Click outside Demand Description modal to close
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    modalOverlay.classList.remove('show');
+                }
+            });
+
+            // Join Member button click to show purchase success modal
+            joinMemberButton.addEventListener('click', () => {
+                console.log('Join Member button clicked!');
+                purchaseSuccessModalOverlay.classList.add('show');
+            });
+
+            // Purchase Success modal confirm button click
+            purchaseConfirmButton.addEventListener('click', () => {
+                console.log('Purchase Success confirm button clicked!');
+                purchaseSuccessModalOverlay.classList.remove('show');
+                // Simulate successful purchase, update member status and switch card display
+                isMember = true;
+                updateMemberCardDisplay(); // Update display
+            });
+
+            // Click outside Purchase Success modal to close (optional, if you want user to be forced to click confirm)
+            purchaseSuccessModalOverlay.addEventListener('click', (e) => {
+                if (e.target === purchaseSuccessModalOverlay) {
+                    purchaseSuccessModalOverlay.classList.remove('show');
+                }
+            });
+
+            // Renew Star Logo click event
+            if (renewStarLogo) {
+                renewStarLogo.addEventListener('click', () => {
+                    alert('Renew Star Logo clicked!'); // Simulate renewal action
+                });
+            }
+
+            // Benefit item click event listener (event delegation)
+            const memberRightsGrid = document.querySelector('.member-rights-grid');
+            if (memberRightsGrid) {
+                memberRightsGrid.addEventListener('click', (e) => {
+                    const clickedItem = e.target.closest('.member-rights-item-grid');
+                    if (clickedItem && clickedItem.dataset.status === 'inactive') {
+                        console.log('Inactive benefit clicked, showing upgrade prompt!');
+                        upgradeModalOverlay.classList.add('show');
+                    }
+                });
+            }
+
+            // Upgrade Prompt modal cancel button
+            upgradeCancelButton.addEventListener('click', () => {
+                console.log('Upgrade Prompt cancel button clicked!');
+                upgradeModalOverlay.classList.remove('show');
+            });
+
+            // Upgrade Prompt modal confirm button
+            upgradeConfirmButton.addEventListener('click', () => {
+                console.log('Upgrade Prompt confirm button clicked!');
+                // Add logic to navigate to upgrade page here
+                alert('Navigating to member upgrade page...'); // Simulate navigation
+                upgradeModalOverlay.classList.remove('show');
+            });
+
+            // Click outside Upgrade Prompt modal to close
+            upgradeModalOverlay.addEventListener('click', (e) => {
+                if (e.target === upgradeModalOverlay) {
+                    upgradeModalOverlay.classList.remove('show');
+                }
+            });
+        }; // End of window.onload
+    </script>
+</body>
+</html>
