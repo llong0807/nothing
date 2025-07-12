@@ -246,6 +246,25 @@
         .modal-content p:last-child {
             margin-bottom: 0;
         }
+        /* New style for the "跳转文档" button inside the modal */
+        .modal-jump-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #4CAF50; /* Green color */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem; /* text-xs */
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            z-index: 10; /* Ensure it's above other content in the modal header */
+        }
+        .modal-jump-button:hover {
+            background-color: #45a049; /* Darker green */
+        }
+
 
         /* Member Benefits Details Card Styles */
         .member-details-card {
@@ -675,9 +694,14 @@
     <!-- Modal Dialog (Demand Description) -->
     <div id="modalOverlay" class="modal-overlay">
         <div class="modal-content">
+            <!-- New "跳转文档" button -->
+            <button class="modal-jump-button" onclick="window.open('https://um21c35u8u.feishu.cn/wiki/JZC6wny8Pi6At4kZZ4zcrPafn3d?from=from_copylink', '_blank')">
+                跳转文档
+            </button>
             <button id="modalCloseButton" class="modal-close-button">&times;</button>
-            <h2>需求说明：</h2>
-            <p>1.在线时长：这东西业务上没有实际意义，一种游戏心理交互。<br>在线时长达到要求就会升级并给称号。
+            <h3>需求说明：</h3>
+            <p>1.
+                在线时长：这东西业务上没有实际意义，一种游戏心理交互。<br>在线时长达到要求就会升级并给称号。
                 称号等级可以拓展到其他业务场景可见，比如雷达和排行榜，比如美团甚至在骑手端搞了个骑手排行榜。<br>
                 而且还提供升级加速的途经，可以通过积分换取时间加速，简单粗暴。而积分只能通过每日登录+签到获得。<br><br>
                 想要获得更多积分，购买会员可以提供加成。
@@ -701,8 +725,8 @@
                 积分的获得方式目前就是登录+签到。想要获得更多积分，就是会员加成+赠送，买的越多送的越多。<br><br>
                 由于积分是很私人的设计，压根不怕囤积，因为不能交易。数值上也相对好设计，基本就是DAU价值乘一个系数。<br>
                 比如普通用户七天积分是5-7-10-15-18-20-30这种逐步奖励的方式，一周就是105分。
-                一旦断签，奖励就从第一天开始，还能设计补签按钮，引入会员限制。<br><br>
-                会员身份下，根据系数，比如20%加成。普通用户如果一个月最多获得400分。一个1000分的目标就能拉住用户两个月。<br><br>
+                一旦断签，奖励就从第一天开始，还能设计补签按钮，引入会员限制。<br>
+                会员身份下，根据系数，比如20%加成。普通用户如果一个月最多获得400分。一个1000分的目标就能拉住用户两个月。<br>
                 举个例子，用户连续签到3个月的积分，这种就是粘性用户，给这类用户积分打折30%也是可以的。<br>
                 115网盘就做个一个活动，签到一年送一年会员。
                 本质上就是适当跟钉子用户妥协，并黏住他， 还提供一个积分打折的解决方案。
