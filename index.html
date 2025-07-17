@@ -126,18 +126,10 @@
         /* Common Content Area */
         .content {
             flex-grow: 1;
-            padding: 0; /* Remove padding for iframe to fill */
+            padding: 20px;
             overflow-y: auto; /* Enable scrolling for content area */
             -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
             background-color: #f9f9f9; /* Light background for content */
-        }
-
-        /* Styling for iframes within content areas */
-        .content iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block; /* Remove extra space below iframe */
         }
 
         /* Footer / Tab Bar styles */
@@ -408,7 +400,7 @@
 
         /* Shipper Cargo Management Page */
         #shipper-cargo-manage-page .header {
-            color: #2196f3; /* Blue header */
+            color: #2196f3; /* Blue header for shipper */
         }
         #shipper-cargo-manage-page .tabs {
             display: flex;
@@ -543,8 +535,206 @@
         }
 
 
-        /* Shipper My Page - Styles for the embedded content */
-        /* The content of this page is now primarily an iframe */
+        /* Shipper My Page - New Styles for the embedded content */
+        /* 头部背景已移除 */
+        #shipper-my-page .profile-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 12px 20px; /* 调整内边距，垂直方向更紧凑 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            margin-top: 25px; /* 距离 app-screen 顶部 25px */
+            margin-left: 20px;
+            margin-right: 20px;
+            flex-shrink: 0; /* 不收缩 */
+            z-index: 10; /* 确保在其他元素之上 */
+        }
+        #shipper-my-page .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #666;
+            border: 3px solid #fff; /* 头像白色边框 */
+            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.5); /* 头像外层光晕 */
+            flex-shrink: 0;
+            margin-right: 16px;
+        }
+        #shipper-my-page .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        #shipper-my-page .progress-bar {
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(to right, #6a82fb, #fc5c7d);
+            border-radius: 10px;
+        }
+        #shipper-my-page .content-area { /* 新增内容区域，用于包裹所有可滚动卡片 */
+            flex-grow: 1; /* 允许这个区域填充剩余空间 */
+            overflow-y: auto; /* 允许垂直滚动 */
+            padding: 0 20px 20px 20px; /* 整体卡片区域的左右底部内边距，顶部无内边距 */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        #shipper-my-page .section-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 20px; /* 调整垂直内边距，使其内容紧凑且能填满空间 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0; /* 不允许卡片在 flex 容器中收缩 */
+        }
+        /* 调整第一个 section-card 的顶部外边距，以控制与 profile-card 的间隙 */
+        #shipper-my-page .content-area .section-card:first-child {
+            margin-top: 20px; /* 个人信息卡片与会员权益卡片之间的间隙 */
+        }
+        #shipper-my-page .section-card:not(:last-child) {
+            margin-bottom: 16px; /* 卡片之间的间隙，稍微增加以增加呼吸感 */
+        }
+        /* 为帮助与反馈卡片添加特定样式 */
+        #shipper-my-page .help-feedback-card {
+            margin-top: 50px; /* 距离上方卡片 50px 的高度 */
+        }
+        #shipper-my-page .login-management-link {
+            color: #888; /* 红灰色 */
+            font-size: 0.75rem; /* text-xs 小字号 */
+            text-align: center;
+            margin-top: 10px; /* 距离上方帮助与反馈卡片的间距 */
+            margin-bottom: 10px; /* 距离页面底部的间距 */
+            display: block; /* 确保占据整行 */
+            text-decoration: none; /* 移除下划线 */
+        }
+        #shipper-my-page .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #6a82fb;
+        }
+        #shipper-my-page .sign-in-day {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+        }
+        #shipper-my-page .sign-in-day.active {
+            background: linear-gradient(to right, #6a82fb, #fc5c7d);
+            color: #fff;
+        }
+
+        /* 需求说明按钮的样式 (现在是绝对定位在 app-screen 内部) */
+        #shipper-my-page .demand-button {
+            position: absolute; /* 相对于 app-screen 定位 */
+            top: 5px; /* 距离 app-screen 顶部 */
+            left: 5px; /* 距离 app-screen 左侧 */
+            background-color: #EF4444; /* Tailwind red-500 */
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            width: fit-content; /* 根据内容调整宽度 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s ease;
+            z-index: 100; /* 确保在 profile-card 上方 */
+        }
+        #shipper-my-page .demand-button:hover {
+            background-color: #DC2626; /* 更深的红色 */
+        }
+
+        /* 会员按钮的自定义样式 */
+        #shipper-my-page .member-button {
+            background: linear-gradient(to right, #FF6B6B, #4ECDC4); /* 明快渐变色 */
+            text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); /* 文字效果 */
+            transition: all 0.3s ease; /* 过渡效果 */
+        }
+        #shipper-my-page .member-button:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); /* 悬停阴影 */
+            transform: translateY(-2px); /* 悬停上浮效果 */
+        }
+
+        /* 模态对话框样式 */
+        #shipper-my-page .modal-overlay {
+            position: absolute; /* 相对于父级 .page 定位 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* 默认隐藏 */
+            justify-content: center;
+            align-items: center;
+            z-index: 2000; /* 确保在所有内容之上 */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #shipper-my-page .modal-overlay.show {
+            display: flex; /* 显示时使用 flex */
+            opacity: 1;
+        }
+        #shipper-my-page .modal-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 320px; /* 适应手机屏幕宽度 */
+            width: 90%;
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        #shipper-my-page .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        #shipper-my-page .modal-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            padding: 5px;
+        }
+        #shipper-my-page .modal-content h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        #shipper-my-page .modal-content p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        #shipper-my-page .modal-content p:last-child {
+            margin-bottom: 0;
+        }
 
 
         /* Driver Find Cargo Page */
@@ -871,362 +1061,6 @@
         .radar-board:hover .radar-items-inner {
             animation-play-state: paused;
         }
-
-        /* Cargo Detail Page Styles */
-        #cargo-detail-page, #driver-cargo-detail-page { /* Apply to both shipper and driver detail pages */
-            display: flex;
-            flex-direction: column; /* Ensure content and footer stack */
-        }
-
-        #cargo-detail-page .detail-header, #driver-cargo-detail-page .detail-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 20px;
-            background-color: #fff;
-            border-bottom: 1px solid #eee;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            flex-shrink: 0; /* Prevent header from shrinking */
-        }
-
-        #cargo-detail-page .detail-header .back-arrow, #driver-cargo-detail-page .detail-header .back-arrow {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        #cargo-detail-page .detail-header .header-title, #driver-cargo-detail-page .detail-header .header-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        #cargo-detail-page .detail-header .header-action-btn, #driver-cargo-detail-page .detail-header .header-action-btn {
-            background-color: transparent;
-            color: #2196f3; /* Blue for share, red for delete */
-            border: none;
-            padding: 5px 10px;
-            font-size: 15px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.2s ease;
-        }
-        #cargo-detail-page .detail-header .header-action-btn.delete-btn, #driver-cargo-detail-page .detail-header .header-action-btn.delete-btn {
-            color: #e63946; /* Red for delete */
-        }
-        #cargo-detail-page .detail-header .header-action-btn:hover, #driver-cargo-detail-page .detail-header .header-action-btn:hover {
-            background-color: #f0f0f0;
-        }
-
-        #cargo-detail-page .detail-content, #driver-cargo-detail-page .detail-content {
-            flex-grow: 1; /* Allows content to take available space and scroll */
-            overflow-y: auto;
-            padding: 15px; /* Reduced padding for sections to have their own padding */
-            background-color: #f9f9f9;
-            padding-bottom: 80px; /* Add padding to prevent content from being hidden by fixed footer */
-        }
-
-        #cargo-detail-page .detail-section, #driver-cargo-detail-page .detail-section {
-            background-color: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-
-        /* Route Section - Adjusted for vertical display and left alignment */
-        #cargo-detail-page .route-section, #driver-cargo-detail-page .route-section {
-            display: flex;
-            flex-direction: column; /* Stack vertically */
-            align-items: flex-start; /* Align items to the left */
-            gap: 10px; /* Space between the origin group, arrow, and destination group */
-        }
-
-        #cargo-detail-page .route-section .address-group, #driver-cargo-detail-page .route-section .address-group {
-            display: flex;
-            align-items: flex-start;
-            width: 100%; /* Take full width to allow internal content to align */
-        }
-
-        #cargo-detail-page .route-section .address-icon, #driver-cargo-detail-page .route-section .address-icon {
-            font-size: 24px;
-            margin-right: 8px;
-        }
-        #cargo-detail-page .route-section .origin-icon, #driver-cargo-detail-page .route-section .origin-icon {
-            color: #2196f3; /* Blue for origin */
-        }
-        #cargo-detail-page .route-section .destination-icon, #driver-cargo-detail-page .route-section .destination-icon {
-            color: #ff9800; /* Orange for destination */
-        }
-
-
-        #cargo-detail-page .route-section .address-info, #driver-cargo-detail-page .route-section .address-info {
-            flex-grow: 1;
-        }
-
-        /* Increased font sizes for elderly users */
-        #cargo-detail-page .route-section .address-district, #driver-cargo-detail-page .route-section .address-district {
-            font-size: 22px; /* Increased from 20px */
-            font-weight: bold;
-            color: #333;
-            line-height: 1.3;
-        }
-
-        #cargo-detail-page .route-section .address-detail, #driver-cargo-detail-page .route-section .address-detail {
-            font-size: 19px; /* Increased from 17px */
-            color: #666;
-            line-height: 1.3;
-        }
-
-        #cargo-detail-page .route-section .route-arrow, #driver-cargo-detail-page .route-section .route-arrow {
-            font-size: 24px;
-            font-weight: bold;
-            color: #999;
-            /* To align with the left edge of the icons, considering icon size (24px) and its margin-right (8px) */
-            /* The icon is 24px wide. The address-group has no padding. The icon's left edge is at the start of the address-group. */
-            /* So, to align the arrow with the icon, the arrow should also start at the same left position as the address-group. */
-            /* This is achieved by setting margin-left: 0 and padding-left: 0, assuming the parent (route-section) aligns its children flex-start. */
-            margin-left: 0;
-            align-self: flex-start;
-            padding-left: 0;
-        }
-
-        /* Mileage Section Styles - Now inside route-section */
-        #cargo-detail-page .route-section .mileage-section, #driver-cargo-detail-page .route-section .mileage-section {
-            background-color: #f0f8ff; /* Very light blue background */
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-top: 30px; /* Space from destination, as requested */
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            width: calc(100% - 40px); /* Adjust for padding of parent detail-section (20px left/right) */
-        }
-        #cargo-detail-page .route-section .mileage-section:hover, #driver-cargo-detail-page .route-section .mileage-section:hover {
-            background-color: #e6f7ff;
-        }
-
-        #cargo-detail-page .mileage-info, #driver-cargo-detail-page .mileage-info {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-
-        #cargo-detail-page .mileage-value, #driver-cargo-detail-page .mileage-value {
-            font-size: 14px; /* Decreased by 2px from 16px */
-            font-weight: bold;
-            color: #333;
-            margin-right: 10px;
-        }
-
-        #cargo-detail-page .mileage-reference, #driver-cargo-detail-page .mileage-reference {
-            font-size: 9px; /* Decreased by 2px from 11px */
-            color: #888;
-            display: flex;
-            align-items: center;
-        }
-
-        #cargo-detail-page .mileage-reference .exclamation-icon, #driver-cargo-detail-page .mileage-reference .exclamation-icon {
-            font-size: 14px;
-            color: #ff9800; /* Orange exclamation */
-            margin-left: 5px;
-        }
-
-        #cargo-detail-page .map-link, #driver-cargo-detail-page .map-link {
-            display: flex;
-            align-items: center;
-            color: #2196f3; /* Blue for map link */
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none; /* Remove underline */
-        }
-
-        #cargo-detail-page .map-link .map-icon, #driver-cargo-detail-page .map-link .map-icon {
-            font-size: 20px;
-            margin-right: 5px;
-        }
-
-        /* NEW: Cargo Messages Section Styles */
-        #cargo-detail-page .cargo-messages-section {
-            background-color: #fff8e1; /* Light yellow background */
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            cursor: pointer; /* Indicate clickable area */
-            transition: background-color 0.2s ease;
-        }
-        #cargo-detail-page .cargo-messages-section:hover {
-            background-color: #fff5cc; /* Slightly darker yellow on hover */
-        }
-
-        #cargo-detail-page .cargo-messages-section .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        #cargo-detail-page .cargo-messages-section .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin: 0; /* Reset default margin */
-        }
-
-        #cargo-detail-page .cargo-messages-section .view-more {
-            font-size: 14px;
-            color: #2196f3; /* Blue for link */
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        #cargo-detail-page .cargo-messages-list .message-item {
-            display: flex;
-            flex-direction: column;
-            padding: 10px 0;
-            border-bottom: 1px dashed #ffe0b2; /* Light orange dashed line */
-        }
-        #cargo-detail-page .cargo-messages-list .message-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        #cargo-detail-page .cargo-messages-list .message-line1 {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 4px;
-            text-align: left;
-        }
-
-        #cargo-detail-page .cargo-messages-list .message-line2 {
-            font-size: 15px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 8px;
-            text-align: left;
-        }
-
-        #cargo-detail-page .cargo-messages-list .message-actions {
-            display: flex;
-            justify-content: flex-end; /* Align buttons to the right */
-            gap: 10px; /* Space between buttons */
-            margin-top: 5px; /* Space from text above */
-        }
-
-        #cargo-detail-page .cargo-messages-list .message-actions .action-btn {
-            background-color: #2196f3; /* Blue button */
-            color: #fff;
-            border: none;
-            border-radius: 8px; /* More rounded */
-            padding: 8px 12px; /* Smaller padding for message buttons */
-            font-size: 13px; /* Smaller font for message buttons */
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        #cargo-detail-page .cargo-messages-list .message-actions .action-btn:hover {
-            background-color: #1976d2;
-            transform: translateY(-1px);
-        }
-        #cargo-detail-page .cargo-messages-list .message-actions .action-btn.secondary {
-            background-color: #9e9e9e; /* Grey secondary */
-        }
-        #cargo-detail-page .cargo-messages-list .message-actions .action-btn.secondary:hover {
-            background-color: #757575;
-        }
-
-
-        /* Cargo Info and Fee Info Sections */
-        #cargo-detail-page .section-title, #driver-cargo-detail-page .section-title { /* Unified class for section titles */
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-            text-align: left; /* All section titles now left-aligned */
-        }
-
-        #cargo-detail-page .info-row, #driver-cargo-detail-page .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline; /* Align text baselines */
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed #eee; /* Subtle separator */
-        }
-        #cargo-detail-page .info-row:last-child, #driver-cargo-detail-page .info-row:last-child {
-            border-bottom: none; /* No border for the last item */
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        #cargo-detail-page .info-label, #driver-cargo-detail-page .info-label {
-            font-size: 14px;
-            color: #666;
-            flex-shrink: 0; /* Prevent label from shrinking */
-            margin-right: 15px; /* Space between label and value */
-        }
-
-        #cargo-detail-page .info-value, #driver-cargo-detail-page .info-value {
-            font-size: 15px;
-            color: #333;
-            font-weight: 500;
-            text-align: right;
-            flex-grow: 1; /* Allow value to take remaining space */
-            word-break: break-word; /* Allow long text to wrap */
-        }
-
-        /* Fixed Footer for Detail Page */
-        .detail-fixed-footer {
-            position: absolute; /* Position relative to the parent .page */
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 15px 20px; /* Consistent padding with other sections, 20px left/right */
-            background-color: #fff;
-            border-top: 1px solid #eee;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
-            display: flex;
-            justify-content: flex-end; /* Align buttons to the right */
-            gap: 10px; /* Space between buttons */
-            z-index: 15; /* Ensure it's above content */
-            flex-shrink: 0; /* Prevent footer from shrinking */
-            box-sizing: border-box; /* Include padding in width calculation */
-        }
-        /* Ensure buttons in fixed footer match cargo-actions buttons */
-        .detail-fixed-footer .action-btn {
-            background-color: #2196f3; /* Blue button */
-            color: #fff;
-            border: none;
-            border-radius: 8px; /* More rounded */
-            padding: 10px 15px; /* More padding */
-            font-size: 14px;
-            cursor: pointer;
-            flex-shrink: 0; /* Prevent buttons from shrinking */
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .detail-fixed-footer .action-btn:hover {
-            background-color: #1976d2;
-            transform: translateY(-1px);
-        }
-        .detail-fixed-footer .action-btn.secondary {
-            background-color: #9e9e9e; /* Grey secondary */
-        }
-        .detail-fixed-footer .action-btn.secondary:hover {
-            background-color: #757575;
-        }
-        .detail-fixed-footer .action-btn.primary { /* For "优先曝光" or "再次发布" */
-            background-color: #ff9800; /* Orange */
-        }
-        .detail-fixed-footer .action-btn.primary:hover {
-            background-color: #fb8c00;
-        }
     </style>
 </head>
 <body>
@@ -1291,19 +1125,19 @@
                 </div>
 
                 <!-- Optimized Free Shipping Button -->
-                <button class="free-shipping-button" onclick="window.location.href = 'publish_1.html'">
+                <button class="free-shipping-button" onclick="window.location.href = 'https://llong0807.github.io/nothing/publish_1.html'">
                     <span class="main-text"><span class="icon">✨</span> 免费发货</span>
                     <span class="slogan">多快好省，如此简单！</span>
                 </button>
             </div>
             <div class="footer">
-                <div class="tab-button active" onclick="handleShipperTabClick(this, 'shipper-home-page')">
+                <div class="tab-button active" onclick="showPage('shipper-home-page')">
                     <span class="icon">🏠</span> 首页
                 </div>
-                <div class="tab-button" onclick="handleShipperTabClick(this, 'shipper-cargo-manage-page')">
+                <div class="tab-button" onclick="showPage('shipper-cargo-manage-page')">
                     <span class="icon">📋</span> 货源管理
                 </div>
-                <div class="tab-button" onclick="handleShipperTabClick(this, 'shipper-my-page', 'cargo_mine.html')">
+                <div class="tab-button" onclick="showPage('shipper-my-page')">
                     <span class="icon">👤</span> 我的
                 </div>
             </div>
@@ -1321,7 +1155,7 @@
                 <!-- Content will dynamically change based on tab selection -->
                 <div id="published-cargo" class="cargo-content active">
                     <!-- Optimized Cargo Item 1 -->
-                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.published[0], 'published')">
+                    <div class="cargo-item" onclick="openCargoInfoPage('pub001', 'published')">
                         <div class="item-header">
                             <span class="route-info">北京西城区到上海浦东新区</span>
                             <span class="publish-time">发布时间：6月27日</span>
@@ -1338,7 +1172,7 @@
                         </div>
                     </div>
                     <!-- Optimized Cargo Item 2 -->
-                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.published[1], 'published')">
+                    <div class="cargo-item" onclick="openCargoInfoPage('pub002', 'published')">
                         <div class="item-header">
                             <span class="route-info">深圳南山区到广州天河区</span>
                             <span class="publish-time">发布时间：6月26日</span>
@@ -1355,7 +1189,7 @@
                         </div>
                     </div>
                     <!-- Original Cargo Item (for comparison, not fully optimized) -->
-                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.published[2], 'published')">
+                    <div class="cargo-item" onclick="openCargoInfoPage('pub003', 'published')">
                         <div class="item-header">
                             <span class="route-info">成都武侯区到重庆渝北区</span>
                             <span class="publish-time">发布时间：6月25日</span>
@@ -1371,7 +1205,7 @@
                 </div>
                 <div id="found-car-cargo" class="cargo-content" style="display:none;">
                     <!-- Optimized "已找车" Cargo Item 1 -->
-                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData['found-car'][0], 'found-car')">
+                    <div class="cargo-item" onclick="openCargoInfoPage('fc001', 'found-car')">
                         <div class="item-header">
                             <span class="route-info">广州番禺区到深圳宝安区</span>
                             <span class="publish-time">发布时间：6月24日</span>
@@ -1384,7 +1218,7 @@
                         </div>
                     </div>
                     <!-- Optimized "已找车" Cargo Item 2 -->
-                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData['found-car'][1], 'found-car')">
+                    <div class="cargo-item" onclick="openCargoInfoPage('fc002', 'found-car')">
                         <div class="item-header">
                             <span class="route-info">上海静安区到杭州西湖区</span>
                             <span class="publish-time">发布时间：6月23日</span>
@@ -1399,7 +1233,7 @@
                 </div>
                 <div id="cancelled-cargo" class="cargo-content" style="display:none;">
                     <!-- Optimized "已作废" Cargo Item 1 -->
-                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.cancelled[0], 'cancelled')">
+                    <div class="cargo-item" onclick="openCargoInfoPage('can001', 'cancelled')">
                         <div class="item-header">
                             <span class="route-info">成都武侯区到重庆渝北区</span>
                             <span class="publish-time">发布时间：6月22日</span>
@@ -1412,7 +1246,7 @@
                         </div>
                     </div>
                     <!-- Optimized "已作废" Cargo Item 2 -->
-                    <div class="cargo-item" onclick="showCargoDetailPage(allCargoData.cancelled[1], 'cancelled')">
+                    <div class="cargo-item" onclick="openCargoInfoPage('can002', 'cancelled')">
                         <div class="item-header">
                             <span class="route-info">北京朝阳区到天津滨海新区</span>
                             <span class="publish-time">发布时间：6月21日</span>
@@ -1426,34 +1260,182 @@
                 </div>
             </div>
             <div class="footer">
-                <div class="tab-button" onclick="handleShipperTabClick(this, 'shipper-home-page')">
+                <div class="tab-button" onclick="showPage('shipper-home-page')">
                     <span class="icon">🏠</span> 首页
                 </div>
-                <div class="tab-button" onclick="handleShipperTabClick(this, 'shipper-cargo-manage-page')">
+                <div class="tab-button" onclick="showPage('shipper-cargo-manage-page')">
                     <span class="icon">📋</span> 货源管理
                 </div>
-                <div class="tab-button" onclick="handleShipperTabClick(this, 'shipper-my-page', 'cargo_mine.html')">
+                <div class="tab-button" onclick="showPage('shipper-my-page')">
                     <span class="icon">👤</span> 我的
                 </div>
             </div>
         </div>
 
-        <!-- 5. Shipper's "My" Page (Now with iframe, header removed) -->
+        <!-- 5. Shipper's "My" Page -->
         <div id="shipper-my-page" class="page">
-            <!-- Removed the header div as requested -->
-            <div class="content">
-                <!-- Iframe to embed external URL -->
-                <iframe id="shipperMyPageFrame" src="cargo_mine.html"></iframe>
+            <div class="header">我的 (货方)</div>
+            <!-- 需求说明按钮 (现在位于 app-screen 内部，绝对定位) -->
+            <button id="demandInfoButton" class="demand-button">
+                需求说明
+            </button>
+
+            <!-- 个人信息卡片 -->
+            <div class="profile-card">
+                <!-- 第一行：头像、用户名和切换身份按钮 -->
+                <div class="flex items-start w-full mb-3">
+                    <!-- 头像 -->
+                    <div class="avatar">
+                        <i data-lucide="user" class="w-10 h-10 text-gray-500"></i>
+                    </div>
+                    <!-- 用户名和切换身份按钮 -->
+                    <div class="flex-grow flex flex-col mt-[15px]">
+                        <div class="flex justify-between items-center w-full">
+                            <h2 class="text-base font-bold text-gray-600">这里是用户名称</h2>
+                            <button class="text-xs text-blue-500 font-medium flex items-center" onclick="showPage('identity-page')">
+                                切换身份 <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                            </button>
+                        </div>
+                        <!-- 称号显示 -->
+                        <p class="text-gray-500 text-sm mt-1">称号显示</p>
+                    </div>
+                </div>
+
+                <!-- 第二行：已在线时间、下一级称号 -->
+                <div class="flex justify-between items-center text-sm text-gray-600 mb-0">
+                    <span>已在线 30分钟</span>
+                    <span>下一级称号：无名小卒</span>
+                </div>
+
+                <!-- 第三行：进度条及加速 -->
+                <div class="flex justify-between items-center text-sm text-gray-600 mb-1">
+                    <span>进度条</span>
+                    <span>加速 <i data-lucide="zap" class="w-4 h-4 inline-block ml-1 text-yellow-500"></i></span>
+                </div>
+                <div class="progress-bar-container mb-2">
+                    <div class="progress-bar"></div>
+                </div>
+
+                <!-- 第四行：注册时间及陪伴天数 -->
+                <div class="flex justify-between items-center text-xs text-gray-400">
+                    <span>注册时间</span>
+                    <span>已陪伴223天</span>
+                </div>
+                <span class="text-sm text-gray-700 font-medium block">2025/2/22 13:33</span>
+            </div>
+
+            <!-- 可滚动内容区域 -->
+            <div class="content-area">
+                <!-- 会员权益区域 -->
+                <div class="section-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex flex-col">
+                            <h3 class="text-lg font-semibold text-gray-800">获取会员权益</h3>
+                            <p class="text-gray-500 text-sm">畅享尊贵体验</p>
+                        </div>
+                        <button class="member-button text-white px-4 py-2 rounded-full shadow-md flex items-center justify-center">
+                            加入货方会员 <i data-lucide="star" class="w-4 h-4 ml-2 fill-current text-yellow-300"></i>
+                        </button>
+                    </div>
+                    <div class="flex justify-around text-center mt-6">
+                        <div class="flex flex-col items-center">
+                            <div class="icon-circle">
+                                <i data-lucide="truck" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-600">货源随心发</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="icon-circle">
+                                <i data-lucide="award" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-600">货源优先展示</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="icon-circle">
+                                <i data-lucide="eye" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-xs text-gray-600">醒目货源</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 签到领积分区域 -->
+                <div class="section-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">签到领积分</h3>
+                        <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                            积分兑换
+                        </button>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <p class="text-gray-500 text-sm">规则说明xxxx</p>
+                        <span class="text-gray-500 text-sm">积分：100</span>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day active">10</div>
+                            <span class="text-xs text-gray-500 mt-1">第1天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">15</div>
+                            <span class="text-xs text-gray-500 mt-1">第2天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">20</div>
+                            <span class="text-xs text-gray-500 mt-1">第3天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">25</div>
+                            <span class="text-xs text-gray-500 mt-1">第4天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">35</div>
+                            <span class="text-xs text-gray-500 mt-1">第5天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">40</div>
+                            <span class="text-xs text-gray-500 mt-1">第6天</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="sign-in-day">38</div>
+                            <span class="text-xs text-gray-500 mt-1">第7天</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 帮助与反馈 -->
+                <div class="section-card help-feedback-card">
+                    <button class="text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                        帮助与反馈 <i data-lucide="message-circle" class="w-5 h-5 ml-2"></i>
+                    </button>
+                </div>
+
+                <!-- 登录管理入口 -->
+                <a href="#" class="login-management-link">
+                    登录管理
+                </a>
             </div>
             <div class="footer">
-                <div class="tab-button" onclick="handleShipperTabClick(this, 'shipper-home-page')">
+                <div class="tab-button" onclick="showPage('shipper-home-page')">
                     <span class="icon">🏠</span> 首页
                 </div>
-                <div class="tab-button" onclick="handleShipperTabClick(this, 'shipper-cargo-manage-page')">
+                <div class="tab-button" onclick="showPage('shipper-cargo-manage-page')">
                     <span class="icon">📋</span> 货源管理
                 </div>
-                <div class="tab-button active" onclick="handleShipperTabClick(this, 'shipper-my-page', 'cargo_mine.html')">
+                <div class="tab-button active" onclick="showPage('shipper-my-page')">
                     <span class="icon">👤</span> 我的
+                </div>
+            </div>
+
+            <!-- 模态对话框 -->
+            <div id="modalOverlay" class="modal-overlay">
+                <div class="modal-content">
+                    <button id="modalCloseButton" class="modal-close-button">&times;</button>
+                    <h3>这个页面需求说明：</h3>
+                    <p>1. 在线时长这东西没有实际上的业务意义，只能是用户的一种心理交互。在线时长达到要求就升级所谓的“称号”。称号拓展，比如雷达或者其他地方可以见到，未来是不是点击称号可以给个排行榜？想要称号加速，可以成为会员或积分换取时间，简单翻译， 就是要么花钱要么花时间，这个小小的设计主要是提高在线留存和转化。</p>
+                    <p>2. 签到，提高留存和转化，对于不太愿意花钱的的用户，积分可以兑换发货次数，积累到一个比较高的积分额度，在用积分打折吸引买会员等等。</p>
+                    <p>3. 会员权益部分，页面不会做太多说明，点进去会做会员分级。</p>
+                    <p>4. 待续</p>
                 </div>
             </div>
         </div>
@@ -1582,6 +1564,7 @@
 
         <!-- 8. Driver's "My" Page -->
         <div id="driver-my-page" class="page">
+            <div class="header">我的 (车方)</div>
             <div class="profile-header">
                 <div class="avatar">👨‍✈️</div>
                 <div class="nickname">司机老张</div>
@@ -1626,100 +1609,9 @@
                 <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
                     <span class="icon">📦</span> 货源管理
                 </div>
-                <div class="tab-button active" onclick="showPage('driver-my-page')">
+                <div class="tab-button" onclick="showPage('driver-my-page')">
                     <span class="icon">👷</span> 我的
                 </div>
-            </div>
-        </div>
-
-        <!-- NEW: Cargo Detail Page (Shipper's) -->
-        <div id="cargo-detail-page" class="page">
-            <div class="header detail-header">
-                <span class="back-arrow" onclick="showPage('shipper-cargo-manage-page')">←</span>
-                <span class="header-title">货物信息</span>
-                <button id="detail-action-btn" class="action-btn header-action-btn"></button>
-            </div>
-            <div class="content detail-content">
-                <!-- 货物信息区域 (路线) - Adjusted for vertical display and left alignment -->
-                <div class="detail-section route-section">
-                    <div class="address-group">
-                        <span class="address-icon origin-icon">📍</span>
-                        <div class="address-info">
-                            <div class="address-district" id="origin-district"></div>
-                            <div class="address-detail" id="origin-detail"></div>
-                        </div>
-                    </div>
-                    <!-- Arrow aligned with icons -->
-                    <span class="route-arrow">↓</span>
-                    <div class="address-group">
-                        <span class="address-icon destination-icon">📍</span>
-                        <div class="address-info">
-                            <div class="address-district" id="destination-district"></div>
-                            <div class="address-detail" id="destination-detail"></div>
-                        </div>
-                    </div>
-
-                    <!-- NEW: Mileage Section - Now inside route-section -->
-                    <div class="mileage-section" id="shipper-map-link-container">
-                        <div class="mileage-info">
-                            <span class="mileage-value" id="mileage-display">正在计算</span>
-                            <span class="mileage-reference">里程仅供参考 <span class="exclamation-icon">!</span></span>
-                        </div>
-                        <div class="map-link">
-                            <span class="map-icon">🗺️</span>
-                            <span>查看路线</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- NEW: Cargo Messages Section (Conditionally displayed) -->
-                <div class="detail-section cargo-messages-section" id="cargo-messages-section" style="display: none;">
-                    <div class="section-header" onclick="alert('进入货源消息独立页面')">
-                        <div class="section-title">货源消息</div>
-                        <div class="view-more">点击查看></div>
-                    </div>
-                    <div class="cargo-messages-list" id="cargo-messages-list">
-                        <!-- Message items will be dynamically added here -->
-                    </div>
-                </div>
-
-                <!-- 货物信息区域 (详细属性) -->
-                <div class="detail-section cargo-info-section">
-                    <div class="section-title">货源信息</div>
-                    <div class="info-row">
-                        <span class="info-label">货物名称</span>
-                        <span class="info-value" id="cargo-name"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">货物参数</span>
-                        <span class="info-value" id="cargo-params"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">装卸时间</span>
-                        <span class="info-value" id="load-time-detail"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">联系电话</span>
-                        <span class="info-value" id="contact-phone"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">备注信息</span>
-                        <span class="info-value" id="remarks"></span>
-                    </div>
-                </div>
-
-                <!-- 费用信息区域 -->
-                <div class="detail-section fee-info-section">
-                    <div class="section-title">费用信息</div>
-                    <div class="info-row">
-                        <span class="info-label">运费</span>
-                        <span class="info-value" id="freight-cost"></span>
-                    </div>
-                </div>
-            </div>
-            <!-- Fixed Footer for Detail Page -->
-            <div class="detail-fixed-footer" id="cargo-detail-footer">
-                <!-- Buttons will be dynamically added here -->
             </div>
         </div>
 
@@ -2025,7 +1917,6 @@
         };
 
 
-
         // Function to show a specific page and hide others
         function showPage(pageId) {
             const pages = document.querySelectorAll('.page');
@@ -2042,35 +1933,12 @@
                 tabButtons.forEach(button => {
                     button.classList.remove('active');
                     // Check if the button's onclick attribute targets the current pageId
-                    // Note: This needs to be updated if handleShipperTabClick is used
                     if (button.onclick && button.onclick.toString().includes(`showPage('${pageId}')`)) {
                         button.classList.add('active');
                     }
                 });
             }
         }
-
-        // Handle Shipper Tab Clicks, including loading iframe for '我的' page
-        function handleShipperTabClick(clickedButton, pageId, iframeUrl = null) {
-            showPage(pageId); // First, activate the page
-
-            // Update active state for tab buttons within the *current* footer
-            const currentFooter = clickedButton.closest('.footer');
-            if (currentFooter) {
-                const tabButtons = currentFooter.querySelectorAll('.tab-button');
-                tabButtons.forEach(button => button.classList.remove('active'));
-                clickedButton.classList.add('active');
-            }
-
-            // If the target page is 'shipper-my-page' and a URL is provided, load it into the iframe
-            if (pageId === 'shipper-my-page' && iframeUrl) {
-                const shipperMyPageFrame = document.getElementById('shipperMyPageFrame');
-                if (shipperMyPageFrame) {
-                    shipperMyPageFrame.src = iframeUrl;
-                }
-            }
-        }
-
 
         // Shipper Home Page Banner Auto-Slide
         let currentBannerIndex = 0;
@@ -2136,7 +2004,7 @@
             let nextScrollDelay = Math.random() * (4000 - 2000) + 2000; // Random speed between 2-4 seconds
 
             // Check if the *next* item to be displayed (which is currently at the bottom) is a highlight item
-            // We need to look ahead to the item that will become the *new* top item after the current scroll
+            // We need to look ahead to the item that will become the *new* top item after the scroll
             const nextItemToBeTopIndex = (currentRadarDisplayIndex + 1) % radarItemsData.length; // The item that will move to the top position after the current scroll
             if (radarItemsData[nextItemToBeTopIndex].highlight) {
                 nextScrollDelay = 5000; // Pause for 5 seconds for highlighted items
@@ -2279,112 +2147,9 @@
             }
         }
 
-        // Function to populate and show the Cargo Detail Page (Shipper)
-        function showCargoDetailPage(cargoItem, status) {
-            // Populate route information
-            document.getElementById('origin-district').textContent = cargoItem.originDistrict;
-            document.getElementById('origin-detail').textContent = cargoItem.originDetail;
-            document.getElementById('destination-district').textContent = cargoItem.destinationDistrict;
-            document.getElementById('destination-detail').textContent = cargoItem.destinationDetail;
-
-            // Populate cargo details
-            document.getElementById('cargo-name').textContent = cargoItem.cargoName;
-            document.getElementById('cargo-params').textContent = cargoItem.cargoParams;
-            document.getElementById('load-time-detail').textContent = cargoItem.loadTime;
-            document.getElementById('contact-phone').textContent = cargoItem.contactPhone;
-            document.getElementById('remarks').textContent = cargoItem.remarks;
-
-            // Populate fee information
-            document.getElementById('freight-cost').textContent = cargoItem.freightCost;
-
-            // Populate mileage information
-            const mileageDisplay = document.getElementById('mileage-display');
-            mileageDisplay.textContent = '正在计算'; // Initial state
-            setTimeout(() => {
-                mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
-            }, 1000); // Simulate a 1-second calculation time
-
-            // Set up the "查看路线" link for shipper
-            const shipperMapLinkContainer = document.getElementById('shipper-map-link-container');
-            shipperMapLinkContainer.onclick = () => {
-                const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
-                const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
-                window.open(`map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`, '_blank');
-            };
-
-
-            // Populate and conditionally display Cargo Messages section
-            const cargoMessagesSection = document.getElementById('cargo-messages-section');
-            const cargoMessagesList = document.getElementById('cargo-messages-list');
-            cargoMessagesList.innerHTML = ''; // Clear previous messages
-
-            if (cargoItem.dynamicAlert && cargoItem.messages && cargoItem.messages.length > 0) {
-                cargoMessagesSection.style.display = 'block'; // Show the section
-                // Display up to 3 messages
-                cargoItem.messages.slice(0, 3).forEach(msg => {
-                    const messageItem = document.createElement('div');
-                    messageItem.classList.add('message-item');
-                    messageItem.innerHTML = `
-                        <span class="message-line1">申请时间：${msg.time}</span>
-                        <span class="message-line2">${msg.user}，尾号${msg.phoneSuffix}，发起${msg.type}</span>
-                        <div class="message-actions">
-                            <button class="action-btn secondary" onclick="event.stopPropagation(); alert('联系 ${msg.user}')">联系</button>
-                            <button class="action-btn" onclick="event.stopPropagation(); alert('同意 ${msg.type} 来自 ${msg.user}')">同意</button>
-                        </div>
-                    `;
-                    cargoMessagesList.appendChild(messageItem);
-                });
-            } else {
-                cargoMessagesSection.style.display = 'none'; // Hide the section
-            }
-
-
-            // Set header action button
-            const detailActionBtn = document.getElementById('detail-action-btn');
-            if (status === 'cancelled') {
-                detailActionBtn.textContent = '删除';
-                detailActionBtn.classList.add('delete-btn');
-                detailActionBtn.onclick = () => alert('删除货源: ' + cargoItem.id);
-            } else {
-                detailActionBtn.textContent = '分享';
-                detailActionBtn.classList.remove('delete-btn');
-                detailActionBtn.onclick = () => alert('分享货源: ' + cargoItem.id);
-            }
-
-            // Dynamically populate fixed footer buttons
-            const detailFooter = document.getElementById('cargo-detail-footer');
-            detailFooter.innerHTML = ''; // Clear existing buttons
-
-            let buttonsToCreate = [];
-            if (status === 'published') {
-                buttonsToCreate = [
-                    { text: '撤销', className: 'secondary', action: () => alert('撤销货源: ' + cargoItem.id) },
-                    { text: '修改', className: 'secondary', action: () => alert('修改货源: ' + cargoItem.id) },
-                    { text: '优先曝光', className: 'primary', action: () => alert('优先曝光货源: ' + cargoItem.id) }
-                ];
-            } else if (status === 'found-car') {
-                buttonsToCreate = [
-                    { text: '联系意向车主', className: '', action: () => alert('联系意向车主: ' + cargoItem.id) }
-                ];
-            } else if (status === 'cancelled') {
-                buttonsToCreate = [
-                    { text: '再次发布', className: 'primary', action: () => alert('再次发布货源: ' + cargoItem.id) }
-                ];
-            }
-
-            buttonsToCreate.forEach(btnInfo => {
-                const button = document.createElement('button');
-                button.textContent = btnInfo.text;
-                button.classList.add('action-btn');
-                if (btnInfo.className) {
-                    button.classList.add(btnInfo.className);
-                }
-                button.onclick = btnInfo.action;
-                detailFooter.appendChild(button);
-            });
-
-
-            showPage('cargo-detail-page'); // Show the detail page
+        // Function to open cargo_info.html for shipper
+        function openCargoInfoPage(cargoId, status) {
+            window.location.href = `cargo_info.html?id=${cargoId}&status=${status}`;
         }
 
         // Function to populate and show the Cargo Detail Page (Driver)
@@ -2417,7 +2182,7 @@
             driverMapLinkContainer.onclick = () => {
                 const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
                 const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
-                window.open(`map_page.html?origin=${encodeURIComponent(originAddress)}&destination=${encodeURIComponent(destinationAddress)}`, '_blank');
+                alert(`查看从 ${originAddress} 到 ${destinationAddress} 的路线`);
             };
 
 
@@ -2524,6 +2289,32 @@
             setInterval(() => updateDynamicCargoAlert('dynamicAlert-item1'), 4000); // Update every 4 seconds
             setInterval(() => updateDynamicCargoAlert('dynamicAlert-item2'), 5000); // Update every 5 seconds
 
+            // Shipper My Page specific JS initialization
+            const demandInfoButton = document.getElementById('demandInfoButton');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalCloseButton = document.getElementById('modalCloseButton');
+            
+            // Ensure elements exist before adding listeners
+            if (demandInfoButton && modalOverlay && modalCloseButton) {
+                // Button click to show modal
+                demandInfoButton.addEventListener('click', () => {
+                    console.log('需求说明按钮被点击了！'); // Add debug log
+                    modalOverlay.classList.add('show');
+                });
+
+                // Close modal
+                modalCloseButton.addEventListener('click', () => {
+                    modalOverlay.classList.remove('show');
+                });
+
+                // Close modal on outside click
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        modalOverlay.classList.remove('show');
+                    }
+                });
+            }
+
             // Initialize Lucide Icons after DOM is loaded and elements are present
             if (typeof lucide !== 'undefined' && lucide.createIcons) {
                 lucide.createIcons();
@@ -2608,27 +2399,6 @@
             `;
             document.head.appendChild(style);
         };
-
-         // This is the message listener for the main page (parent)
-        // It listens for messages coming from iframes embedded within it.
-        window.addEventListener('message', function(event) {
-            // Ensure the message comes from a trusted origin.
-            // Replace 'https://llong0807.github.io' with the actual domain where your iframe content is hosted.
-            // For local development, this might be 'http://localhost:port' or similar.
-            if (event.origin !== 'https://llong0807.github.io') {
-                console.warn('Received message from untrusted origin:', event.origin);
-                return;
-            }
-
-            const data = event.data;
-            console.log(`Main page received message from iframe, attempting to navigate to page: ${data.pageId}`);
-
-            // If the action is 'showPage' and a pageId is provided, call the main page's showPage function.
-            if (data.action === 'showPage' && data.pageId) {
-                // Directly call showPage as it's defined in the global scope of the parent window.
-                showPage(data.pageId);
-            }
-        }, false);
 
     </script>
 </body>
