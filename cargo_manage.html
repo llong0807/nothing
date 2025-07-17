@@ -483,7 +483,8 @@
         function openCargoInfoPage(cargoId, status) {
             // Use parent.window.location.href to navigate the main app's window
             // This assumes cargo_info.html is at the same level as app_prototype_interactive_html
-            window.location.href = `cargo_info.html?id=${cargoId}&status=${status}`;
+            window.open('cargo_info.html?id=${cargoId}&status=${status}', '_self')
+            // window.location.href = `cargo_info.html?id=${cargoId}&status=${status}`;
         }
 
         // Basic alert polyfill to avoid blocking prompts in iframe
