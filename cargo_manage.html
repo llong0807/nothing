@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>货源管理 (货方)</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles for the content within the iframe */
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9; /* Light background for content */
+            color: #333;
+            height: 100vh; /* Ensure body takes full viewport height */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent body scroll, content will scroll within cargo-list */
+            /* Note: This page is designed to adapt to its parent iframe's size. */
+            /* The parent app-screen is 375px wide, so this page will automatically adjust to that width. */
+        }
+
+        /* Shipper Cargo Management Page */
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid #eee;
+            background-color: #fcfcfc;
+            padding: 5px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            flex-shrink: 0; /* Prevent tabs from shrinking */
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0; /* Adjusted padding */
+            font-size: 15px;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent; /* Thicker active border */
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .tab.active {
+            color: #2196f3; /* Active blue */
+            border-bottom-color: #2196f3;
+            font-weight: bold;
+        }
+        .cargo-list {
+            flex-grow: 1;
+            overflow-y: auto; /* Enable scrolling for cargo list */
+            padding: 15px 20px; /* Consistent padding */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .cargo-item {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px; /* More rounded */
+            padding: 20px; /* More padding */
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Softer shadow */
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer; /* Make the whole item clickable */
+        }
+        .cargo-item:hover {
+            transform: translateY(-3px);
+        }
+        /* Specific background for "Found Car" items */
+        #found-car-cargo .cargo-item {
+            background-color: #e8f5e9; /* Very light green for "found car" */
+            border: 1px solid #c8e6c9;
+        }
+        /* Specific background for "Cancelled" items */
+        #cancelled-cargo .cargo-item {
+            background-color: #f5f5f5; /* Light grey for "cancelled" */
+            border: 1px solid #e0e0e0;
+        }
+
+        /* New styles for cargo item details */
+        .cargo-item .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to start for multi-line route */
+            margin-bottom: 8px;
+        }
+        .cargo-item .route-info {
+            flex-grow: 1;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.4;
+            margin-right: 10px; /* Space between route and time */
+            white-space: normal; /* Allow text wrapping */
+        }
+        .cargo-item .publish-time {
+            font-size: 13px;
+            color: #888;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .cargo-item .dynamic-alert {
+            margin-top: 12px;
+            padding: 8px 12px;
+            background-color: #e6f7ff; /* Light blue background */
+            border-left: 4px solid #1890ff; /* Blue left border */
+            border-radius: 6px;
+            font-size: 13px;
+            color: #333;
+            overflow: hidden; /* Hide overflow for slide effect */
+            position: relative;
+            height: 30px; /* Fixed height for animation */
+            display: flex;
+            align-items: center;
+        }
+        .cargo-item .dynamic-alert-text {
+            position: absolute;
+            width: calc(100% - 24px); /* Adjust for padding */
+            opacity: 0;
+            transform: translateY(100%);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .cargo-item .dynamic-alert-text.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cargo-actions {
+            text-align: right;
+            margin-top: 15px; /* More space */
+        }
+        .cargo-actions .action-btn { /* Unified button style */
+            background-color: #2196f3; /* Blue button */
+            color: #fff;
+            border: none;
+            border-radius: 8px; /* More rounded */
+            padding: 10px 15px; /* More padding */
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .cargo-actions .action-btn:hover {
+            background-color: #1976d2;
+            transform: translateY(-1px);
+        }
+        .cargo-actions .action-btn.secondary {
+            background-color: #9e9e9e; /* Grey secondary */
+        }
+        .cargo-actions .action-btn.secondary:hover {
+            background-color: #757575;
+        }
+        .cargo-actions .action-btn.primary { /* For "优先曝光" or "再次发布" */
+            background-color: #ff9800; /* Orange */
+        }
+        .cargo-actions .action-btn.primary:hover {
+            background-color: #fb8c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        <div class="tab active" data-tab="published">发布中</div>
+        <div class="tab" data-tab="found-car">已找车</div>
+        <div class="tab" data-tab="cancelled">已作废</div>
+    </div>
+    <div class="cargo-list">
+        <!-- Content will dynamically change based on tab selection -->
+        <div id="published-cargo" class="cargo-content active">
+            <!-- Optimized Cargo Item 1 -->
+            <div class="cargo-item" onclick="openCargoInfoPage('pub001', 'published')">
+                <div class="item-header">
+                    <span class="route-info">北京西城区到上海浦东新区</span>
+                    <span class="publish-time">发布时间：6月27日</span>
+                </div>
+                <p class="cargo-details">货物: 电子产品, 5吨, 3.2x2x1.5米</p>
+                <p class="load-time">装卸时间: 随到随装</p>
+                <div class="dynamic-alert" id="dynamicAlert-item1">
+                    <span class="dynamic-alert-text active">李师傅刚刚收藏了您的货源！</span>
+                </div>
+                <div class="cargo-actions">
+                    <button class="action-btn secondary" onclick="event.stopPropagation(); alert('撤销货源')">撤销</button>
+                    <button class="action-btn secondary" onclick="event.stopPropagation(); alert('修改货源')">修改</button>
+                    <button class="action-btn primary" onclick="event.stopPropagation(); alert('优先曝光货源')">优先曝光</button>
+                </div>
+            </div>
+            <!-- Optimized Cargo Item 2 -->
+            <div class="cargo-item" onclick="openCargoInfoPage('pub002', 'published')">
+                <div class="item-header">
+                    <span class="route-info">深圳南山区到广州天河区</span>
+                    <span class="publish-time">发布时间：6月26日</span>
+                </div>
+                <p class="cargo-details">货物: 生鲜蔬菜, 2吨, 2.5x1.8x1米</p>
+                <p class="load-time">装卸时间: 7月1日</p>
+                <div class="dynamic-alert" id="dynamicAlert-item2">
+                    <span class="dynamic-alert-text active">已有意向车主，点击查看></span>
+                </div>
+                <div class="cargo-actions">
+                    <button class="action-btn secondary" onclick="event.stopPropagation(); alert('撤销货源')">撤销</button>
+                    <button class="action-btn secondary" onclick="event.stopPropagation(); alert('修改货源')">修改</button>
+                    <button class="action-btn primary" onclick="event.stopPropagation(); alert('优先曝光货源')">优先曝光</button>
+                </div>
+            </div>
+            <!-- Original Cargo Item (for comparison, not fully optimized) -->
+            <div class="cargo-item" onclick="openCargoInfoPage('pub003', 'published')">
+                <div class="item-header">
+                    <span class="route-info">成都武侯区到重庆渝北区</span>
+                    <span class="publish-time">发布时间：6月25日</span>
+                </div>
+                <p class="cargo-details">货物: 家具, 10方, 4x2x2米</p>
+                <p class="load-time">装卸时间: 随到随装</p>
+                <div class="cargo-actions">
+                    <button class="action-btn secondary" onclick="event.stopPropagation(); alert('撤销货源')">撤销</button>
+                    <button class="action-btn secondary" onclick="event.stopPropagation(); alert('修改货源')">修改</button>
+                    <button class="action-btn primary" onclick="event.stopPropagation(); alert('优先曝光货源')">优先曝光</button>
+                </div>
+            </div>
+        </div>
+        <div id="found-car-cargo" class="cargo-content" style="display:none;">
+            <!-- Optimized "已找车" Cargo Item 1 -->
+            <div class="cargo-item" onclick="openCargoInfoPage('fc001', 'found-car')">
+                <div class="item-header">
+                    <span class="route-info">广州番禺区到深圳宝安区</span>
+                    <span class="publish-time">发布时间：6月24日</span>
+                </div>
+                <p class="cargo-details">货物: 服装, 2吨, 2x1.5x1米</p>
+                <p class="load-time">装卸时间: 6月28日</p>
+                <!-- Dynamic alert removed as requested -->
+                <div class="cargo-actions">
+                    <button class="action-btn" onclick="event.stopPropagation(); alert('联系意向车主')">联系意向车主</button>
+                </div>
+            </div>
+            <!-- Optimized "已找车" Cargo Item 2 -->
+            <div class="cargo-item" onclick="openCargoInfoPage('fc002', 'found-car')">
+                <div class="item-header">
+                    <span class="route-info">上海静安区到杭州西湖区</span>
+                    <span class="publish-time">发布时间：6月23日</span>
+                </div>
+                <p class="cargo-details">货物: 电子设备, 3吨, 3x2x1.8米</p>
+                <p class="load-time">装卸时间: 随到随装</p>
+                <!-- Dynamic alert removed as requested -->
+                <div class="cargo-actions">
+                    <button class="action-btn" onclick="event.stopPropagation(); alert('联系意向车主')">联系意向车主</button>
+                </div>
+            </div>
+        </div>
+        <div id="cancelled-cargo" class="cargo-content" style="display:none;">
+            <!-- Optimized "已作废" Cargo Item 1 -->
+            <div class="cargo-item" onclick="openCargoInfoPage('can001', 'cancelled')">
+                <div class="item-header">
+                    <span class="route-info">成都武侯区到重庆渝北区</span>
+                    <span class="publish-time">发布时间：6月22日</span>
+                </div>
+                <p class="cargo-details">货物: 家具, 10方, 4x2x2米</p>
+                <p class="load-time">装卸时间: 6月25日</p>
+                <!-- Dynamic alert removed as requested -->
+                <div class="cargo-actions">
+                    <button class="action-btn primary" onclick="event.stopPropagation(); alert('再次发布货源')">再次发布</button>
+                </div>
+            </div>
+            <!-- Optimized "已作废" Cargo Item 2 -->
+            <div class="cargo-item" onclick="openCargoInfoPage('can002', 'cancelled')">
+                <div class="item-header">
+                    <span class="route-info">北京朝阳区到天津滨海新区</span>
+                    <span class="publish-time">发布时间：6月21日</span>
+                </div>
+                <p class="cargo-details">货物: 建筑材料, 8吨, 3x2x1米</p>
+                <p class="load-time">装卸时间: 随到随装</p>
+                <div class="cargo-actions">
+                    <button class="action-btn primary" onclick="event.stopPropagation(); alert('再次发布货源')">再次发布</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Cargo Data (expanded for detail page) - Duplicated here as cargo_manage.html is a standalone page
+        const allCargoData = {
+            'published': [
+                {
+                    id: 'pub001',
+                    route: '北京西城区到上海浦东新区',
+                    publishTime: '6月27日',
+                    cargoName: '电子产品',
+                    cargoParams: '5吨, 3.2x2x1.5米',
+                    loadTime: '随到随装',
+                    contactPhone: '138****1234',
+                    remarks: '需恒温运输，易碎品，请小心搬运。',
+                    freightCost: '5000元',
+                    originDistrict: '北京市西城区',
+                    originDetail: '金融街18号',
+                    destinationDistrict: '上海市浦东新区',
+                    destinationDetail: '陆家嘴环路1000号',
+                    dynamicAlert: "李师傅刚刚收藏了您的货源！", // This will trigger messages section
+                    mileage: '约1200公里',
+                    messages: [
+                        { time: '06.25 15:20', user: '用户李师傅', phoneSuffix: '6666', type: '申请' },
+                        { time: '06.25 14:00', user: '用户王司机', phoneSuffix: '8888', type: '关注' },
+                        { time: '06.25 10:30', user: '用户赵师傅', phoneSuffix: '1111', type: '意向' }
+                    ]
+                },
+                {
+                    id: 'pub002',
+                    route: '深圳南山区到广州天河区',
+                    publishTime: '6月26日',
+                    cargoName: '生鲜蔬菜',
+                    cargoParams: '2吨, 2.5x1.8x1米',
+                    loadTime: '7月1日',
+                    contactPhone: '139****5678',
+                    remarks: '需冷藏，上午10点前送达。',
+                    freightCost: '面议',
+                    originDistrict: '深圳市南山区',
+                    originDetail: '科技园南区1号',
+                    destinationDistrict: '广州市天河区',
+                    destinationDetail: '珠江新城花城大道',
+                    dynamicAlert: "已有意向车主，点击查看>", // This will trigger messages section
+                    mileage: '约100公里',
+                    messages: [
+                        { time: '06.26 09:00', user: '用户钱师傅', phoneSuffix: '5555', type: '意向' },
+                        { time: '06.26 08:30', user: '用户孙师傅', phoneSuffix: '4444', type: '关注' }
+                    ]
+                },
+                {
+                    id: 'pub003',
+                    route: '成都武侯区到重庆渝北区',
+                    publishTime: '6月25日',
+                    cargoName: '家具',
+                    cargoParams: '10方, 4x2x2米',
+                    loadTime: '随到随装',
+                    contactPhone: '130****9012',
+                    remarks: '拆卸后运输，需协助搬运上楼。',
+                    freightCost: '3500元',
+                    originDistrict: '成都市武侯区',
+                    originDetail: '武侯祠大街231号',
+                    destinationDistrict: '重庆市渝北区',
+                    destinationDetail: '解放碑街道民权路',
+                    dynamicAlert: null, // No dynamic alert for this one, so no messages section
+                    mileage: '约300公里',
+                    messages: []
+                }
+            ],
+            'found-car': [
+                {
+                    id: 'fc001',
+                    route: '广州番禺区到深圳宝安区',
+                    publishTime: '6月24日',
+                    cargoName: '服装',
+                    cargoParams: '2吨, 2x1.5x1米',
+                    loadTime: '6月28日',
+                    contactPhone: '131****3456',
+                    remarks: '已联系司机王师傅，等待确认。',
+                    freightCost: '1800元',
+                    originDistrict: '广州市番禺区',
+                    originDetail: '市桥街光明南路',
+                    destinationDistrict: '深圳市宝安区',
+                    destinationDetail: '新安街道宝安大道',
+                    dynamicAlert: null,
+                    mileage: '约80公里',
+                    messages: []
+                },
+                {
+                    id: 'fc002',
+                    route: '上海静安区到杭州西湖区',
+                    publishTime: '6月23日',
+                    cargoName: '电子设备',
+                    cargoParams: '3吨, 3x2x1.8米',
+                    loadTime: '随到随装',
+                    contactPhone: '132****7890',
+                    remarks: '已匹配司机李师傅，请尽快联系。',
+                    freightCost: '2500元',
+                    originDistrict: '上海市静安区',
+                    originDetail: '南京西路123号',
+                    destinationDistrict: '杭州市西湖区',
+                    destinationDetail: '西溪湿地文二西路',
+                    dynamicAlert: null,
+                    mileage: '约170公里',
+                    messages: []
+                }
+            ],
+            'cancelled': [
+                {
+                    id: 'can001',
+                    route: '成都武侯区到重庆渝北区',
+                    publishTime: '6月22日',
+                    cargoName: '家具',
+                    cargoParams: '10方, 4x2x2米',
+                    loadTime: '6月25日',
+                    contactPhone: '133****1122',
+                    remarks: '因货主临时有变，已取消。',
+                    freightCost: '3500元',
+                    originDistrict: '成都市武侯区',
+                    originDetail: '武侯祠大街231号',
+                    destinationDistrict: '重庆市渝北区',
+                    destinationDetail: '解放碑街道民权路',
+                    dynamicAlert: null,
+                    mileage: '约300公里',
+                    messages: []
+                },
+                {
+                    id: 'can002',
+                    route: '北京朝阳区到天津滨海新区',
+                    publishTime: '6月21日',
+                    cargoName: '建筑材料',
+                    cargoParams: '8吨, 3x2x1米',
+                    loadTime: '随到随装',
+                    contactPhone: '134****3344',
+                    remarks: '货源已过期，需重新发布。',
+                    freightCost: '2000元',
+                    originDistrict: '北京市朝阳区',
+                    originDetail: '望京SOHO',
+                    destinationDistrict: '天津市滨海新区',
+                    destinationDetail: '天津港保税区',
+                    dynamicAlert: null,
+                    mileage: '约140公里',
+                    messages: []
+                }
+            ]
+        };
+
+        // Shipper Cargo Management Page Dynamic Alerts
+        const dynamicCargoAlertMessages = [
+            "李师傅刚刚收藏了您的货源！",
+            "已有意向车主，点击查看>",
+            "您的货源正在被多位司机关注！",
+            "系统为您推荐了3位优质司机！"
+        ];
+        let dynamicCargoAlertIndex = 0;
+
+        function updateDynamicCargoAlert(alertElementId) {
+            const alertElement = document.getElementById(alertElementId);
+            if (!alertElement) return;
+
+            // Remove existing text elements to prepare for new one
+            const existingTextElements = alertElement.querySelectorAll('.dynamic-alert-text');
+            existingTextElements.forEach(el => el.remove());
+
+            const newMessage = dynamicCargoAlertMessages[dynamicCargoAlertIndex];
+
+            const newTextElement = document.createElement('span');
+            newTextElement.classList.add('dynamic-alert-text');
+            newTextElement.textContent = newMessage;
+            alertElement.appendChild(newTextElement);
+
+            // Trigger reflow to ensure transition works
+            void newTextElement.offsetWidth;
+            newTextElement.classList.add('active');
+
+            dynamicCargoAlertIndex = (dynamicCargoAlertIndex + 1) % dynamicCargoAlertMessages.length;
+        }
+
+        // Initialize shipper's cargo management tabs
+        function setupShipperCargoTabs() {
+            const tabsContainer = document.querySelector('.tabs');
+            if (tabsContainer) {
+                const tabs = tabsContainer.querySelectorAll('.tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Remove active class from all tabs
+                        tabs.forEach(t => t.classList.remove('active'));
+                        // Add active class to clicked tab
+                        this.classList.add('active');
+
+                        // Hide all cargo content
+                        const allCargoContent = document.querySelectorAll('.cargo-content');
+                        allCargoContent.forEach(content => {
+                            content.style.display = 'none';
+                            content.classList.remove('active');
+                        });
+
+                        // Show active cargo content
+                        const targetTab = this.dataset.tab;
+                        document.getElementById(`${targetTab}-cargo`).style.display = 'block';
+                        document.getElementById(`${targetTab}-cargo`).classList.add('active');
+                    });
+                });
+            }
+        }
+
+        // Function to open cargo_info.html for shipper
+        function openCargoInfoPage(cargoId, status) {
+            // Use parent.window.location.href to navigate the main app's window
+            // This assumes cargo_info.html is at the same level as app_prototype_interactive_html
+            window.location.href = `cargo_info.html?id=${cargoId}&status=${status}`;
+        }
+
+        // Basic alert polyfill to avoid blocking prompts in iframe
+        window.alert = (message) => {
+            const appScreen = document.querySelector('body'); // Use body as the root for the iframe
+            if (!appScreen) {
+                console.log(message); // Fallback for environments without app-screen
+                return;
+            }
+
+            // Create a simple modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; /* Use fixed to be relative to viewport */
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background-color: #fff;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                max-width: 80%;
+                font-size: 16px;
+                color: #333;
+                animation: fadeIn 0.3s ease-out;
+                position: relative;
+                overflow: hidden;
+            `;
+
+            const messageText = document.createElement('p');
+            messageText.textContent = message;
+            messageText.style.marginBottom = '25px';
+            messageText.style.fontWeight = 'bold';
+            messageText.style.lineHeight = '1.4';
+
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '确定';
+            closeButton.style.cssText = `
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 12px 25px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.2s ease, transform 0.2s ease;
+                box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+            `;
+            closeButton.onmouseover = () => closeButton.style.backgroundColor = '#0056b3';
+            closeButton.onmouseout = () => closeButton.style.backgroundColor = '#007bff';
+            closeButton.onclick = () => modal.remove();
+
+            modalContent.appendChild(messageText);
+            modalContent.appendChild(closeButton);
+            modal.appendChild(modalContent);
+            appScreen.appendChild(modal);
+
+            // Add a simple fadeIn animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        };
+
+
+        // Initialize the page on window load
+        window.onload = function() {
+            setupShipperCargoTabs();
+
+            // Start dynamic alerts for cargo management page
+            setInterval(() => updateDynamicCargoAlert('dynamicAlert-item1'), 4000); // Update every 4 seconds
+            setInterval(() => updateDynamicCargoAlert('dynamicAlert-item2'), 5000); // Update every 5 seconds
+        };
+    </script>
+</body>
+</html>
