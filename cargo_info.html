@@ -137,7 +137,7 @@
         }
 
         #cargo-detail-page .detail-content {
-            flex-grow: 1; /* Allows content to take available space and scroll */
+            flex-grow: 1;
             padding: 15px; /* Reduced padding for sections to have their own padding */
             overflow-y: auto;
             -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
@@ -264,164 +264,165 @@
             margin-right: 5px;
         }
 
-        /* Message Summary Section (CARD STYLING REINTRODUCED AND ENHANCED) */
-        .message-summary-section {
-            background-color: #FFF3E0; /* More distinct light orange/peach */
+        /* --- Message Summary Card Styles (Specific to this card) --- */
+        .message-summary-card {
+            background-color: #fff; /* Changed to white */
             border-radius: 12px;
-            padding: 20px; /* Reintroduced padding */
-            margin-bottom: 15px; /* Adjusted margin to fit within content flow */
-            /* ENHANCED STYLES BELOW */
-            box-shadow: 0 6px 16px rgba(0,0,0,0.15); /* Slightly stronger shadow */
-            border: 2px solid #FFCC80; /* More prominent, matching border */
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Adjusted shadow */
+            border: 1px solid #eee; /* Changed to thinner, light border */
             transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            display: block; /* Ensure it's a block element */
+            display: block;
         }
-        .message-summary-section:hover {
-            background-color: #FFE6CC; /* Slightly darker orange on hover */
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* More pronounced shadow on hover */
-            border-color: #FFB347; /* Slightly darker border on hover */
+        .message-summary-card:hover {
+            background-color: #f8f8f8; /* Subtle hover for white card */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1); /* Subtle hover shadow */
+            border-color: #ddd; /* Subtle hover border */
         }
 
-        /* Style for the header of message summary section */
-        .message-summary-section .section-header {
+        .message-summary-card .section-header {
             display: flex;
-            justify-content: space-between; /* Space out title and view count */
+            justify-content: space-between;
             align-items: center;
-            margin: 0; /* Reset all margins */
-            padding: 0; /* Reset all paddings */
-            margin-bottom: 5px; /* Explicit 5px margin below the header */
+            margin: 0;
+            padding: 0;
+            margin-bottom: 5px;
         }
 
-        /* New style for the "消息摘要" plain text heading */
-        .message-summary-heading-text {
-            font-size: 16px; /* Keep it readable */
-            font-weight: bold; /* Still bold for emphasis */
+        .message-summary-card .message-summary-heading-text {
+            font-size: 16px;
+            font-weight: bold;
             color: #333;
             margin: 0;
             padding: 0;
-            display: flex; /* To align icon and text inside it */
+            display: flex;
             align-items: center;
         }
 
-        .message-summary-section .message-summary-heading-text .title-icon {
-            font-size: 18px; /* Size of the icon */
-            margin-right: 8px; /* Space between icon and text */
-            color: #FF8C00; /* A distinct orange color for the icon */
+        .message-summary-card .message-summary-heading-text .title-icon {
+            font-size: 18px;
+            margin-right: 8px;
+            color: #FF8C00;
         }
 
-        /* Style for the "已浏览人数" text */
-        .message-summary-section .view-count-text {
+        .message-summary-card .view-count-text {
             font-size: 12px;
             color: #888;
-            white-space: nowrap; /* Prevent text from wrapping */
+            white-space: nowrap;
         }
 
-
-        /* Message list container */
-        .message-summary-section .cargo-messages-list {
-            margin: 0; /* Reset list margins */
-            padding: 0; /* Reset list paddings */
-            list-style: none; /* Remove default list bullets */
+        .message-summary-card .cargo-messages-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
         }
 
-        .message-summary-section .message-item {
+        /* Message items within the summary card (original styles) */
+        .message-summary-card .message-item {
             display: flex;
             flex-direction: column;
-            padding: 6px 0; /* Adjusted from 8px to 6px for more compactness */
-            border-bottom: 1px dashed #ffe0b2; /* Light orange dashed line */
+            background-color: #FFFDE7; /* Light rice yellow for subtle background */
+            border: 1px solid #e0e0e0; /* Subtle border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 10px; /* Consistent padding on all sides */
+            margin-bottom: 8px; /* Space between items */
         }
-        .message-summary-section .message-item:last-of-type { /* Use last-of-type for the last message item */
-            border-bottom: none;
-            padding-bottom: 0;
+        .message-summary-card .message-item:last-of-type {
+            margin-bottom: 0; /* No bottom margin for the last item */
         }
 
-        .message-summary-section .message-line1 {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 2px; /* Made line more compact */
-            text-align: left;
-        }
-        .message-summary-section .message-line1 .user-avatar {
-            width: 20px; /* Reduced by half (from 40px) */
-            height: 20px; /* Reduced by half (from 40px) */
+        .message-summary-card .message-item .user-avatar {
+            width: 20px; /* Small avatar for summary */
+            height: 20px;
             border-radius: 50%;
             margin-right: 8px;
             object-fit: cover;
             border: 1px solid #ddd;
         }
-        .message-summary-section .message-line1 .user-name {
+        .message-summary-card .message-item .message-line1 {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 2px;
+            text-align: left;
+        }
+        .message-summary-card .message-item .user-name {
             font-weight: bold;
             color: #333;
             margin-right: 5px;
         }
-        .message-summary-section .message-line1 .intent-type {
-            color: #e63946; /* Red for emphasis */
+        .message-summary-card .message-item .phone-suffix {
+            color: #888;
+            margin-right: 10px;
+        }
+        .message-summary-card .message-item .intent-type {
+            color: #e63946;
             font-weight: 600;
         }
 
-        .message-summary-section .message-line2 {
-            font-size: 12px; /* Smaller font for second line */
+        .message-summary-card .message-item .message-line2 {
+            font-size: 12px;
             color: #888;
-            margin-bottom: 4px; /* Made line more compact */
+            margin-bottom: 4px;
             text-align: left;
             margin-left: 28px; /* Adjusted to align with text next to smaller avatar */
         }
-        .message-summary-section .message-line2 .user-level {
+        .message-summary-card .message-item .user-level {
             font-weight: 500;
-            color: #2196f3; /* Blue for level */
+            color: #2196f3;
             margin-right: 5px;
         }
-        .message-summary-section .message-line2 .user-title {
+        .message-summary-card .message-item .user-title {
             font-style: italic;
-            color: #ff9800; /* Orange for title */
+            color: #e65100; /* Slightly darker orange for title */
             margin-right: 10px;
         }
 
-
-        .message-summary-section .message-actions {
+        .message-summary-card .message-item .message-actions {
             display: flex;
-            justify-content: flex-end; /* Align buttons to the right */
-            gap: 8px; /* Reduced gap between buttons */
-            margin-top: 3px; /* Adjusted from 5px to 3px to reduce space above buttons */
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 3px;
         }
-
-        .message-summary-section .message-actions .action-btn {
-            background-color: #2196f3; /* Blue button */
+        .message-summary-card .message-item .action-btn {
+            background-color: #2196f3;
             color: #fff;
             border: none;
-            border-radius: 8px; /* More rounded */
-            padding: 5px 8px; /* Reduced padding for buttons (approx 30%) */
-            font-size: 10px; /* Reduced font size for buttons (approx 30%) */
+            border-radius: 8px;
+            padding: 5px 8px;
+            font-size: 10px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .message-summary-section .message-actions .action-btn:hover {
+        .message-summary-card .message-item .action-btn:hover {
             background-color: #1976d2;
             transform: translateY(-1px);
         }
-        .message-summary-section .message-actions .action-btn.secondary {
-            background-color: #9e9e9e; /* Grey secondary */
+        .message-summary-card .message-item .action-btn.secondary {
+            background-color: #9e9e9e;
         }
-        .message-summary-section .message-actions .action-btn.secondary:hover {
+        .message-summary-card .message-item .action-btn.secondary:hover {
             background-color: #757575;
         }
+        /* --- End Message Summary Card Styles --- */
 
-        .message-summary-section .view-more-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
+        /* View More Link specific styles */
+        .message-summary-card .view-more-link {
+            display: flex; /* Changed to flex */
+            justify-content: center; /* Center content horizontally */
+            color: #2196f3; /* Blue text color */
+            margin-top: 20px; /* Spacing from items above */
             font-size: 14px;
-            color: #2196f3;
-            text-decoration: none;
-            font-weight: 500;
             cursor: pointer;
+            transition: color 0.2s ease;
         }
-        .message-summary-section .view-more-link:hover {
-            text-decoration: underline;
+        .message-summary-card .view-more-link:hover {
+            color: #1976d2;
         }
+
 
         /* New style for "意向车方" card */
         .intended-driver-section {
@@ -674,6 +675,149 @@
             background-color: #757575;
         }
 
+        /* --- Styles for the new "消息动态" page --- */
+        #messages-dynamic-page {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #f0f2f5;
+            z-index: 5;
+        }
+
+        #messages-dynamic-page .dynamic-header {
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #messages-dynamic-page .dynamic-header .back-arrow {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        #messages-dynamic-page .dynamic-header .header-title {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        #messages-dynamic-page .dynamic-content {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background-color: #f9f9f9;
+        }
+
+        /* Dynamic page message item styles (distinct from summary) */
+        #messages-dynamic-page .dynamic-message-item {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+        #messages-dynamic-page .dynamic-message-item:last-of-type {
+            margin-bottom: 0;
+        }
+
+        #messages-dynamic-page .dynamic-message-item .user-avatar {
+            width: 28px; /* Larger avatar for dynamic page */
+            height: 28px;
+            border-radius: 50%;
+            margin-right: 8px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+
+        #messages-dynamic-page .dynamic-message-item .dynamic-message-line1 {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 2px;
+            text-align: left;
+        }
+        #messages-dynamic-page .dynamic-message-item .user-name {
+            font-weight: bold;
+            color: #333;
+            margin-right: 5px;
+        }
+        #messages-dynamic-page .dynamic-message-item .phone-suffix {
+            color: #888;
+            margin-right: 10px;
+        }
+        #messages-dynamic-page .dynamic-message-item .intent-type {
+            color: #e63946;
+            font-weight: 600;
+        }
+
+        #messages-dynamic-page .dynamic-message-item .dynamic-message-line2 {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 4px;
+            text-align: left;
+            margin-left: 36px; /* Adjusted for larger avatar (28px avatar + 8px margin) */
+        }
+        #messages-dynamic-page .dynamic-message-item .user-level {
+            font-weight: 500;
+            color: #2196f3;
+            margin-right: 5px;
+        }
+        #messages-dynamic-page .dynamic-message-item .user-title {
+            font-style: italic;
+            color: #ff9800;
+            margin-right: 10px;
+        }
+
+        #messages-dynamic-page .dynamic-message-item .dynamic-message-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 3px;
+        }
+        #messages-dynamic-page .dynamic-message-item .action-btn {
+            background-color: #2196f3;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 8px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #messages-dynamic-page .dynamic-message-item .action-btn:hover {
+            background-color: #1976d2;
+            transform: translateY(-1px);
+        }
+        #messages-dynamic-page .dynamic-message-item .action-btn.secondary {
+            background-color: #9e9e9e;
+        }
+        #messages-dynamic-page .dynamic-message-item .action-btn.secondary:hover {
+            background-color: #757575;
+        }
+        /* --- End Styles for the new "消息动态" page --- */
+
     </style>
 </head>
 <body>
@@ -700,7 +844,7 @@
                 </div>
 
                 <!-- NEW: Message Summary Section (CARD STYLING REINTRODUCED AND ENHANCED) -->
-                <div class="detail-section message-summary-section" id="message-summary-section" style="display: none;">
+                <div class="message-summary-card" id="message-summary-section" style="display: none;">
                     <div class="section-header">
                         <span class="message-summary-heading-text">
                             <span class="title-icon">💡</span>消息摘要
@@ -710,7 +854,7 @@
                     <div class="cargo-messages-list" id="cargo-messages-list">
                         <!-- Message items will be dynamically added here by JavaScript -->
                     </div>
-                    <div class="view-more-link" onclick="alert('进入消息动态独立页面')">查看更多</div>
+                    <div class="view-more-link" onclick="showMessagesDynamicPage(currentCargoId)">查看更多></div>
                 </div>
 
                 <!-- 货物信息区域 (路线) - Adjusted for vertical display and left alignment -->
@@ -784,6 +928,21 @@
                 <!-- Buttons will be dynamically added here -->
             </div>
         </div>
+
+        <!-- NEW: 消息动态页面 -->
+        <div id="messages-dynamic-page" style="display: none;">
+            <div class="dynamic-header">
+                <span class="back-arrow" onclick="hideMessagesDynamicPage()">←</span>
+                <span class="header-title">消息动态</span>
+                <span></span> <!-- Placeholder for alignment -->
+            </div>
+            <div class="dynamic-content">
+                <div class="cargo-messages-list" id="dynamic-messages-list">
+                    <!-- All message items will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
 
         <!-- Modal for Test Button -->
         <div id="test-modal-overlay" class="modal-overlay">
@@ -1001,6 +1160,9 @@
 
         // Global variable to store the currently selected driver for "found-car" status
         let currentSelectedDriver = null;
+        // Global variable to store the ID of the cargo currently being viewed
+        let currentCargoId = null;
+        let currentCargoStatus = null; // Also store current status
 
         // Function to get the title based on user level
         function getUserTitle(level) {
@@ -1021,6 +1183,16 @@
 
         // Function to populate and show the Cargo Detail Page (Shipper)
         function showCargoDetailPage(cargoItem, status, selectedDriverInfo = null) {
+            // Set global current cargo ID and status
+            currentCargoId = cargoItem.id;
+            currentCargoStatus = status;
+
+            // Hide messages dynamic page if it's open
+            document.getElementById('messages-dynamic-page').style.display = 'none';
+            // Show cargo detail page
+            document.getElementById('cargo-detail-page').style.display = 'flex';
+
+
             // Populate route information
             document.getElementById('origin-district').textContent = cargoItem.originDistrict;
             document.getElementById('origin-detail').textContent = cargoItem.originDetail;
@@ -1078,7 +1250,7 @@
                     // Display up to 2 messages
                     cargoItem.messages.slice(0, 2).forEach(msg => {
                         const messageItem = document.createElement('div');
-                        messageItem.classList.add('message-item');
+                        messageItem.classList.add('message-item'); // Use original message-item style for summary
 
                         // Determine display text for message type
                         let messageTypeText = msg.type;
@@ -1185,7 +1357,7 @@
             confirmSelectDriverBtn.onclick = () => {
                 confirmationModalOverlay.classList.remove('visible');
                 // Simulate the action of selecting a driver and taking cargo offline
-                alert(`已选择 ${driverName} 作为承运方，货源 '${cargoId}' 已下架。请尽快与车方私聊。`);
+                alert(`已选择 ${driverInfo.name} 作为承运方，货源 '${cargoId}' 已下架。请尽快与车方私聊。`);
                 // Load the cargo in 'found-car' status and pass the selected driver info
                 loadCargo(cargoId, 'found-car', driverInfo);
             };
@@ -1219,6 +1391,80 @@
             completeCargoModalOverlay.classList.add('visible');
         }
 
+        // Function to show the "消息动态" page
+        function showMessagesDynamicPage(cargoId) {
+            const cargoItem = getCargoItemById(cargoId);
+            if (!cargoItem || !cargoItem.messages || cargoItem.messages.length === 0) {
+                alert('该货源没有消息动态可查看。');
+                return;
+            }
+
+            // Hide the main cargo detail page
+            document.getElementById('cargo-detail-page').style.display = 'none';
+            // Show the messages dynamic page
+            document.getElementById('messages-dynamic-page').style.display = 'flex';
+
+            const dynamicMessagesList = document.getElementById('dynamic-messages-list');
+            dynamicMessagesList.innerHTML = ''; // Clear previous messages
+
+            cargoItem.messages.forEach(msg => {
+                const messageItem = document.createElement('div');
+                messageItem.classList.add('dynamic-message-item'); // Use specific class for dynamic page message items
+
+                // Determine display text for message type
+                let messageTypeText = msg.type;
+                if (msg.type === '关注') {
+                    messageTypeText = '关注此货源';
+                } else if (msg.type === '申请') {
+                    messageTypeText = '有承接意向';
+                }
+
+                // Conditionally render action buttons based on message type
+                const actionsHtml = msg.type === '关注' ? '' : `
+                    <div class="dynamic-message-actions">
+                        <button class="action-btn secondary" onclick="event.stopPropagation(); alert('联系车方: ${msg.fullPhone}')">联系车方</button>
+                        <button class="action-btn" onclick="event.stopPropagation(); showConfirmationModal('${cargoItem.id}', '${msg.user}', '${msg.phoneSuffix}', '${msg.avatar}', ${msg.level}, '${msg.fullPhone}')">选择该车方</button>
+                    </div>
+                `;
+
+                messageItem.innerHTML = `
+                    <div class="dynamic-message-line1">
+                        <img src="${msg.avatar}" alt="用户头像" class="user-avatar">
+                        <span class="user-name">${msg.user}</span>
+                        <span class="phone-suffix">尾号${msg.phoneSuffix}</span>
+                        <span class="intent-type">${messageTypeText}</span>
+                    </div>
+                    <div class="dynamic-message-line2">
+                        <span class="user-level">L${msg.level}</span>
+                        <span class="user-title">${getUserTitle(msg.level)}</span>
+                        <span>${msg.time}</span>
+                    </div>
+                    ${actionsHtml}
+                `;
+                dynamicMessagesList.appendChild(messageItem);
+            });
+        }
+
+        // Function to hide the "消息动态" page and return to cargo detail
+        function hideMessagesDynamicPage() {
+            document.getElementById('messages-dynamic-page').style.display = 'none';
+            document.getElementById('cargo-detail-page').style.display = 'flex';
+            // Re-render the cargo detail page with its current state
+            if (currentCargoId && currentCargoStatus) {
+                loadCargo(currentCargoId, currentCargoStatus, currentSelectedDriver);
+            }
+        }
+
+        // Helper function to get cargo item by ID across all statuses
+        function getCargoItemById(cargoId) {
+            for (const statusKey in allCargoData) {
+                const found = allCargoData[statusKey].find(item => item.id === cargoId);
+                if (found) {
+                    return found;
+                }
+            }
+            return null;
+        }
 
         // Function to load cargo based on ID and status
         function loadCargo(cargoId, status, selectedDriverInfo = null) {
@@ -1228,6 +1474,9 @@
             document.getElementById('cancel-cargo-modal-overlay').classList.remove('visible');
             document.getElementById('complete-cargo-modal-overlay').classList.remove('visible');
 
+            // Set global current cargo ID and status
+            currentCargoId = cargoId;
+            currentCargoStatus = status;
 
             // Find the cargo item based on the provided cargoId and status
             let cargoItem = null;
