@@ -433,7 +433,8 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.15);
             border: 2px solid #81D4FA; /* Light blue border */
             display: flex;
-            align-items: center;
+            flex-direction: column; /* Changed to column to stack title and content */
+            align-items: flex-start; /* Align content to the start */
             gap: 15px;
             transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
@@ -442,6 +443,22 @@
             background-color: #ccecf4;
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             border-color: #4FC3F7;
+        }
+
+        /* Added style for the new title within intended-driver-section */
+        .intended-driver-section .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px; /* Space between title and content */
+            width: 100%; /* Ensure title takes full width */
+        }
+
+        .intended-driver-section .driver-content {
+            display: flex; /* Flex container for avatar, info, and button */
+            align-items: center;
+            gap: 15px;
+            width: 100%; /* Take full width */
         }
 
         .intended-driver-section .driver-avatar {
@@ -835,12 +852,15 @@
             <div class="content detail-content">
                 <!-- NEW: Intended Driver Section (initially hidden) -->
                 <div class="detail-section intended-driver-section" id="intended-driver-section" style="display: none;">
-                    <img src="" alt="Driver Avatar" class="driver-avatar" id="intended-driver-avatar">
-                    <div class="driver-info">
-                        <div class="driver-name-phone" id="intended-driver-name-phone"></div>
-                        <div class="driver-level-title" id="intended-driver-level-title"></div>
+                    <div class="section-title">意向车方</div> <!-- Added title here -->
+                    <div class="driver-content">
+                        <img src="" alt="Driver Avatar" class="driver-avatar" id="intended-driver-avatar">
+                        <div class="driver-info">
+                            <div class="driver-name-phone" id="intended-driver-name-phone"></div>
+                            <div class="driver-level-title" id="intended-driver-level-title"></div>
+                        </div>
+                        <button class="contact-driver-btn" id="contact-intended-driver-btn">联系车方</button>
                     </div>
-                    <button class="contact-driver-btn" id="contact-intended-driver-btn">联系车方</button>
                 </div>
 
                 <!-- NEW: Message Summary Section (CARD STYLING REINTRODUCED AND ENHANCED) -->
@@ -1097,7 +1117,8 @@
                     destinationDetail: '新安街道宝安大道',
                     dynamicAlert: null,
                     mileage: '约80公里',
-                    messages: []
+                    messages: [],
+                    selectedDriver: { name: '张师傅', phoneSuffix: '7777', avatar: 'https://placehold.co/50x50/33A1FF/FFFFFF?text=Z', level: 60, fullPhone: '13512347777' }
                 },
                 {
                     id: 'fc002',
@@ -1115,7 +1136,8 @@
                     destinationDetail: '西溪湿地文二西路',
                     dynamicAlert: null,
                     mileage: '约170公里',
-                    messages: []
+                    messages: [],
+                    selectedDriver: { name: '李师傅', phoneSuffix: '9999', avatar: 'https://placehold.co/50x50/FF5733/FFFFFF?text=L', level: 75, fullPhone: '13698769999' }
                 }
             ],
             'cancelled': [
@@ -1288,12 +1310,20 @@
             } else if (status === 'found-car') {
                 intendedDriverSection.style.display = 'flex'; // Show the intended driver section
                 // Populate intended driver details
-                if (selectedDriverInfo) {
-                    document.getElementById('intended-driver-avatar').src = selectedDriverInfo.avatar;
-                    document.getElementById('intended-driver-name-phone').textContent = `${selectedDriverInfo.name} (尾号${selectedDriverInfo.phoneSuffix})`;
-                    document.getElementById('intended-driver-level-title').textContent = `L${selectedDriverInfo.level} ${getUserTitle(selectedDriverInfo.level)}`;
-                    document.getElementById('contact-intended-driver-btn').onclick = () => alert(`联系意向车方: ${selectedDriverInfo.fullPhone}`);
-                    currentSelectedDriver = selectedDriverInfo; // Store for later use if needed
+                let driverToDisplay = selectedDriverInfo || cargoItem.selectedDriver;
+
+                if (driverToDisplay) {
+                    document.getElementById('intended-driver-avatar').src = driverToDisplay.avatar;
+                    document.getElementById('intended-driver-name-phone').textContent = `${driverToDisplay.name} (尾号${driverToDisplay.phoneSuffix})`;
+                    document.getElementById('intended-driver-level-title').textContent = `L${driverToDisplay.level} ${getUserTitle(driverToDisplay.level)}`;
+                    document.getElementById('contact-intended-driver-btn').onclick = () => alert(`联系意向车方: ${driverToDisplay.fullPhone}`);
+                    currentSelectedDriver = driverToDisplay; // Store for later use if needed
+                } else {
+                    // Fallback if no driver info is available for 'found-car' status (shouldn't happen with updated data)
+                    document.getElementById('intended-driver-avatar').src = 'https://placehold.co/50x50/CCCCCC/666666?text=N/A';
+                    document.getElementById('intended-driver-name-phone').textContent = '暂无车方信息';
+                    document.getElementById('intended-driver-level-title').textContent = '';
+                    document.getElementById('contact-intended-driver-btn').onclick = () => alert('暂无联系方式');
                 }
             }
 
@@ -1494,8 +1524,8 @@
 
             if (cargoItem) {
                 // If the status is changing to 'found-car', ensure selectedDriverInfo is passed
-                if (status === 'found-car' && !selectedDriverInfo && currentSelectedDriver) {
-                    selectedDriverInfo = currentSelectedDriver; // Use the globally stored driver if available
+                if (status === 'found-car' && !selectedDriverInfo && cargoItem.selectedDriver) {
+                    selectedDriverInfo = cargoItem.selectedDriver; // Use the pre-defined selectedDriver if available
                 }
                 showCargoDetailPage(cargoItem, status, selectedDriverInfo);
             } else {
