@@ -215,7 +215,7 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            cursor: pointer;
+            /* Removed cursor: pointer; from here */
             transition: background-color 0.2s ease;
             width: 100%; /* Take full width of its parent's content area */
             box-sizing: border-box; /* Ensure padding is included in the width */
@@ -257,6 +257,7 @@
             font-size: 14px;
             font-weight: 500;
             text-decoration: none; /* Remove underline */
+            cursor: pointer; /* Added cursor: pointer; here */
         }
 
         #cargo-detail-page .map-link .map-icon {
@@ -897,12 +898,12 @@
                     </div>
 
                     <!-- Mileage Section - Now inside route-section -->
-                    <div class="mileage-section" id="shipper-map-link-container">
+                    <div class="mileage-section">
                         <div class="mileage-info">
                             <span class="mileage-value" id="mileage-display">正在计算</span>
                             <span class="mileage-reference">里程仅供参考 <span class="exclamation-icon">!</span></span>
                         </div>
-                        <div class="map-link">
+                        <div class="map-link" id="view-route-link">
                             <span class="map-icon">🗺️</span>
                             <span>查看路线</span>
                         </div>
@@ -1012,6 +1013,18 @@
                 <div class="modal-buttons">
                     <button class="modal-btn cancel-btn" onclick="document.getElementById('complete-cargo-modal-overlay').classList.remove('visible');">忽略</button>
                     <button class="modal-btn" id="confirm-complete-cargo-btn">继续</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW: Generic Message Modal -->
+        <div id="message-modal-overlay" class="modal-overlay">
+            <div class="modal-content">
+                <button class="modal-close-btn" onclick="document.getElementById('message-modal-overlay').classList.remove('visible');">&times;</button>
+                <h3 id="message-modal-title">提示</h3>
+                <p id="message-modal-text"></p>
+                <div class="modal-buttons">
+                    <button class="modal-btn" onclick="document.getElementById('message-modal-overlay').classList.remove('visible');">确定</button>
                 </div>
             </div>
         </div>
@@ -1203,6 +1216,17 @@
             return '未知等级'; // Default for levels outside defined ranges
         }
 
+        // Function to show a generic message modal
+        function showMessageModal(message, title = '提示') {
+            const messageModalOverlay = document.getElementById('message-modal-overlay');
+            const messageModalTitle = document.getElementById('message-modal-title');
+            const messageModalText = document.getElementById('message-modal-text');
+
+            messageModalTitle.textContent = title;
+            messageModalText.textContent = message;
+            messageModalOverlay.classList.add('visible');
+        }
+
         // Function to populate and show the Cargo Detail Page (Shipper)
         function showCargoDetailPage(cargoItem, status, selectedDriverInfo = null) {
             // Set global current cargo ID and status
@@ -1239,12 +1263,10 @@
             }, 1000); // Simulate a 1-second calculation time
 
             // Set up the "查看路线" link for shipper
-            const shipperMapLinkContainer = document.getElementById('shipper-map-link-container');
-            shipperMapLinkContainer.onclick = () => {
-                const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
-                const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
-                // In a real scenario, this would link to a map service or an internal map page
-                alert(`查看从 ${originAddress} 到 ${destinationAddress} 的路线`);
+            const viewRouteLink = document.getElementById('view-route-link'); // Get the specific link element
+            viewRouteLink.onclick = () => {
+                console.log('查看路线 clicked!'); // Debugging log
+                showMessageModal('地图页面待接入'); // Use custom modal
             };
 
             // Get references to message summary and intended driver sections
@@ -1285,7 +1307,7 @@
                         // Conditionally render action buttons based on message type
                         const actionsHtml = msg.type === '关注' ? '' : `
                             <div class="message-actions">
-                                <button class="action-btn secondary" onclick="event.stopPropagation(); alert('联系车方: ${msg.fullPhone}')">联系车方</button>
+                                <button class="action-btn secondary" onclick="event.stopPropagation(); showMessageModal('联系车方: ${msg.fullPhone}')">联系车方</button>
                                 <button class="action-btn" onclick="event.stopPropagation(); showConfirmationModal('${cargoItem.id}', '${msg.user}', '${msg.phoneSuffix}', '${msg.avatar}', ${msg.level}, '${msg.fullPhone}')">选择该车方</button>
                             </div>
                         `;
@@ -1316,14 +1338,14 @@
                     document.getElementById('intended-driver-avatar').src = driverToDisplay.avatar;
                     document.getElementById('intended-driver-name-phone').textContent = `${driverToDisplay.name} (尾号${driverToDisplay.phoneSuffix})`;
                     document.getElementById('intended-driver-level-title').textContent = `L${driverToDisplay.level} ${getUserTitle(driverToDisplay.level)}`;
-                    document.getElementById('contact-intended-driver-btn').onclick = () => alert(`联系意向车方: ${driverToDisplay.fullPhone}`);
+                    document.getElementById('contact-intended-driver-btn').onclick = () => showMessageModal(`联系意向车方: ${driverToDisplay.fullPhone}`);
                     currentSelectedDriver = driverToDisplay; // Store for later use if needed
                 } else {
                     // Fallback if no driver info is available for 'found-car' status (shouldn't happen with updated data)
                     document.getElementById('intended-driver-avatar').src = 'https://placehold.co/50x50/CCCCCC/666666?text=N/A';
                     document.getElementById('intended-driver-name-phone').textContent = '暂无车方信息';
                     document.getElementById('intended-driver-level-title').textContent = '';
-                    document.getElementById('contact-intended-driver-btn').onclick = () => alert('暂无联系方式');
+                    document.getElementById('contact-intended-driver-btn').onclick = () => showMessageModal('暂无联系方式');
                 }
             }
 
@@ -1333,11 +1355,11 @@
             if (status === 'cancelled') {
                 detailActionBtn.textContent = '删除';
                 detailActionBtn.classList.add('delete-btn');
-                detailActionBtn.onclick = () => alert('删除货源: ' + cargoItem.id);
+                detailActionBtn.onclick = () => showMessageModal('删除货源: ' + cargoItem.id);
             } else {
                 detailActionBtn.textContent = '分享';
                 detailActionBtn.classList.remove('delete-btn');
-                detailActionBtn.onclick = () => alert('分享货源: ' + cargoItem.id);
+                detailActionBtn.onclick = () => showMessageModal('分享货源: ' + cargoItem.id);
             }
 
             // Dynamically populate fixed footer buttons
@@ -1347,19 +1369,19 @@
             let buttonsToCreate = [];
             if (status === 'published') {
                 buttonsToCreate = [
-                    { text: '撤销', className: 'secondary', action: () => alert('撤销货源: ' + cargoItem.id) },
-                    { text: '修改', className: 'secondary', action: () => alert('修改货源: ' + cargoItem.id) },
-                    { text: '优先曝光', className: 'primary', action: () => alert('优先曝光货源: ' + cargoItem.id) }
+                    { text: '撤销', className: 'secondary', action: () => showMessageModal('撤销货源: ' + cargoItem.id) },
+                    { text: '修改', className: 'secondary', action: () => showMessageModal('修改货源: ' + cargoItem.id) },
+                    { text: '优先曝光', className: 'primary', action: () => showMessageModal('优先曝光货源: ' + cargoItem.id) }
                 ];
             } else if (status === 'found-car') {
                 buttonsToCreate = [
-                    { text: '联系意向车主', className: '', action: () => alert('联系意向车主: ' + currentSelectedDriver.fullPhone) },
+                    { text: '联系意向车主', className: '', action: () => showMessageModal('联系意向车主: ' + currentSelectedDriver.fullPhone) },
                     { text: '取消货源', className: 'secondary', action: () => showCancelCargoModal(cargoItem.id) },
                     { text: '找车完成', className: 'primary', action: () => showCompleteCargoModal(cargoItem.id) }
                 ];
             } else if (status === 'cancelled') {
                 buttonsToCreate = [
-                    { text: '再次发布', className: 'primary', action: () => alert('再次发布货源: ' + cargoItem.id) }
+                    { text: '再次发布', className: 'primary', action: () => showMessageModal('再次发布货源: ' + cargoItem.id) }
                 ];
             }
 
@@ -1387,7 +1409,7 @@
             confirmSelectDriverBtn.onclick = () => {
                 confirmationModalOverlay.classList.remove('visible');
                 // Simulate the action of selecting a driver and taking cargo offline
-                alert(`已选择 ${driverInfo.name} 作为承运方，货源 '${cargoId}' 已下架。请尽快与车方私聊。`);
+                showMessageModal(`已选择 ${driverInfo.name} 作为承运方，货源 '${cargoId}' 已下架。请尽快与车方私聊。`);
                 // Load the cargo in 'found-car' status and pass the selected driver info
                 loadCargo(cargoId, 'found-car', driverInfo);
             };
@@ -1402,7 +1424,7 @@
 
             confirmCancelCargoBtn.onclick = () => {
                 cancelCargoModalOverlay.classList.remove('visible');
-                alert(`货源 '${cargoId}' 已取消，并进入已作废列表。`);
+                showMessageModal(`货源 '${cargoId}' 已取消，并进入已作废列表。`);
                 loadCargo(cargoId, 'cancelled');
             };
             cancelCargoModalOverlay.classList.add('visible');
@@ -1415,7 +1437,7 @@
 
             confirmCompleteCargoBtn.onclick = () => {
                 completeCargoModalOverlay.classList.remove('visible');
-                alert(`货源 '${cargoId}' 已完成，并已作废。`);
+                showMessageModal(`货源 '${cargoId}' 已完成，并已作废。`);
                 loadCargo(cargoId, 'cancelled'); // Assuming "找车完成" also leads to 'cancelled' or 'completed' state
             };
             completeCargoModalOverlay.classList.add('visible');
@@ -1425,7 +1447,7 @@
         function showMessagesDynamicPage(cargoId) {
             const cargoItem = getCargoItemById(cargoId);
             if (!cargoItem || !cargoItem.messages || cargoItem.messages.length === 0) {
-                alert('该货源没有消息动态可查看。');
+                showMessageModal('该货源没有消息动态可查看。');
                 return;
             }
 
@@ -1452,7 +1474,7 @@
                 // Conditionally render action buttons based on message type
                 const actionsHtml = msg.type === '关注' ? '' : `
                     <div class="dynamic-message-actions">
-                        <button class="action-btn secondary" onclick="event.stopPropagation(); alert('联系车方: ${msg.fullPhone}')">联系车方</button>
+                        <button class="action-btn secondary" onclick="event.stopPropagation(); showMessageModal('联系车方: ${msg.fullPhone}')">联系车方</button>
                         <button class="action-btn" onclick="event.stopPropagation(); showConfirmationModal('${cargoItem.id}', '${msg.user}', '${msg.phoneSuffix}', '${msg.avatar}', ${msg.level}, '${msg.fullPhone}')">选择该车方</button>
                     </div>
                 `;
@@ -1503,6 +1525,7 @@
             document.getElementById('confirmation-modal-overlay').classList.remove('visible');
             document.getElementById('cancel-cargo-modal-overlay').classList.remove('visible');
             document.getElementById('complete-cargo-modal-overlay').classList.remove('visible');
+            document.getElementById('message-modal-overlay').classList.remove('visible'); // Hide generic message modal too
 
             // Set global current cargo ID and status
             currentCargoId = cargoId;
@@ -1529,7 +1552,7 @@
                 }
                 showCargoDetailPage(cargoItem, status, selectedDriverInfo);
             } else {
-                alert(`未找到 ID 为 '${cargoId}' 的货源信息，或状态 '${status}' 无效。`);
+                showMessageModal(`未找到 ID 为 '${cargoId}' 的货源信息，或状态 '${status}' 无效。`);
                 console.warn(`Cargo with ID '${cargoId}' not found or invalid status '${status}'.`);
             }
         }
@@ -1565,6 +1588,12 @@
                     document.getElementById('complete-cargo-modal-overlay').classList.remove('visible');
                 }
             });
+            // Generic message modal close on outside click
+            document.getElementById('message-modal-overlay').addEventListener('click', (event) => {
+                if (event.target === document.getElementById('message-modal-overlay')) {
+                    document.getElementById('message-modal-overlay').classList.remove('visible');
+                }
+            });
 
 
             // Determine which cargo to load initially (always default to pub001, published for this demo)
@@ -1575,7 +1604,7 @@
             if (initialCargoItem) {
                 showCargoDetailPage(initialCargoItem, initialStatus);
             } else {
-                alert('没有可显示的默认货源信息。');
+                showMessageModal('没有可显示的默认货源信息。');
                 console.error('No default cargo data available.');
             }
         };
