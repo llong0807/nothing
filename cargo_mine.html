@@ -28,7 +28,7 @@
         /* The main container simulating a phone screen */
         .app-screen {
             width: 375px; /* Standard mobile width */
-            height: 812px; /* Fixed height for standard mobile height, no stretching */
+            min-height: 100vh; /* Allow it to grow beyond the viewport height */
             background-color: #ffffff;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Softer, larger shadow as requested */
@@ -36,7 +36,7 @@
             flex-direction: column;
             position: relative; /* Keep relative positioning for absolute child buttons */
             z-index: 1; /* Ensure it's above other elements */
-            overflow: hidden; /* Hide content overflowing app-screen corners */
+            overflow: visible; /* Allow content to overflow and push the page height */
             margin: 0 auto; /* Horizontally center app-screen */
         }
         /* Header background removed */
@@ -84,8 +84,7 @@
             border-radius: 10px;
         }
         .content-area { /* New content area, wraps all scrollable cards */
-            flex-grow: 1; /* Allow this area to fill remaining space */
-            overflow-y: auto; /* Allow vertical scrolling */
+            /* Removed flex-grow and overflow-y to allow the whole page to scroll */
             padding: 0 18px 18px 18px; /* Left/right/bottom padding for card area, no top padding, more compact */
             box-sizing: border-box;
             display: flex;
@@ -472,105 +471,105 @@
     </style>
 </head>
 <body>
-    <div class="app-screen">
-        <!-- Demand Description button (now absolutely positioned inside app-screen) -->
-        <button id="demandInfoButton" class="demand-button">
-            需求说明
-        </button>
+<div class="app-screen">
+    <!-- Demand Description button (now absolutely positioned inside app-screen) -->
+    <button id="demandInfoButton" class="demand-button">
+        需求说明
+    </button>
 
-        <!-- User Profile Card -->
-        <div class="profile-card">
-            <!-- First row: Avatar, Username, and Switch Identity button -->
-            <div class="flex items-start w-full mb-3">
-                <!-- Avatar -->
-                <div class="avatar">
-                    <i data-lucide="user" class="w-10 h-10 text-gray-500"></i>
-                </div>
-                <!-- Username and Switch Identity button -->
-                <div class="flex-grow flex flex-col mt-[15px]">
-                    <div class="flex justify-between items-center w-full">
-                        <h2 class="text-base font-bold text-gray-600">这里是用户名称</h2>
-                        <button id="switchIdentityButton" class="text-xs text-blue-500 font-medium flex items-center">
-                            切换身份 <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
-                        </button>
-                    </div>
-                    <!-- Title Display -->
-                    <p class="text-gray-500 text-sm mt-1">无名小卒</p>
-                </div>
+    <!-- User Profile Card -->
+    <div class="profile-card">
+        <!-- First row: Avatar, Username, and Switch Identity button -->
+        <div class="flex items-start w-full mb-3">
+            <!-- Avatar -->
+            <div class="avatar">
+                <i data-lucide="user" class="w-10 h-10 text-gray-500"></i>
             </div>
-
-            <!-- Second row: Online time, next title -->
-            <div class="flex justify-between items-center text-sm text-gray-600 mb-0">
-                <span>已在线 30分钟</span>
-                <span>下一级称号：街头货郎(2级)</span>
+            <!-- Username and Switch Identity button -->
+            <div class="flex-grow flex flex-col mt-[15px]">
+                <div class="flex justify-between items-center w-full">
+                    <h2 class="text-base font-bold text-gray-600">这里是用户名称</h2>
+                    <button id="switchIdentityButton" class="text-xs text-blue-500 font-medium flex items-center">
+                        切换身份 <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                <!-- Title Display -->
+                <p class="text-gray-500 text-sm mt-1">无名小卒</p>
             </div>
+        </div>
 
-            <!-- Third row: Progress bar and acceleration -->
-            <div class="flex justify-between items-center text-sm text-gray-600 mb-1">
-                <span>进度条</span>
-                <!-- 加速按钮：使用内联SVG，并确保flex居中 -->
-                <button class="text-blue-500 font-medium text-sm flex items-center justify-center px-2 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                    加速
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 text-yellow-500">
-                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        <!-- Second row: Online time, next title -->
+        <div class="flex justify-between items-center text-sm text-gray-600 mb-0">
+            <span>已在线 30分钟</span>
+            <span>下一级称号：街头货郎(2级)</span>
+        </div>
+
+        <!-- Third row: Progress bar and acceleration -->
+        <div class="flex justify-between items-center text-sm text-gray-600 mb-1">
+            <span>进度条</span>
+            <!-- 加速按钮：使用内联SVG，并确保flex居中 -->
+            <button class="text-blue-500 font-medium text-sm flex items-center justify-center px-2 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                加速
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 text-yellow-500">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="progress-bar-container mb-2">
+            <div class="progress-bar"></div>
+        </div>
+
+        <!-- Fourth row: Registration time and companion days -->
+        <div class="flex justify-between items-center text-xs text-gray-400">
+            <span>注册时间</span>
+            <span>已陪伴223天</span>
+        </div>
+        <span class="text-sm text-gray-700 font-medium block">2025/2/22 13:33</span>
+    </div>
+
+    <!-- Scrollable Content Area -->
+    <div class="content-area">
+        <!-- Member Benefits Area (Non-member state) -->
+        <div id="nonMemberCard" class="section-card">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-800">获取会员权益</h3>
+                    <p class="text-gray-500 text-sm">畅享尊贵体验</p>
+                </div>
+                <!-- 加入货方会员按钮：使用内联SVG，并确保flex居中 -->
+                <button id="joinMemberButton" class="member-button text-white px-4 py-2 rounded-full shadow-md">
+                    加入货方会员
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="ml-2 text-yellow-300">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                     </svg>
                 </button>
             </div>
-            <div class="progress-bar-container mb-2">
-                <div class="progress-bar"></div>
+            <div class="flex justify-around text-center mt-6">
+                <div class="flex flex-col items-center">
+                    <div class="icon-circle">
+                        <i data-lucide="truck" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">货源随心发</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="icon-circle">
+                        <i data-lucide="award" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">货源优先展示</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="icon-circle">
+                        <i data-lucide="eye" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xs text-gray-600">醒目货源</span>
+                </div>
             </div>
-
-            <!-- Fourth row: Registration time and companion days -->
-            <div class="flex justify-between items-center text-xs text-gray-400">
-                <span>注册时间</span>
-                <span>已陪伴223天</span>
-            </div>
-            <span class="text-sm text-gray-700 font-medium block">2025/2/22 13:33</span>
         </div>
 
-        <!-- Scrollable Content Area -->
-        <div class="content-area">
-            <!-- Member Benefits Area (Non-member state) -->
-            <div id="nonMemberCard" class="section-card">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex flex-col">
-                        <h3 class="text-lg font-semibold text-gray-800">获取会员权益</h3>
-                        <p class="text-gray-500 text-sm">畅享尊贵体验</p>
-                    </div>
-                    <!-- 加入货方会员按钮：使用内联SVG，并确保flex居中 -->
-                    <button id="joinMemberButton" class="member-button text-white px-4 py-2 rounded-full shadow-md">
-                        加入货方会员
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="ml-2 text-yellow-300">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="flex justify-around text-center mt-6">
-                    <div class="flex flex-col items-center">
-                        <div class="icon-circle">
-                            <i data-lucide="truck" class="w-6 h-6"></i>
-                        </div>
-                        <span class="text-xs text-gray-600">货源随心发</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="icon-circle">
-                            <i data-lucide="award" class="w-6 h-6"></i>
-                        </div>
-                        <span class="text-xs text-gray-600">货源优先展示</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="icon-circle">
-                            <i data-lucide="eye" class="w-6 h-6"></i>
-                        </div>
-                        <span class="text-xs text-gray-600">醒目货源</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Member Benefits Area (Member state) - Optimized Style -->
-            <div id="memberDetailsCard" class="section-card member-details-card hidden">
-                <div class="member-header">
-                    <div class="member-type-group">
+        <!-- Member Benefits Area (Member state) - Optimized Style -->
+        <div id="memberDetailsCard" class="section-card member-details-card hidden">
+            <div class="member-header">
+                <div class="member-type-group">
                         <span class="member-type-text">
                             <!-- Inline SVG for Crown Icon -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="crown-icon">
@@ -578,339 +577,339 @@
                             </svg>
                             PLUS 年卡会员
                         </span>
-                        <span class="expiry-date">2026.06.18到期 ></span>
-                    </div>
-                    <div class="star-logo-button" id="renewStarLogo">
-                        <i data-lucide="star" class="w-8 h-8 lucide"></i>
-                    </div>
+                    <span class="expiry-date">2026.06.18到期 ></span>
                 </div>
-                
-                <div class="member-rights-grid">
-                    <!-- Benefit Item Examples -->
-                    <div class="member-rights-item-grid">
-                        <div class="icon-wrapper">
-                            <span>5/10</span>
-                        </div>
-                        <span>免费发货</span>
-                    </div>
-                    <div class="member-rights-item-grid">
-                        <div class="icon-wrapper">
-                            <span>1/5</span>
-                        </div>
-                        <span>醒目发货</span>
-                    </div>
-                    <div class="member-rights-item-grid">
-                        <div class="icon-wrapper">
-                            <span>2/3</span>
-                        </div>
-                        <span>置顶曝光</span>
-                    </div>
-                    <div class="member-rights-item-grid">
-                        <div class="icon-wrapper">
-                            <span>5</span>
-                        </div>
-                        <span>签到加分</span>
-                    </div>
-                    <!-- Inactive Benefit Example -->
-                    <div class="member-rights-item-grid disabled" data-status="inactive">
-                        <div class="icon-wrapper disabled">
-                            <i data-lucide="phone" class="w-6 h-6 lucide"></i>
-                        </div>
-                        <span>专属客服</span>
-                    </div>
-                    <div class="member-rights-item-grid disabled" data-status="inactive">
-                        <div class="icon-wrapper disabled">
-                            <i data-lucide="gem" class="w-6 h-6 lucide"></i>
-                        </div>
-                        <span>生日特权</span>
-                    </div>
+                <div class="star-logo-button" id="renewStarLogo">
+                    <i data-lucide="star" class="w-8 h-8 lucide"></i>
                 </div>
             </div>
 
-            <!-- Sign-in for Points Area -->
-            <div class="section-card">
-                <div class="flex justify-between items-start mb-2"> <!-- Adjusted mb-4 to mb-2 to move text up -->
-                    <h3 class="text-lg font-semibold text-gray-800">签到领积分</h3>
-                    <div class="flex gap-2"> <!-- Added a flex container for buttons -->
-                        <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                            积分兑换
-                        </button>
-                        <!-- Added "我的兑换" button -->
-                        <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                            我的兑换
-                        </button>
+            <div class="member-rights-grid">
+                <!-- Benefit Item Examples -->
+                <div class="member-rights-item-grid">
+                    <div class="icon-wrapper">
+                        <span>5/10</span>
                     </div>
+                    <span>免费发货</span>
                 </div>
-                <div class="flex justify-between items-center mb-2"> <!-- Adjusted mb-4 to mb-2 to move text up -->
-                    <p class="text-gray-500 text-sm">规则说明xxxx</p>
-                    <span class="text-gray-500 text-sm">积分：100</span>
+                <div class="member-rights-item-grid">
+                    <div class="icon-wrapper">
+                        <span>1/5</span>
+                    </div>
+                    <span>醒目发货</span>
                 </div>
-                <div class="grid grid-cols-7 gap-2 text-center">
-                    <div class="flex flex-col items-center">
-                        <div class="sign-in-day active">10</div>
-                        <span class="text-xs text-gray-500 mt-1">第1天</span>
+                <div class="member-rights-item-grid">
+                    <div class="icon-wrapper">
+                        <span>2/3</span>
                     </div>
-                    <div class="flex flex-col items-center">
-                        <div class="sign-in-day">15</div>
-                        <span class="text-xs text-gray-500 mt-1">第2天</span>
+                    <span>置顶曝光</span>
+                </div>
+                <div class="member-rights-item-grid">
+                    <div class="icon-wrapper">
+                        <span>5</span>
                     </div>
-                    <div class="flex flex-col items-center">
-                        <div class="sign-in-day">20</div>
-                        <span class="text-xs text-gray-500 mt-1">第3天</span>
+                    <span>签到加分</span>
+                </div>
+                <!-- Inactive Benefit Example -->
+                <div class="member-rights-item-grid disabled" data-status="inactive">
+                    <div class="icon-wrapper disabled">
+                        <i data-lucide="phone" class="w-6 h-6 lucide"></i>
                     </div>
-                    <div class="flex flex-col items-center">
-                        <div class="sign-in-day">25</div>
-                        <span class="text-xs text-gray-500 mt-1">第4天</span>
+                    <span>专属客服</span>
+                </div>
+                <div class="member-rights-item-grid disabled" data-status="inactive">
+                    <div class="icon-wrapper disabled">
+                        <i data-lucide="gem" class="w-6 h-6 lucide"></i>
                     </div>
-                    <div class="flex flex-col items-center">
-                        <div class="sign-in-day">35</div>
-                        <span class="text-xs text-gray-500 mt-1">第5天</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="sign-in-day">40</div>
-                        <span class="text-xs text-gray-500 mt-1">第6天</span>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="sign-in-day">38</div>
-                        <span class="text-xs text-gray-500 mt-1">第7天</span>
-                    </div>
+                    <span>生日特权</span>
                 </div>
             </div>
-
-            <!-- Help and Feedback -->
-            <div class="section-card help-feedback-card">
-                <button class="text-gray-600 font-medium flex items-center justify-center w-full py-2">
-                    帮助与反馈 <i data-lucide="message-circle" class="w-5 h-5 lucide"></i>
-                </button>
-            </div>
-
-            <!-- Login Management Entry -->
-            <a href="#" class="login-management-link">
-                登录管理
-            </a>
         </div>
-    </div>
 
-    <!-- Modal Dialog (Demand Description) -->
-    <div id="modalOverlay" class="modal-overlay">
-        <div class="modal-content">
-            <!-- New "跳转文档" button -->
-            <button class="modal-jump-button" onclick="window.open('https://um21c35u8u.feishu.cn/wiki/JZC6wny8Pi6At4kZZ4zcrPafn3d?from=from_copylink', '_blank')">
-                跳转文档
+        <!-- Sign-in for Points Area -->
+        <div class="section-card">
+            <div class="flex justify-between items-start mb-2"> <!-- Adjusted mb-4 to mb-2 to move text up -->
+                <h3 class="text-lg font-semibold text-gray-800">签到领积分</h3>
+                <div class="flex gap-2"> <!-- Added a flex container for buttons -->
+                    <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                        积分兑换
+                    </button>
+                    <!-- Added "我的兑换" button -->
+                    <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                        我的兑换
+                    </button>
+                </div>
+            </div>
+            <div class="flex justify-between items-center mb-2"> <!-- Adjusted mb-4 to mb-2 to move text up -->
+                <p class="text-gray-500 text-sm">规则说明xxxx</p>
+                <span class="text-gray-500 text-sm">积分：100</span>
+            </div>
+            <div class="grid grid-cols-7 gap-2 text-center">
+                <div class="flex flex-col items-center">
+                    <div class="sign-in-day active">10</div>
+                    <span class="text-xs text-gray-500 mt-1">第1天</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="sign-in-day">15</div>
+                    <span class="text-xs text-gray-500 mt-1">第2天</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="sign-in-day">20</div>
+                    <span class="text-xs text-gray-500 mt-1">第3天</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="sign-in-day">25</div>
+                    <span class="text-xs text-gray-500 mt-1">第4天</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="sign-in-day">35</div>
+                    <span class="text-xs text-gray-500 mt-1">第5天</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="sign-in-day">40</div>
+                    <span class="text-xs text-gray-500 mt-1">第6天</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="sign-in-day">38</div>
+                    <span class="text-xs text-gray-500 mt-1">第7天</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help and Feedback -->
+        <div class="section-card help-feedback-card">
+            <button class="text-gray-600 font-medium flex items-center justify-center w-full py-2">
+                帮助与反馈 <i data-lucide="message-circle" class="w-5 h-5 lucide"></i>
             </button>
-            <button id="modalCloseButton" class="modal-close-button">&times;</button>
-            <h3>需求说明：</h3>
-            <p>1.
-                在线时长：这东西业务上没有实际意义，一种游戏心理交互。<br>在线时长达到要求就会升级并给称号。
-                称号等级可以拓展到其他业务场景可见，比如雷达和排行榜，比如美团甚至在骑手端搞了个骑手排行榜。<br>
-                而且还提供升级加速的途经，可以通过积分换取时间加速，简单粗暴。而积分只能通过每日登录+签到获得。<br><br>
-                想要获得更多积分，购买会员可以提供加成。
-                总之，这是个心理游戏的设计，激励+虚荣心，也让个人中心不是那么苍白，提供了更多的用户交互。
-                这个小小的设计主要是提高在线留存和转化。</p>
-            <p>2. 签到：同样是为了提高留存和转化。
-                签到能获得积分，对于不太愿意花钱的的用户，积分可以兑换一些权益。<br><br>
-                比如发货次数，体验会员，加速称号升级，积分还能以打折的噱头吸引买会员等等。
-                这种设计旨在利用用户的沉没成本的心理，签到一旦开始签，一续签的概率就会提高。
-            </p>
+        </div>
 
-            <p>3. 会员权益部分：页面做权益展示，点击会进入一个会员购买页面，提供不同等级的会员服务。<br>
-                购买后除了业务上提供服务，还能提供一些积分</p>
-            <p>4. 关于用户等级，这块不会太复杂，手机端记录用户的使用时长。<br>
-                初期按分钟累计来进行升级（初期小时跟进会让用户失去耐心），
-                等级的设计可以是称号+等级的方式。<br>
-                一个称号对应10个等级的话，50个称号就是500级。总一开始5分钟升级一次，到后面按月算。
-            </p>
-            <p>5. 关于积分设计：积分签到一周七天，类似游戏收菜机制，一旦放弃就有沉没成本的心理。<br>
-                连签给奖励，数值这块已经在设计了。
-                积分的获得方式目前就是登录+签到。想要获得更多积分，就是会员加成+赠送，买的越多送的越多。<br><br>
-                由于积分是很私人的设计，压根不怕囤积，因为不能交易。数值上也相对好设计，基本就是DAU价值乘一个系数。<br>
-                比如普通用户七天积分是5-7-10-15-18-20-30这种逐步奖励的方式，一周就是105分。
-                一旦断签，奖励就从第一天开始，还能设计补签按钮，引入会员限制。<br>
-                会员身份下，根据系数，比如20%加成。普通用户如果一个月最多获得400分。一个1000分的目标就能拉住用户两个月。<br>
-                举个例子，用户连续签到3个月的积分，这种就是粘性用户，给这类用户积分打折30%也是可以的。<br>
-                115网盘就做个一个活动，签到一年送一年会员。
-                本质上就是适当跟钉子用户妥协，并黏住他， 还提供一个积分打折的解决方案。
-            </p>
-            <p>5. 接口部分：这块的东西看起来多，接口反而没有想象那么多，目前看9个能全覆盖。<br>
-                5.1 签到信息获取接口，展示用。<br>
-                5.2 签到行为接口。获取积分。<br>
-                5.3 积分信息获取接口。展示积分。<br>
-                5.4 积分信息兑换接口，兑换用。<br>
-                5.5 虚拟权益列表接口，配合5.4<br>
-                5.6 用户等级获取接口。<br>
-                5.7 用户等级加速接口。<br>
-                5.8 会员商品列表接口。<br>
-                5.9 会员购买接口。<br>
-            </p>
-            <p> 待续，欢迎补充建议
-            </p>
+        <!-- Login Management Entry -->
+        <a href="#" class="login-management-link">
+            登录管理
+        </a>
+    </div>
+</div>
+
+<!-- Modal Dialog (Demand Description) -->
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content">
+        <!-- New "跳转文档" button -->
+        <button class="modal-jump-button" onclick="window.open('https://um21c35u8u.feishu.cn/wiki/JZC6wny8Pi6At4kZZ4zcrPafn3d?from=from_copylink', '_blank')">
+            跳转文档
+        </button>
+        <button id="modalCloseButton" class="modal-close-button">&times;</button>
+        <h3>需求说明：</h3>
+        <p>1.
+            在线时长：这东西业务上没有实际意义，一种游戏心理交互。<br>在线时长达到要求就会升级并给称号。
+            称号等级可以拓展到其他业务场景可见，比如雷达和排行榜，比如美团甚至在骑手端搞了个骑手排行榜。<br>
+            而且还提供升级加速的途经，可以通过积分换取时间加速，简单粗暴。而积分只能通过每日登录+签到获得。<br><br>
+            想要获得更多积分，购买会员可以提供加成。
+            总之，这是个心理游戏的设计，激励+虚荣心，也让个人中心不是那么苍白，提供了更多的用户交互。
+            这个小小的设计主要是提高在线留存和转化。</p>
+        <p>2. 签到：同样是为了提高留存和转化。
+            签到能获得积分，对于不太愿意花钱的的用户，积分可以兑换一些权益。<br><br>
+            比如发货次数，体验会员，加速称号升级，积分还能以打折的噱头吸引买会员等等。
+            这种设计旨在利用用户的沉没成本的心理，签到一旦开始签，一续签的概率就会提高。
+        </p>
+
+        <p>3. 会员权益部分：页面做权益展示，点击会进入一个会员购买页面，提供不同等级的会员服务。<br>
+            购买后除了业务上提供服务，还能提供一些积分</p>
+        <p>4. 关于用户等级，这块不会太复杂，手机端记录用户的使用时长。<br>
+            初期按分钟累计来进行升级（初期小时跟进会让用户失去耐心），
+            等级的设计可以是称号+等级的方式。<br>
+            一个称号对应10个等级的话，50个称号就是500级。总一开始5分钟升级一次，到后面按月算。
+        </p>
+        <p>5. 关于积分设计：积分签到一周七天，类似游戏收菜机制，一旦放弃就有沉没成本的心理。<br>
+            连签给奖励，数值这块已经在设计了。
+            积分的获得方式目前就是登录+签到。想要获得更多积分，就是会员加成+赠送，买的越多送的越多。<br><br>
+            由于积分是很私人的设计，压根不怕囤积，因为不能交易。数值上也相对好设计，基本就是DAU价值乘一个系数。<br>
+            比如普通用户七天积分是5-7-10-15-18-20-30这种逐步奖励的方式，一周就是105分。
+            一旦断签，奖励就从第一天开始，还能设计补签按钮，引入会员限制。<br>
+            会员身份下，根据系数，比如20%加成。普通用户如果一个月最多获得400分。一个1000分的目标就能拉住用户两个月。<br>
+            举个例子，用户连续签到3个月的积分，这种就是粘性用户，给这类用户积分打折30%也是可以的。<br>
+            115网盘就做个一个活动，签到一年送一年会员。
+            本质上就是适当跟钉子用户妥协，并黏住他， 还提供一个积分打折的解决方案。
+        </p>
+        <p>5. 接口部分：这块的东西看起来多，接口反而没有想象那么多，目前看9个能全覆盖。<br>
+            5.1 签到信息获取接口，展示用。<br>
+            5.2 签到行为接口。获取积分。<br>
+            5.3 积分信息获取接口。展示积分。<br>
+            5.4 积分信息兑换接口，兑换用。<br>
+            5.5 虚拟权益列表接口，配合5.4<br>
+            5.6 用户等级获取接口。<br>
+            5.7 用户等级加速接口。<br>
+            5.8 会员商品列表接口。<br>
+            5.9 会员购买接口。<br>
+        </p>
+        <p> 待续，欢迎补充建议
+        </p>
+    </div>
+</div>
+
+<!-- Modal Dialog (Purchase Member Success) -->
+<div id="purchaseSuccessModalOverlay" class="modal-overlay">
+    <div class="purchase-success-modal">
+        <h3>权益页面设计中</h3>
+        <button id="purchaseConfirmButton">确认</button>
+    </div>
+</div>
+
+<!-- Modal Dialog (Upgrade Prompt) -->
+<div id="upgradeModalOverlay" class="modal-overlay">
+    <div class="upgrade-modal">
+        <h3>此权益未开通</h3>
+        <p>升级会员可解锁更多专属权益！</p>
+        <div class="button-group">
+            <button class="cancel-button" id="upgradeCancelButton">取消</button>
+            <button class="confirm-button" id="upgradeConfirmButton">去升级</button>
         </div>
     </div>
+</div>
 
-    <!-- Modal Dialog (Purchase Member Success) -->
-    <div id="purchaseSuccessModalOverlay" class="modal-overlay">
-        <div class="purchase-success-modal">
-            <h3>权益页面设计中</h3>
-            <button id="purchaseConfirmButton">确认</button>
-        </div>
-    </div>
+<!-- Include Lucide Icons script, ensure loaded before calling its functions -->
+<script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
+<script>
+    // Placeholder function for page navigation
+    function showPage(pageName) {
+        console.log(`Navigating to page: ${pageName}`);
+        // Here you would implement your actual page navigation logic,
+        // e.g., changing content, redirecting, etc.
+         document.getElementById('yourButtonId').addEventListener('click', function() {
+            // 发送消息给父页面
 
-    <!-- Modal Dialog (Upgrade Prompt) -->
-    <div id="upgradeModalOverlay" class="modal-overlay">
-        <div class="upgrade-modal">
-            <h3>此权益未开通</h3>
-            <p>升级会员可解锁更多专属权益！</p>
-            <div class="button-group">
-                <button class="cancel-button" id="upgradeCancelButton">取消</button>
-                <button class="confirm-button" id="upgradeConfirmButton">去升级</button>
-            </div>
-        </div>
-    </div>
+        });
+    }
 
-    <!-- Include Lucide Icons script, ensure loaded before calling its functions -->
-    <script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
-    <script>
-        // Placeholder function for page navigation
-        function showPage(pageName) {
-            console.log(`Navigating to page: ${pageName}`);
-            // Here you would implement your actual page navigation logic,
-            // e.g., changing content, redirecting, etc.
-             document.getElementById('yourButtonId').addEventListener('click', function() {
-                // 发送消息给父页面
-               
+    // Ensure execution after DOM content is fully loaded
+    window.onload = function() {
+        // Initialize Lucide Icons
+        // This ensures the Lucide library is fully loaded before trying to create icons
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
+        } else {
+            console.error("Lucide icons library not loaded or not available.");
+        }
+
+        const demandInfoButton = document.getElementById('demandInfoButton');
+        const modalOverlay = document.getElementById('modalOverlay'); // Demand description modal
+        const modalCloseButton = document.getElementById('modalCloseButton');
+
+        const joinMemberButton = document.getElementById('joinMemberButton');
+        const purchaseSuccessModalOverlay = document.getElementById('purchaseSuccessModalOverlay'); // Purchase success modal
+        const purchaseConfirmButton = document.getElementById('purchaseConfirmButton');
+        const renewStarLogo = document.getElementById('renewStarLogo'); // Renew star icon
+
+        const nonMemberCard = document.getElementById('nonMemberCard');
+        const memberDetailsCard = document.getElementById('memberDetailsCard');
+
+        const upgradeModalOverlay = document.getElementById('upgradeModalOverlay'); // Upgrade prompt modal
+        const upgradeCancelButton = document.getElementById('upgradeCancelButton');
+        const upgradeConfirmButton = document.getElementById('upgradeConfirmButton');
+        const switchIdentityButton = document.getElementById('switchIdentityButton'); // Get the switch identity button
+
+
+        let isMember = false; // Simulate member status
+
+        // Initial display state
+        function updateMemberCardDisplay() {
+            if (isMember) {
+                nonMemberCard.classList.add('hidden');
+                memberDetailsCard.classList.remove('hidden');
+            } else {
+                nonMemberCard.classList.remove('hidden');
+                memberDetailsCard.classList.add('hidden');
+            }
+        }
+        updateMemberCardDisplay(); // Call once on page load
+
+        // Demand Description button click to show modal
+        demandInfoButton.addEventListener('click', () => {
+            console.log('Demand Description button clicked!');
+            modalOverlay.classList.add('show');
+        });
+
+        // Close Demand Description modal
+        modalCloseButton.addEventListener('click', () => {
+            modalOverlay.classList.remove('show');
+        });
+
+        // Click outside Demand Description modal to close
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('show');
+            }
+        });
+
+        // Add event listener for "切换身份" button
+        if (switchIdentityButton) {
+            switchIdentityButton.addEventListener('click', () => {
+                showPage('identity-page');
             });
         }
 
-        // Ensure execution after DOM content is fully loaded
-        window.onload = function() {
-            // Initialize Lucide Icons
-            // This ensures the Lucide library is fully loaded before trying to create icons
-            if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                lucide.createIcons();
-            } else {
-                console.error("Lucide icons library not loaded or not available.");
-            }
 
-            const demandInfoButton = document.getElementById('demandInfoButton');
-            const modalOverlay = document.getElementById('modalOverlay'); // Demand description modal
-            const modalCloseButton = document.getElementById('modalCloseButton');
+        // Join Member button click to show purchase success modal
+        joinMemberButton.addEventListener('click', () => {
+            console.log('Join Member button clicked!');
+            purchaseSuccessModalOverlay.classList.add('show');
+        });
 
-            const joinMemberButton = document.getElementById('joinMemberButton');
-            const purchaseSuccessModalOverlay = document.getElementById('purchaseSuccessModalOverlay'); // Purchase success modal
-            const purchaseConfirmButton = document.getElementById('purchaseConfirmButton');
-            const renewStarLogo = document.getElementById('renewStarLogo'); // Renew star icon
+        // Purchase Success modal confirm button click
+        purchaseConfirmButton.addEventListener('click', () => {
+            console.log('Purchase Success confirm button clicked!');
+            purchaseSuccessModalOverlay.classList.remove('show');
+            // Simulate successful purchase, update member status and switch card display
+            isMember = true;
+            updateMemberCardDisplay(); // Update display
+        });
 
-            const nonMemberCard = document.getElementById('nonMemberCard');
-            const memberDetailsCard = document.getElementById('memberDetailsCard');
-
-            const upgradeModalOverlay = document.getElementById('upgradeModalOverlay'); // Upgrade prompt modal
-            const upgradeCancelButton = document.getElementById('upgradeCancelButton');
-            const upgradeConfirmButton = document.getElementById('upgradeConfirmButton');
-            const switchIdentityButton = document.getElementById('switchIdentityButton'); // Get the switch identity button
-
-
-            let isMember = false; // Simulate member status
-
-            // Initial display state
-            function updateMemberCardDisplay() {
-                if (isMember) {
-                    nonMemberCard.classList.add('hidden');
-                    memberDetailsCard.classList.remove('hidden');
-                } else {
-                    nonMemberCard.classList.remove('hidden');
-                    memberDetailsCard.classList.add('hidden');
-                }
-            }
-            updateMemberCardDisplay(); // Call once on page load
-
-            // Demand Description button click to show modal
-            demandInfoButton.addEventListener('click', () => {
-                console.log('Demand Description button clicked!');
-                modalOverlay.classList.add('show');
-            });
-
-            // Close Demand Description modal
-            modalCloseButton.addEventListener('click', () => {
-                modalOverlay.classList.remove('show');
-            });
-
-            // Click outside Demand Description modal to close
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) {
-                    modalOverlay.classList.remove('show');
-                }
-            });
-
-            // Add event listener for "切换身份" button
-            if (switchIdentityButton) {
-                switchIdentityButton.addEventListener('click', () => {
-                    showPage('identity-page');
-                });
-            }
-
-
-            // Join Member button click to show purchase success modal
-            joinMemberButton.addEventListener('click', () => {
-                console.log('Join Member button clicked!');
-                purchaseSuccessModalOverlay.classList.add('show');
-            });
-
-            // Purchase Success modal confirm button click
-            purchaseConfirmButton.addEventListener('click', () => {
-                console.log('Purchase Success confirm button clicked!');
+        // Click outside Purchase Success modal to close (optional, if you want user to be forced to click confirm)
+        purchaseSuccessModalOverlay.addEventListener('click', (e) => {
+            if (e.target === purchaseSuccessModalOverlay) {
                 purchaseSuccessModalOverlay.classList.remove('show');
-                // Simulate successful purchase, update member status and switch card display
-                isMember = true;
-                updateMemberCardDisplay(); // Update display
-            });
+            }
+        });
 
-            // Click outside Purchase Success modal to close (optional, if you want user to be forced to click confirm)
-            purchaseSuccessModalOverlay.addEventListener('click', (e) => {
-                if (e.target === purchaseSuccessModalOverlay) {
-                    purchaseSuccessModalOverlay.classList.remove('show');
+        // Renew Star Logo click event
+        if (renewStarLogo) {
+            renewStarLogo.addEventListener('click', () => {
+                alert('Renew Star Logo clicked!'); // Simulate renewal action
+            });
+        }
+
+        // Benefit item click event listener (event delegation)
+        const memberRightsGrid = document.querySelector('.member-rights-grid');
+        if (memberRightsGrid) {
+            memberRightsGrid.addEventListener('click', (e) => {
+                const clickedItem = e.target.closest('.member-rights-item-grid');
+                if (clickedItem && clickedItem.dataset.status === 'inactive') {
+                    console.log('Inactive benefit clicked, showing upgrade prompt!');
+                    upgradeModalOverlay.classList.add('show');
                 }
             });
+        }
 
-            // Renew Star Logo click event
-            if (renewStarLogo) {
-                renewStarLogo.addEventListener('click', () => {
-                    alert('Renew Star Logo clicked!'); // Simulate renewal action
-                });
-            }
+        // Upgrade Prompt modal cancel button
+        upgradeCancelButton.addEventListener('click', () => {
+            console.log('Upgrade Prompt cancel button clicked!');
+            upgradeModalOverlay.classList.remove('show');
+        });
 
-            // Benefit item click event listener (event delegation)
-            const memberRightsGrid = document.querySelector('.member-rights-grid');
-            if (memberRightsGrid) {
-                memberRightsGrid.addEventListener('click', (e) => {
-                    const clickedItem = e.target.closest('.member-rights-item-grid');
-                    if (clickedItem && clickedItem.dataset.status === 'inactive') {
-                        console.log('Inactive benefit clicked, showing upgrade prompt!');
-                        upgradeModalOverlay.classList.add('show');
-                    }
-                });
-            }
+        // Upgrade Prompt modal confirm button
+        upgradeConfirmButton.addEventListener('click', () => {
+            console.log('Upgrade Prompt confirm button clicked!');
+            // Add logic to navigate to upgrade page here
+            alert('Navigating to member upgrade page...'); // Simulate navigation
+            upgradeModalOverlay.classList.remove('show');
+        });
 
-            // Upgrade Prompt modal cancel button
-            upgradeCancelButton.addEventListener('click', () => {
-                console.log('Upgrade Prompt cancel button clicked!');
+        // Click outside Upgrade Prompt modal to close
+        upgradeModalOverlay.addEventListener('click', (e) => {
+            if (e.target === upgradeModalOverlay) {
                 upgradeModalOverlay.classList.remove('show');
-            });
-
-            // Upgrade Prompt modal confirm button
-            upgradeConfirmButton.addEventListener('click', () => {
-                console.log('Upgrade Prompt confirm button clicked!');
-                // Add logic to navigate to upgrade page here
-                alert('Navigating to member upgrade page...'); // Simulate navigation
-                upgradeModalOverlay.classList.remove('show');
-            });
-
-            // Click outside Upgrade Prompt modal to close
-            upgradeModalOverlay.addEventListener('click', (e) => {
-                if (e.target === upgradeModalOverlay) {
-                    upgradeModalOverlay.classList.remove('show');
-                }
-            });
-        }; // End of window.onload
-    </script>
+            }
+        });
+    }; // End of window.onload
+</script>
 </body>
 </html>
