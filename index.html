@@ -57,58 +57,6 @@
             pointer-events: all; /* Enable interaction when active */
         }
 
-        /* Password Overlay Page */
-        #password-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #a8dadc, #457b9d); /* A calming blue-green gradient */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 20; /* Ensure it's above all other pages */
-            color: #fff;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        }
-        #password-overlay .overlay-title {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 50px;
-        }
-        #password-overlay .overlay-input {
-            width: 70%;
-            padding: 15px;
-            margin-bottom: 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            color: #333;
-        }
-        #password-overlay .overlay-button {
-            width: 70%;
-            padding: 18px;
-            background-color: #e63946; /* A vibrant red for action */
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(230, 57, 70, 0.4);
-            transition: all 0.3s ease;
-        }
-        #password-overlay .overlay-button:hover {
-            background-color: #d62839;
-            transform: translateY(-2px);
-        }
-
-
         /* Common Header Style */
         .header {
             padding: 15px 20px;
@@ -398,206 +346,7 @@
         }
 
 
-        /* Shipper My Page - New Styles for the embedded content */
-        /* 头部背景已移除 */
-        #shipper-my-page .profile-card {
-            background-color: #ffffff;
-            border-radius: 15px;
-            padding: 12px 20px; /* 调整内边距，垂直方向更紧凑 */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            display: flex;
-            flex-direction: column;
-            margin-top: 25px; /* 距离 app-screen 顶部 25px */
-            margin-left: 20px;
-            margin-right: 20px;
-            flex-shrink: 0; /* 不收缩 */
-            z-index: 10; /* 确保在其他元素之上 */
-        }
-        #shipper-my-page .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: #e0e0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            color: #666;
-            border: 3px solid #fff; /* 头像白色边框 */
-            box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.5); /* 头像外层光晕 */
-            flex-shrink: 0;
-            margin-right: 16px;
-        }
-        #shipper-my-page .progress-bar-container {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            height: 8px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        #shipper-my-page .progress-bar {
-            height: 100%;
-            width: 60%;
-            background: linear-gradient(to right, #6a82fb, #fc5c7d);
-            border-radius: 10px;
-        }
-        #shipper-my-page .content-area { /* 新增内容区域，用于包裹所有可滚动卡片 */
-            flex-grow: 1; /* 允许这个区域填充剩余空间 */
-            overflow-y: auto; /* 允许垂直滚动 */
-            padding: 0 20px 20px 20px; /* 整体卡片区域的左右底部内边距，顶部无内边距 */
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-        }
-        #shipper-my-page .section-card {
-            background-color: #ffffff;
-            border-radius: 15px;
-            padding: 20px; /* 调整垂直内边距，使其内容紧凑且能填满空间 */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            flex-shrink: 0; /* 不允许卡片在 flex 容器中收缩 */
-        }
-        /* 调整第一个 section-card 的顶部外边距，以控制与 profile-card 的间隙 */
-        #shipper-my-page .content-area .section-card:first-child {
-            margin-top: 20px; /* 个人信息卡片与会员权益卡片之间的间隙 */
-        }
-        #shipper-my-page .section-card:not(:last-child) {
-            margin-bottom: 16px; /* 卡片之间的间隙，稍微增加以增加呼吸感 */
-        }
-        /* 为帮助与反馈卡片添加特定样式 */
-        #shipper-my-page .help-feedback-card {
-            margin-top: 50px; /* 距离上方卡片 50px 的高度 */
-        }
-        #shipper-my-page .login-management-link {
-            color: #888; /* 红灰色 */
-            font-size: 0.75rem; /* text-xs 小字号 */
-            text-align: center;
-            margin-top: 10px; /* 距离上方帮助与反馈卡片的间距 */
-            margin-bottom: 10px; /* 距离页面底部的间距 */
-            display: block; /* 确保占据整行 */
-            text-decoration: none; /* 移除下划线 */
-        }
-        #shipper-my-page .icon-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 8px;
-            color: #6a82fb;
-        }
-        #shipper-my-page .sign-in-day {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 600;
-            color: #333;
-        }
-        #shipper-my-page .sign-in-day.active {
-            background: linear-gradient(to right, #6a82fb, #fc5c7d);
-            color: #fff;
-        }
 
-        /* 需求说明按钮的样式 (现在是绝对定位在 app-screen 内部) */
-        #shipper-my-page .demand-button {
-            position: absolute; /* 相对于 app-screen 定位 */
-            top: 5px; /* 距离 app-screen 顶部 */
-            left: 5px; /* 距离 app-screen 左侧 */
-            background-color: #EF4444; /* Tailwind red-500 */
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.875rem; /* text-sm */
-            font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-            width: fit-content; /* 根据内容调整宽度 */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.2s ease;
-            z-index: 100; /* 确保在 profile-card 上方 */
-        }
-        #shipper-my-page .demand-button:hover {
-            background-color: #DC2626; /* 更深的红色 */
-        }
-
-        /* 会员按钮的自定义样式 */
-        #shipper-my-page .member-button {
-            background: linear-gradient(to right, #FF6B6B, #4ECDC4); /* 明快渐变色 */
-            text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); /* 文字效果 */
-            transition: all 0.3s ease; /* 过渡效果 */
-        }
-        #shipper-my-page .member-button:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); /* 悬停阴影 */
-            transform: translateY(-2px); /* 悬停上浮效果 */
-        }
-
-        /* 模态对话框样式 */
-        #shipper-my-page .modal-overlay {
-            position: absolute; /* 相对于父级 .page 定位 */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: none; /* 默认隐藏 */
-            justify-content: center;
-            align-items: center;
-            z-index: 2000; /* 确保在所有内容之上 */
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        #shipper-my-page .modal-overlay.show {
-            display: flex; /* 显示时使用 flex */
-            opacity: 1;
-        }
-        #shipper-my-page .modal-content {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            max-width: 320px; /* 适应手机屏幕宽度 */
-            width: 90%;
-            position: relative;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        #shipper-my-page .modal-overlay.show .modal-content {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        #shipper-my-page .modal-close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #999;
-            cursor: pointer;
-            padding: 5px;
-        }
-        #shipper-my-page .modal-content h3 {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-        }
-        #shipper-my-page .modal-content p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        #shipper-my-page .modal-content p:last-child {
-            margin-bottom: 0;
-        }
 
 
         /* Driver Find Cargo Page */
@@ -1183,1020 +932,855 @@
     </style>
 </head>
 <body>
-    <div class="app-screen">
+<div class="app-screen">
 
-        <!-- New: Password Overlay Page - This is the first thing the user sees -->
-        <div id="password-overlay">
-            <div class="overlay-title">请输入访问密码</div>
-            <input type="password" id="overlayPasswordInput" class="overlay-input" placeholder="密码">
-            <button class="overlay-button" onclick="checkOverlayPassword()">进入原型</button>
+
+    <!-- 1. Original Login Page (Now shown by default) -->
+    <div id="login-page" class="page active">
+        <div class="logo">物流App</div>
+        <button class="login-button" onclick="showPage('identity-page')">一键登录</button>
+        <div class="login-options">
+            <a href="#">短信验证码登录</a> | <a href="#">忘记密码</a>
         </div>
+    </div>
 
-        <!-- 1. Original Login Page (Now hidden until overlay password is correct, and restored to original design) -->
-        <div id="login-page" class="page">
-            <div class="logo">物流App</div>
-            <button class="login-button" onclick="showPage('identity-page')">一键登录</button>
-            <div class="login-options">
-                <a href="#">短信验证码登录</a> | <a href="#">忘记密码</a>
-            </div>
+    <!-- 2. Identity Selection Page -->
+    <div id="identity-page" class="page">
+        <div class="identity-title">请选择您的身份</div>
+        <div class="identity-card shipper-card" onclick="showPage('shipper-home-page')">
+            <span class="icon">📦</span>
+            我要发货
         </div>
-
-        <!-- 2. Identity Selection Page -->
-        <div id="identity-page" class="page">
-            <div class="identity-title">请选择您的身份</div>
-            <div class="identity-card shipper-card" onclick="showPage('shipper-home-page')">
-                <span class="icon">📦</span>
-                我要发货
-            </div>
-            <div class="identity-card driver-card" onclick="showPage('driver-find-cargo-page')">
-                <span class="icon">🚚</span>
-                我要找货
-            </div>
+        <div class="identity-card driver-card" onclick="showPage('driver-find-cargo-page')">
+            <span class="icon">🚚</span>
+            我要找货
         </div>
+    </div>
 
-        <!-- 3. Shipper's Home Page -->
-        <div id="shipper-home-page" class="page">
-            <div class="header">首页 (货方)</div>
-            <div class="content">
-                <!-- Optimized Banner Area -->
-                <div class="banner-container">
-                    <div class="banner-wrapper" id="bannerWrapper">
-                        <div class="banner-page">
-                            <span>大运到家，省心省力！</span>
-                        </div>
-                        <div class="banner-page">
-                            <span>新用户首单立减，优惠享不停！</span>
-                        </div>
-                        <div class="banner-page">
-                            <span>智能匹配，极速发货，告别等待！</span>
-                        </div>
+    <!-- 3. Shipper's Home Page -->
+    <div id="shipper-home-page" class="page">
+        <div class="header">首页 (货方)</div>
+        <div class="content">
+            <!-- Optimized Banner Area -->
+            <div class="banner-container">
+                <div class="banner-wrapper" id="bannerWrapper">
+                    <div class="banner-page">
+                        <span>大运到家，省心省力！</span>
+                    </div>
+                    <div class="banner-page">
+                        <span>新用户首单立减，优惠享不停！</span>
+                    </div>
+                    <div class="banner-page">
+                        <span>智能匹配，极速发货，告别等待！</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Optimized Radar Board -->
-                <div class="radar-board">
-                    <h3><span class="icon">📡</span> 雷达功能看板</h3>
-                    <div class="radar-items-container">
-                        <div class="radar-items-inner" id="radarItemsInner">
-                            <!-- Radar items will be dynamically added by JavaScript -->
-                        </div>
+            <!-- Optimized Radar Board -->
+            <div class="radar-board">
+                <h3><span class="icon">📡</span> 雷达功能看板</h3>
+                <div class="radar-items-container">
+                    <div class="radar-items-inner" id="radarItemsInner">
+                        <!-- Radar items will be dynamically added by JavaScript -->
                     </div>
                 </div>
+            </div>
 
-                <!-- Optimized Free Shipping Button -->
-                <button class="free-shipping-button" onclick="window.location.href = 'https://llong0807.github.io/nothing/publish_1.html'">
-                    <span class="main-text"><span class="icon">✨</span> 免费发货</span>
-                    <span class="slogan">多快好省，如此简单！</span>
-                </button>
-            </div>
-            <div class="footer">
-                <div class="tab-button active" onclick="showPage('shipper-home-page')">
-                    <span class="icon">🏠</span> 首页
-                </div>
-                <div class="tab-button" onclick="showPage('shipper-cargo-manage-iframe-page')">
-                    <span class="icon">📋</span> 货源管理
-                </div>
-                <div class="tab-button" onclick="showPage('shipper-my-page')">
-                    <span class="icon">👤</span> 我的
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. Shipper's Cargo Management Page (now an iframe) -->
-        <div id="shipper-cargo-manage-iframe-page" class="page">
-            <div class="header">货源管理 (货方)</div>
-            <div class="content p-0"> <!-- Remove padding here as iframe will handle its own padding -->
-                <!-- The iframe will load cargo_manage.html and automatically adjust to the app-screen's 375px width. -->
-                <iframe id="cargoManageIframe" src="cargo_manage.html" class="w-full h-full border-0"></iframe>
-            </div>
-            <div class="footer">
-                <div class="tab-button" onclick="showPage('shipper-home-page')">
-                    <span class="icon">🏠</span> 首页
-                </div>
-                <div class="tab-button active" onclick="showPage('shipper-cargo-manage-iframe-page')">
-                    <span class="icon">📋</span> 货源管理
-                </div>
-                <div class="tab-button" onclick="showPage('shipper-my-page')">
-                    <span class="icon">👤</span> 我的
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. Shipper's "My" Page -->
-        <div id="shipper-my-page" class="page">
-            <div class="header">我的 (货方)</div>
-            <!-- 需求说明按钮 (现在位于 app-screen 内部，绝对定位) -->
-            <button id="demandInfoButton" class="demand-button">
-                需求说明
+            <!-- Optimized Free Shipping Button -->
+            <button class="free-shipping-button" onclick="window.location.href = 'https://llong0807.github.io/nothing/publish_1.html'">
+                <span class="main-text"><span class="icon">✨</span> 免费发货</span>
+                <span class="slogan">多快好省，如此简单！</span>
             </button>
-
-            <!-- 个人信息卡片 -->
-            <div class="profile-card">
-                <!-- 第一行：头像、用户名和切换身份按钮 -->
-                <div class="flex items-start w-full mb-3">
-                    <!-- 头像 -->
-                    <div class="avatar">
-                        <i data-lucide="user" class="w-10 h-10 text-gray-500"></i>
-                    </div>
-                    <!-- 用户名和切换身份按钮 -->
-                    <div class="flex-grow flex flex-col mt-[15px]">
-                        <div class="flex justify-between items-center w-full">
-                            <h2 class="text-base font-bold text-gray-600">这里是用户名称</h2>
-                            <button class="text-xs text-blue-500 font-medium flex items-center" onclick="showPage('identity-page')">
-                                切换身份 <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
-                            </button>
-                        </div>
-                        <!-- 称号显示 -->
-                        <p class="text-gray-500 text-sm mt-1">称号显示</p>
-                    </div>
-                </div>
-
-                <!-- 第二行：已在线时间、下一级称号 -->
-                <div class="flex justify-between items-center text-sm text-gray-600 mb-0">
-                    <span>已在线 30分钟</span>
-                    <span>下一级称号：无名小卒</span>
-                </div>
-
-                <!-- 第三行：进度条及加速 -->
-                <div class="flex justify-between items-center text-sm text-gray-600 mb-1">
-                    <span>进度条</span>
-                    <span>加速 <i data-lucide="zap" class="w-4 h-4 inline-block ml-1 text-yellow-500"></i></span>
-                </div>
-                <div class="progress-bar-container mb-2">
-                    <div class="progress-bar"></div>
-                </div>
-
-                <!-- 第四行：注册时间及陪伴天数 -->
-                <div class="flex justify-between items-center text-xs text-gray-400">
-                    <span>注册时间</span>
-                    <span>已陪伴223天</span>
-                </div>
-                <span class="text-sm text-gray-700 font-medium block">2025/2/22 13:33</span>
+        </div>
+        <div class="footer">
+            <div class="tab-button active" onclick="showPage('shipper-home-page')">
+                <span class="icon">🏠</span> 首页
+            </div>
+            <div class="tab-button" onclick="showPage('shipper-cargo-manage-iframe-page')">
+                <span class="icon">📋</span> 货源管理
+            </div>
+            <div class="tab-button" onclick="showPage('shipper-my-page')">
+                <span class="icon">👤</span> 我的
             </div>
 
-            <!-- 可滚动内容区域 -->
-            <div class="content-area">
-                <!-- 会员权益区域 -->
-                <div class="section-card">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex flex-col">
-                            <h3 class="text-lg font-semibold text-gray-800">获取会员权益</h3>
-                            <p class="text-gray-500 text-sm">畅享尊贵体验</p>
-                        </div>
-                        <button class="member-button text-white px-4 py-2 rounded-full shadow-md flex items-center justify-center">
-                            加入货方会员 <i data-lucide="star" class="w-4 h-4 ml-2 fill-current text-yellow-300"></i>
-                        </button>
-                    </div>
-                    <div class="flex justify-around text-center mt-6">
-                        <div class="flex flex-col items-center">
-                            <div class="icon-circle">
-                                <i data-lucide="truck" class="w-6 h-6"></i>
-                            </div>
-                            <span class="text-xs text-gray-600">货源随心发</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="icon-circle">
-                                <i data-lucide="award" class="w-6 h-6"></i>
-                            </div>
-                            <span class="text-xs text-gray-600">货源优先展示</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="icon-circle">
-                                <i data-lucide="eye" class="w-6 h-6"></i>
-                            </div>
-                            <span class="text-xs text-gray-600">醒目货源</span>
-                        </div>
-                    </div>
-                </div>
+        </div>
+    </div>
 
-                <!-- 签到领积分区域 -->
-                <div class="section-card">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">签到领积分</h3>
-                        <button class="text-blue-500 font-medium text-sm px-3 py-1 rounded-full border border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                            积分兑换
-                        </button>
-                    </div>
-                    <div class="flex justify-between items-center mb-4">
-                        <p class="text-gray-500 text-sm">规则说明xxxx</p>
-                        <span class="text-gray-500 text-sm">积分：100</span>
-                    </div>
-                    <div class="grid grid-cols-7 gap-2 text-center">
-                        <div class="flex flex-col items-center">
-                            <div class="sign-in-day active">10</div>
-                            <span class="text-xs text-gray-500 mt-1">第1天</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="sign-in-day">15</div>
-                            <span class="text-xs text-gray-500 mt-1">第2天</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="sign-in-day">20</div>
-                            <span class="text-xs text-gray-500 mt-1">第3天</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="sign-in-day">25</div>
-                            <span class="text-xs text-gray-500 mt-1">第4天</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="sign-in-day">35</div>
-                            <span class="text-xs text-gray-500 mt-1">第5天</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="sign-in-day">40</div>
-                            <span class="text-xs text-gray-500 mt-1">第6天</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="sign-in-day">38</div>
-                            <span class="text-xs text-gray-500 mt-1">第7天</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 帮助与反馈 -->
-                <div class="section-card help-feedback-card">
-                    <button class="text-gray-600 font-medium flex items-center justify-center w-full py-2">
-                        帮助与反馈 <i data-lucide="message-circle" class="w-5 h-5 ml-2"></i>
-                    </button>
-                </div>
-
-                <!-- 登录管理入口 -->
-                <a href="#" class="login-management-link">
-                    登录管理
-                </a>
+    <!-- 4. Shipper's Cargo Management Page (now an iframe) -->
+    <div id="shipper-cargo-manage-iframe-page" class="page">
+        <div class="header">货源管理 (货方)</div>
+        <div class="content p-0"> <!-- Remove padding here as iframe will handle its own padding -->
+            <!-- The iframe will load cargo_manage.html and automatically adjust to the app-screen's 375px width. -->
+            <iframe id="cargoManageIframe" src="cargo_manage.html" class="w-full h-full border-0"></iframe>
+        </div>
+        <div class="footer">
+            <div class="tab-button" onclick="showPage('shipper-home-page')">
+                <span class="icon">🏠</span> 首页
             </div>
-            <div class="footer">
-                <div class="tab-button" onclick="showPage('shipper-home-page')">
-                    <span class="icon">🏠</span> 首页
-                </div>
-                <div class="tab-button" onclick="showPage('shipper-cargo-manage-iframe-page')">
-                    <span class="icon">📋</span> 货源管理
-                </div>
-                <div class="tab-button active" onclick="showPage('shipper-my-page')">
-                    <span class="icon">👤</span> 我的
-                </div>
+            <div class="tab-button active" onclick="showPage('shipper-cargo-manage-iframe-page')">
+                <span class="icon">📋</span> 货源管理
             </div>
-
-            <!-- 模态对话框 -->
-            <div id="modalOverlay" class="modal-overlay">
-                <div class="modal-content">
-                    <button id="modalCloseButton" class="modal-close-button">&times;</button>
-                    <h3>这个页面需求说明：</h3>
-                    <p>1. 在线时长这东西没有实际上的业务意义，只能是用户的一种心理交互。在线时长达到要求就升级所谓的“称号”。称号拓展，比如雷达或者其他地方可以见到，未来是不是点击称号可以给个排行榜？想要称号加速，可以成为会员或积分换取时间，简单翻译， 就是要么花钱要么花时间，这个小小的设计主要是提高在线留存和转化。</p>
-                    <p>2. 签到，提高留存和转化，对于不太愿意花钱的的用户，积分可以兑换发货次数，积累到一个比较高的积分额度，在用积分打折吸引买会员等等。</p>
-                    <p>3. 会员权益部分，页面不会做太多说明，点进去会做会员分级。</p>
-                    <p>4. 待续</p>
-                </div>
+            <div class="tab-button" onclick="showPage('shipper-my-page')">
+                <span class="icon">👤</span> 我的
             </div>
         </div>
+    </div>
 
-        <!-- 6. Driver's "Find Cargo" Page -->
-        <div id="driver-find-cargo-page" class="page">
-            <div class="header">找货 (车方)</div>
-            <div class="area-select">
-                <span>当前区域: 北京市</span>
-                <button onclick="alert('展开地区选择')">选择区域 ›</button>
-            </div>
-            <div class="cargo-list">
-                <!-- Driver Cargo Item 1 -->
-                <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[0])">
-                    <h4>北京朝阳区 - 天津滨海新区</h4>
-                    <p><strong>货物:</strong> 200挖机 25吨 长8米宽6米高4米</p>
-                    <p><strong>装卸时间:</strong> 6月18日装</p>
-                    <p><strong>预估运费:</strong> ¥1200</p>
-                </div>
-                <!-- Driver Cargo Item 2 -->
-                <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[1])">
-                    <h4>上海浦东新区 - 杭州西湖区</h4>
-                    <p><strong>货物:</strong> 电子产品 5吨 3x2x1.5米</p>
-                    <p><strong>装卸时间:</strong> 6月20日前卸</p>
-                    <p><strong>预估运费:</strong> ¥1500</p>
-                </div>
-                <!-- Driver Cargo Item 3 -->
-                <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[2])">
-                    <h4>广州天河区 - 深圳南山区</h4>
-                    <p><strong>货物:</strong> 生鲜水果 3吨 2.5x1.8x1米</p>
-                    <p><strong>装卸时间:</strong> 随到随装</p>
-                    <p><strong>预估运费:</strong> ¥800</p>
-                </div>
-            </div>
-            <div class="footer">
-                <div class="tab-button active" onclick="showPage('driver-find-cargo-page')">
-                    <span class="icon">🔍</span> 找货
-                </div>
-                <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
-                    <span class="icon">📦</span> 货源管理
-                </div>
-                <div class="tab-button" onclick="showPage('driver-my-page')">
-                    <span class="icon">👷</span> 我的
-                </div>
-            </div>
+    <!-- 5. Shipper's "My" Page -->
+    <div id="shipper-my-page" class="page">
+        <div class="header">我的 (货方)</div>
+        <div class="content p-0"> <!-- Remove padding here as iframe will handle its own padding -->
+            <!-- The iframe will load cargo_manage.html and automatically adjust to the app-screen's 375px width. -->
+            <iframe id="cargo_mineIframe" src="cargo_mine.html" class="w-full h-full border-0"></iframe>
         </div>
 
-        <!-- 7. Driver's Cargo Management Page -->
-        <div id="driver-cargo-manage-page" class="page">
-            <div class="header">货源管理 (车方)</div>
-            <div class="tabs">
-                <div class="tab active" data-tab="feedback">已反馈</div>
-                <div class="tab" data-tab="contacted">已联系</div>
-                <div class="tab" data-tab="followed">已关注</div>
-                <div class="tab" data-tab="history">浏览记录</div>
+        <div class="footer">
+            <div class="tab-button" onclick="showPage('shipper-home-page')">
+                <span class="icon">🏠</span> 首页
             </div>
-            <div class="cargo-list">
-                <!-- Content will dynamically change based on tab selection -->
-                <div id="feedback-cargo" class="cargo-content active">
-                    <div class="cargo-item">
-                        <h4>订单ID: #D20250625001</h4>
-                        <p><strong>路线:</strong> 北京 - 天津</p>
-                        <p><strong>货物:</strong> 建筑材料</p>
-                        <p><strong>状态:</strong> 待确认</p>
-                        <div class="cargo-actions">
-                            <button onclick="alert('联系货主')">联系货主</button>
-                            <button class="secondary" onclick="alert('取消反馈')">取消反馈</button>
-                        </div>
-                    </div>
-                    <div class="cargo-item">
-                        <h4>订单ID: #D20250625002</h4>
-                        <p><strong>路线:</strong> 上海 - 苏州</p>
-                        <p><strong>货物:</strong> 服装</p>
-                        <p><strong>状态:</strong> 匹配中</p>
-                        <div class="cargo-actions">
-                            <button onclick="alert('联系货主')">联系货主</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="contacted-cargo" class="cargo-content" style="display:none;">
-                    <div class="cargo-item">
-                        <h4>订单ID: #D20250624005</h4>
-                        <p><strong>路线:</strong> 上海 - 杭州</p>
-                        <p><strong>货物:</strong> 电子设备</p>
-                        <p><strong>状态:</strong> 已接受</p>
-                        <div class="cargo-actions">
-                            <button onclick="alert('开始导航')">开始导航</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="followed-cargo" class="cargo-content" style="display:none;">
-                    <div class="cargo-item">
-                        <h4>货源ID: #F20250623001</h4>
-                        <p><strong>路线:</strong> 广州 - 珠海</p>
-                        <p><strong>货物:</strong> 零配件</p>
-                        <p><strong>状态:</strong> 待抢</p>
-                        <div class="cargo-actions">
-                            <button onclick="alert('立即抢单')">立即抢单</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="history-cargo" class="cargo-content" style="display:none;">
-                    <div class="cargo-item">
-                        <h4>订单ID: #H20250622001</h4>
-                        <p><strong>路线:</strong> 成都 - 重庆</p>
-                        <p><strong>货物:</strong> 家具</p>
-                        <p><strong>状态:</strong> 已完成</p>
-                        <div class="cargo-actions">
-                            <button onclick="alert('查看详情')">查看详情</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="tab-button" onclick="showPage('shipper-cargo-manage-iframe-page')">
+                <span class="icon">📋</span> 货源管理
             </div>
-            <div class="footer">
-                <div class="tab-button" onclick="showPage('driver-find-cargo-page')">
-                    <span class="icon">🔍</span> 找货
-                </div>
-                <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
-                    <span class="icon">📦</span> 货源管理
-                </div>
-                <div class="tab-button" onclick="showPage('driver-my-page')">
-                    <span class="icon">👷</span> 我的
-                </div>
-            </div>
-        </div>
-
-        <!-- 8. Driver's "My" Page -->
-        <div id="driver-my-page" class="page">
-            <div class="header">我的 (车方)</div>
-            <div class="profile-header">
-                <div class="avatar">👨‍✈️</div>
-                <div class="nickname">司机老张</div>
-                <div class="level-online">等级: 白金司机 | 在线: 500小时</div>
-                <!-- NEW: Switch Identity Button -->
-                <button class="switch-identity-btn" onclick="showPage('identity-page')">切换身份</button>
-            </div>
-            <div class="content">
-                <div class="section-title">会员信息</div>
-                <div class="menu-item" onclick="alert('查看会员等级详情')">
-                    <span class="icon">⭐</span>
-                    <span>会员等级: 白金司机</span>
-                    <span class="arrow">›</span>
-                </div>
-                <div class="menu-item" onclick="alert('查看会员有效期详情')">
-                    <span class="icon">📅</span>
-                    <span>会员有效期: 2027-06-30</span>
-                    <span class="arrow">›</span>
-                </div>
-                <div class="section-title">我的服务</div>
-                <div class="menu-item" onclick="alert('进入我的收入')">
-                    <span class="icon">💸</span>
-                    <span>我的收入</span>
-                    <span class="arrow">›</span>
-                </div>
-                <div class="menu-item" onclick="alert('进入我的车辆管理')">
-                    <span class="icon">🚚</span>
-                    <span>我的车辆</span>
-                    <span class="arrow">›</span>
-                </div>
-                <div class="menu-item" onclick="alert('查看我的绩效')">
-                    <span class="icon">🏅</span>
-                    <span>我的绩效</span>
-                    <span class="arrow">›</span>
-                </div>
-                <button class="settings-button" onclick="alert('进入设置页面')">设置</button>
-            </div>
-            <div class="footer">
-                <div class="tab-button" onclick="showPage('driver-find-cargo-page')">
-                    <span class="icon">🔍</span> 找货
-                </div>
-                <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
-                    <span class="icon">📦</span> 货源管理
-                </div>
-                <div class="tab-button" onclick="showPage('driver-my-page')">
-                    <span class="icon">👷</span> 我的
-                </div>
-            </div>
-        </div>
-
-        <!-- NEW: Driver's Cargo Detail Page -->
-        <div id="driver-cargo-detail-page" class="page">
-            <div class="header detail-header">
-                <span class="back-arrow" onclick="showPage('driver-find-cargo-page')">←</span>
-                <span class="header-title">货源详情</span>
-                <button id="driver-detail-action-btn" class="action-btn header-action-btn"></button>
-            </div>
-            <div class="content detail-content">
-                <!-- 货物信息区域 (路线) - Adjusted for vertical display and left alignment -->
-                <div class="detail-section route-section">
-                    <div class="address-group">
-                        <span class="address-icon origin-icon">📍</span>
-                        <div class="address-info">
-                            <div class="address-district" id="driver-origin-district"></div>
-                            <div class="address-detail" id="driver-origin-detail"></div>
-                        </div>
-                    </div>
-                    <!-- Arrow aligned with icons -->
-                    <span class="route-arrow">↓</span>
-                    <div class="address-group">
-                        <span class="address-icon destination-icon">📍</span>
-                        <div class="address-info">
-                            <div class="address-district" id="driver-destination-district"></div>
-                            <div class="address-detail" id="driver-destination-detail"></div>
-                        </div>
-                    </div>
-
-                    <!-- Mileage Section Styles - Now inside route-section -->
-                    <div class="mileage-section" id="driver-map-link-container">
-                        <div class="mileage-info">
-                            <span class="mileage-value" id="driver-mileage-display">正在计算</span>
-                            <span class="mileage-reference">里程仅供参考 <span class="exclamation-icon">!</span></span>
-                        </div>
-                        <div class="map-link">
-                            <span class="map-icon">🗺️</span>
-                            <span>查看路线</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 货物信息区域 (详细属性) -->
-                <div class="detail-section cargo-info-section">
-                    <div class="section-title">货源信息</div>
-                    <div class="info-row">
-                        <span class="info-label">货物名称</span>
-                        <span class="info-value" id="driver-cargo-name"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">货物参数</span>
-                        <span class="info-value" id="driver-cargo-params"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">装卸时间</span>
-                        <span class="info-value" id="driver-load-time-detail"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">联系电话</span>
-                        <span class="info-value" id="driver-contact-phone"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">备注信息</span>
-                        <span class="info-value" id="driver-remarks"></span>
-                    </div>
-                </div>
-
-                <!-- 费用信息区域 -->
-                <div class="detail-section fee-info-section">
-                    <div class="section-title">费用信息</div>
-                    <div class="info-row">
-                        <span class="info-label">运费</span>
-                        <span class="info-value" id="driver-freight-cost"></span>
-                    </div>
-                </div>
-            </div>
-            <!-- Fixed Footer for Driver Detail Page -->
-            <div class="detail-fixed-footer" id="driver-cargo-detail-footer">
-                <!-- Buttons will be dynamically added here -->
+            <div class="tab-button active" onclick="showPage('shipper-my-page')">
+                <span class="icon">👤</span> 我的
             </div>
         </div>
 
     </div>
 
-    <!-- 引入 Lucide Icons 的脚本，确保在调用其函数前已加载 -->
-    <script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
-    <script>
-        // Function to check the password for the initial overlay
-        function checkOverlayPassword() {
-            const passwordInput = document.getElementById('overlayPasswordInput');
-            const password = passwordInput.value;
-            const correctPassword = "123321"; // The required password has been updated to "123321"
+    <!-- 6. Driver's "Find Cargo" Page -->
+    <div id="driver-find-cargo-page" class="page">
+        <div class="header">找货 (车方)</div>
+        <div class="area-select">
+            <span>当前区域: 北京市</span>
+            <button onclick="alert('展开地区选择')">选择区域 ›</button>
+        </div>
+        <div class="cargo-list">
+            <!-- Driver Cargo Item 1 -->
+            <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[0])">
+                <h4>北京朝阳区 - 天津滨海新区</h4>
+                <p><strong>货物:</strong> 200挖机 25吨 长8米宽6米高4米</p>
+                <p><strong>装卸时间:</strong> 6月18日装</p>
+                <p><strong>预估运费:</strong> ¥1200</p>
+            </div>
+            <!-- Driver Cargo Item 2 -->
+            <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[1])">
+                <h4>上海浦东新区 - 杭州西湖区</h4>
+                <p><strong>货物:</strong> 电子产品 5吨 3x2x1.5米</p>
+                <p><strong>装卸时间:</strong> 6月20日前卸</p>
+                <p><strong>预估运费:</strong> ¥1500</p>
+            </div>
+            <!-- Driver Cargo Item 3 -->
+            <div class="cargo-item" onclick="showDriverCargoDetailPage(driverCargoData.findCargo[2])">
+                <h4>广州天河区 - 深圳南山区</h4>
+                <p><strong>货物:</strong> 生鲜水果 3吨 2.5x1.8x1米</p>
+                <p><strong>装卸时间:</strong> 随到随装</p>
+                <p><strong>预估运费:</strong> ¥800</p>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="tab-button active" onclick="showPage('driver-find-cargo-page')">
+                <span class="icon">🔍</span> 找货
+            </div>
+            <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
+                <span class="icon">📦</span> 货源管理
+            </div>
+            <div class="tab-button" onclick="showPage('driver-my-page')">
+                <span class="icon">👷</span> 我的
+            </div>
+        </div>
+    </div>
 
-            if (password === correctPassword) {
-                document.getElementById('password-overlay').style.display = 'none'; // Hide the overlay
-                showPage('login-page'); // Show the actual app's login page
-            } else {
-                alert('密码错误，请重试。'); // Show error if incorrect
-                passwordInput.value = ''; // Clear the input field
+    <!-- 7. Driver's Cargo Management Page -->
+    <div id="driver-cargo-manage-page" class="page">
+        <div class="header">货源管理 (车方)</div>
+        <div class="tabs">
+            <div class="tab active" data-tab="feedback">已反馈</div>
+            <div class="tab" data-tab="contacted">已联系</div>
+            <div class="tab" data-tab="followed">已关注</div>
+            <div class="tab" data-tab="history">浏览记录</div>
+        </div>
+        <div class="cargo-list">
+            <!-- Content will dynamically change based on tab selection -->
+            <div id="feedback-cargo" class="cargo-content active">
+                <div class="cargo-item">
+                    <h4>订单ID: #D20250625001</h4>
+                    <p><strong>路线:</strong> 北京 - 天津</p>
+                    <p><strong>货物:</strong> 建筑材料</p>
+                    <p><strong>状态:</strong> 待确认</p>
+                    <div class="cargo-actions">
+                        <button onclick="alert('联系货主')">联系货主</button>
+                        <button class="secondary" onclick="alert('取消反馈')">取消反馈</button>
+                    </div>
+                </div>
+                <div class="cargo-item">
+                    <h4>订单ID: #D20250625002</h4>
+                    <p><strong>路线:</strong> 上海 - 苏州</p>
+                    <p><strong>货物:</strong> 服装</p>
+                    <p><strong>状态:</strong> 匹配中</p>
+                    <div class="cargo-actions">
+                        <button onclick="alert('联系货主')">联系货主</button>
+                    </div>
+                </div>
+            </div>
+            <div id="contacted-cargo" class="cargo-content" style="display:none;">
+                <div class="cargo-item">
+                    <h4>订单ID: #D20250624005</h4>
+                    <p><strong>路线:</strong> 上海 - 杭州</p>
+                    <p><strong>货物:</strong> 电子设备</p>
+                    <p><strong>状态:</strong> 已接受</p>
+                    <div class="cargo-actions">
+                        <button onclick="alert('开始导航')">开始导航</button>
+                    </div>
+                </div>
+            </div>
+            <div id="followed-cargo" class="cargo-content" style="display:none;">
+                <div class="cargo-item">
+                    <h4>货源ID: #F20250623001</h4>
+                    <p><strong>路线:</strong> 广州 - 珠海</p>
+                    <p><strong>货物:</strong> 零配件</p>
+                    <p><strong>状态:</strong> 待抢</p>
+                    <div class="cargo-actions">
+                        <button onclick="alert('立即抢单')">立即抢单</button>
+                    </div>
+                </div>
+            </div>
+            <div id="history-cargo" class="cargo-content" style="display:none;">
+                <div class="cargo-item">
+                    <h4>订单ID: #H20250622001</h4>
+                    <p><strong>路线:</strong> 成都 - 重庆</p>
+                    <p><strong>货物:</strong> 家具</p>
+                    <p><strong>状态:</strong> 已完成</p>
+                    <div class="cargo-actions">
+                        <button onclick="alert('查看详情')">查看详情</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="tab-button" onclick="showPage('driver-find-cargo-page')">
+                <span class="icon">🔍</span> 找货
+            </div>
+            <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
+                <span class="icon">📦</span> 货源管理
+            </div>
+            <div class="tab-button" onclick="showPage('driver-my-page')">
+                <span class="icon">👷</span> 我的
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Driver's "My" Page -->
+    <div id="driver-my-page" class="page">
+        <div class="header">我的 (车方)</div>
+        <div class="profile-header">
+            <div class="avatar">👨‍✈️</div>
+            <div class="nickname">司机老张</div>
+            <div class="level-online">等级: 白金司机 | 在线: 500小时</div>
+            <!-- NEW: Switch Identity Button -->
+            <button class="switch-identity-btn" onclick="showPage('identity-page')">切换身份</button>
+        </div>
+        <div class="content">
+            <div class="section-title">会员信息</div>
+            <div class="menu-item" onclick="alert('查看会员等级详情')">
+                <span class="icon">⭐</span>
+                <span>会员等级: 白金司机</span>
+                <span class="arrow">›</span>
+            </div>
+            <div class="menu-item" onclick="alert('查看会员有效期详情')">
+                <span class="icon">📅</span>
+                <span>会员有效期: 2027-06-30</span>
+                <span class="arrow">›</span>
+            </div>
+            <div class="section-title">我的服务</div>
+            <div class="menu-item" onclick="alert('进入我的收入')">
+                <span class="icon">💸</span>
+                <span>我的收入</span>
+                <span class="arrow">›</span>
+            </div>
+            <div class="menu-item" onclick="alert('进入我的车辆管理')">
+                <span class="icon">🚚</span>
+                <span>我的车辆</span>
+                <span class="arrow">›</span>
+            </div>
+            <div class="menu-item" onclick="alert('查看我的绩效')">
+                <span class="icon">🏅</span>
+                <span>我的绩效</span>
+                <span class="arrow">›</span>
+            </div>
+            <button class="settings-button" onclick="alert('进入设置页面')">设置</button>
+        </div>
+        <div class="footer">
+            <div class="tab-button" onclick="showPage('driver-find-cargo-page')">
+                <span class="icon">🔍</span> 找货
+            </div>
+            <div class="tab-button" onclick="showPage('driver-cargo-manage-page')">
+                <span class="icon">📦</span> 货源管理
+            </div>
+            <div class="tab-button" onclick="showPage('driver-my-page')">
+                <span class="icon">👷</span> 我的
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Driver's Cargo Detail Page -->
+    <div id="driver-cargo-detail-page" class="page">
+        <div class="header detail-header">
+            <span class="back-arrow" onclick="showPage('driver-find-cargo-page')">←</span>
+            <span class="header-title">货源详情</span>
+            <button id="driver-detail-action-btn" class="action-btn header-action-btn"></button>
+        </div>
+        <div class="content detail-content">
+            <!-- 货物信息区域 (路线) - Adjusted for vertical display and left alignment -->
+            <div class="detail-section route-section">
+                <div class="address-group">
+                    <span class="address-icon origin-icon">📍</span>
+                    <div class="address-info">
+                        <div class="address-district" id="driver-origin-district"></div>
+                        <div class="address-detail" id="driver-origin-detail"></div>
+                    </div>
+                </div>
+                <!-- Arrow aligned with icons -->
+                <span class="route-arrow">↓</span>
+                <div class="address-group">
+                    <span class="address-icon destination-icon">📍</span>
+                    <div class="address-info">
+                        <div class="address-district" id="driver-destination-district"></div>
+                        <div class="address-detail" id="driver-destination-detail"></div>
+                    </div>
+                </div>
+
+                <!-- Mileage Section Styles - Now inside route-section -->
+                <div class="mileage-section" id="driver-map-link-container">
+                    <div class="mileage-info">
+                        <span class="mileage-value" id="driver-mileage-display">正在计算</span>
+                        <span class="mileage-reference">里程仅供参考 <span class="exclamation-icon">!</span></span>
+                    </div>
+                    <div class="map-link">
+                        <span class="map-icon">🗺️</span>
+                        <span>查看路线</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 货物信息区域 (详细属性) -->
+            <div class="detail-section cargo-info-section">
+                <div class="section-title">货源信息</div>
+                <div class="info-row">
+                    <span class="info-label">货物名称</span>
+                    <span class="info-value" id="driver-cargo-name"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">货物参数</span>
+                    <span class="info-value" id="driver-cargo-params"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">装卸时间</span>
+                    <span class="info-value" id="driver-load-time-detail"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">联系电话</span>
+                    <span class="info-value" id="driver-contact-phone"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">备注信息</span>
+                    <span class="info-value" id="driver-remarks"></span>
+                </div>
+            </div>
+
+            <!-- 费用信息区域 -->
+            <div class="detail-section fee-info-section">
+                <div class="section-title">费用信息</div>
+                <div class="info-row">
+                    <span class="info-label">运费</span>
+                    <span class="info-value" id="driver-freight-cost"></span>
+                </div>
+            </div>
+        </div>
+        <!-- Fixed Footer for Driver Detail Page -->
+        <div class="detail-fixed-footer" id="driver-cargo-detail-footer">
+            <!-- Buttons will be dynamically added here -->
+        </div>
+    </div>
+
+</div>
+
+<!-- 引入 Lucide Icons 的脚本，确保在调用其函数前已加载 -->
+<script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
+<script>
+
+    // Sample Cargo Data for Drivers (only data relevant to this file)
+    const driverCargoData = {
+        'findCargo': [
+            {
+                id: 'D001',
+                routeDisplay: '北京朝阳区 - 天津滨海新区', // For list item H4
+                cargoDisplay: '200挖机 25吨 长8米宽6米高4米', // For list item first P
+                loadTimeDisplay: '6月18日装', // For list item second P
+                originDistrict: '北京市',
+                originDetail: '朝阳区望京SOHO',
+                destinationDistrict: '天津市',
+                destinationDetail: '滨海新区天津港保税区',
+                cargoName: '200挖机',
+                cargoParams: '25吨, 长8米宽6米高4米',
+                loadTime: '2025年6月18日装货',
+                contactPhone: '138****5678',
+                remarks: '工地急用，需尽快运输，有吊装设备。',
+                freightCost: '¥1200',
+                mileage: '约140公里'
+            },
+            {
+                id: 'D002',
+                routeDisplay: '上海浦东新区 - 杭州西湖区',
+                cargoDisplay: '电子产品 5吨 3x2x1.5米',
+                loadTimeDisplay: '6月20日前卸',
+                originDistrict: '上海市',
+                originDetail: '浦东新区陆家嘴环路1000号',
+                destinationDistrict: '杭州市',
+                destinationDetail: '西湖区西溪湿地文二西路',
+                cargoName: '电子产品',
+                cargoParams: '5吨, 3x2x1.5米',
+                loadTime: '2025年6月20日前卸货',
+                contactPhone: '139****1234',
+                remarks: '易碎品，需轻拿轻放，有保温要求。',
+                freightCost: '¥1500',
+                mileage: '约170公里'
+            },
+            {
+                id: 'D003',
+                routeDisplay: '广州天河区 - 深圳南山区',
+                cargoDisplay: '生鲜水果 3吨 2.5x1.8x1米',
+                loadTimeDisplay: '随到随装',
+                originDistrict: '广州市',
+                originDetail: '天河区珠江新城花城大道',
+                destinationDistrict: '深圳市',
+                destinationDetail: '南山区科技园南区1号',
+                cargoName: '生鲜水果',
+                cargoParams: '3吨, 2.5x1.8x1米',
+                loadTime: '随到随装',
+                contactPhone: '130****9876',
+                remarks: '需冷链运输，请确保温度。',
+                freightCost: '¥800',
+                mileage: '约100公里'
             }
-        }
+        ],
+        // Other driver cargo management tabs data can be added here if needed in the future
+    };
 
-        // Sample Cargo Data for Drivers (only data relevant to this file)
-        const driverCargoData = {
-            'findCargo': [
-                {
-                    id: 'D001',
-                    routeDisplay: '北京朝阳区 - 天津滨海新区', // For list item H4
-                    cargoDisplay: '200挖机 25吨 长8米宽6米高4米', // For list item first P
-                    loadTimeDisplay: '6月18日装', // For list item second P
-                    originDistrict: '北京市',
-                    originDetail: '朝阳区望京SOHO',
-                    destinationDistrict: '天津市',
-                    destinationDetail: '滨海新区天津港保税区',
-                    cargoName: '200挖机',
-                    cargoParams: '25吨, 长8米宽6米高4米',
-                    loadTime: '2025年6月18日装货',
-                    contactPhone: '138****5678',
-                    remarks: '工地急用，需尽快运输，有吊装设备。',
-                    freightCost: '¥1200',
-                    mileage: '约140公里'
-                },
-                {
-                    id: 'D002',
-                    routeDisplay: '上海浦东新区 - 杭州西湖区',
-                    cargoDisplay: '电子产品 5吨 3x2x1.5米',
-                    loadTimeDisplay: '6月20日前卸',
-                    originDistrict: '上海市',
-                    originDetail: '浦东新区陆家嘴环路1000号',
-                    destinationDistrict: '杭州市',
-                    destinationDetail: '西湖区西溪湿地文二西路',
-                    cargoName: '电子产品',
-                    cargoParams: '5吨, 3x2x1.5米',
-                    loadTime: '2025年6月20日前卸货',
-                    contactPhone: '139****1234',
-                    remarks: '易碎品，需轻拿轻放，有保温要求。',
-                    freightCost: '¥1500',
-                    mileage: '约170公里'
-                },
-                {
-                    id: 'D003',
-                    routeDisplay: '广州天河区 - 深圳南山区',
-                    cargoDisplay: '生鲜水果 3吨 2.5x1.8x1米',
-                    loadTimeDisplay: '随到随装',
-                    originDistrict: '广州市',
-                    originDetail: '天河区珠江新城花城大道',
-                    destinationDistrict: '深圳市',
-                    destinationDetail: '南山区科技园南区1号',
-                    cargoName: '生鲜水果',
-                    cargoParams: '3吨, 2.5x1.8x1米',
-                    loadTime: '随到随装',
-                    contactPhone: '130****9876',
-                    remarks: '需冷链运输，请确保温度。',
-                    freightCost: '¥800',
-                    mileage: '约100公里'
+
+    // Function to show a specific page and hide others
+    function showPage(pageId) {
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => {
+            page.classList.remove('active');
+        });
+        document.getElementById(pageId).classList.add('active');
+
+        // Update active state of footer tabs if a footer is present
+        const activePage = document.getElementById(pageId);
+        const footer = activePage.querySelector('.footer');
+        if (footer) {
+            const tabButtons = footer.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+                // Check if the button's onclick attribute targets the current pageId
+                if (button.onclick && button.onclick.toString().includes(`showPage('${pageId}')`)) {
+                    button.classList.add('active');
                 }
-            ],
-            // Other driver cargo management tabs data can be added here if needed in the future
-        };
-
-
-        // Function to show a specific page and hide others
-        function showPage(pageId) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.classList.remove('active');
             });
-            document.getElementById(pageId).classList.add('active');
-
-            // Update active state of footer tabs if a footer is present
-            const activePage = document.getElementById(pageId);
-            const footer = activePage.querySelector('.footer');
-            if (footer) {
-                const tabButtons = footer.querySelectorAll('.tab-button');
-                tabButtons.forEach(button => {
-                    button.classList.remove('active');
-                    // Check if the button's onclick attribute targets the current pageId
-                    if (button.onclick && button.onclick.toString().includes(`showPage('${pageId}')`)) {
-                        button.classList.add('active');
-                    }
-                });
-            }
         }
+    }
 
-        // Shipper Home Page Banner Auto-Slide
-        let currentBannerIndex = 0;
-        const bannerWrapper = document.getElementById('bannerWrapper');
-        const totalBanners = 3; // As per requirement
+    // Shipper Home Page Banner Auto-Slide
+    let currentBannerIndex = 0;
+    const bannerWrapper = document.getElementById('bannerWrapper');
+    const totalBanners = 3; // As per requirement
 
-        function autoSlideBanner() {
-            currentBannerIndex = (currentBannerIndex + 1) % totalBanners;
-            bannerWrapper.style.transform = `translateX(-${currentBannerIndex * 100 / totalBanners}%)`;
-        }
-        // Set interval for banner auto-slide
-        setInterval(autoSlideBanner, 5000); // Change banner every 5 seconds
+    function autoSlideBanner() {
+        currentBannerIndex = (currentBannerIndex + 1) % totalBanners;
+        bannerWrapper.style.transform = `translateX(-${currentBannerIndex * 100 / totalBanners}%)`;
+    }
+    // Set interval for banner auto-slide
+    setInterval(autoSlideBanner, 5000); // Change banner every 5 seconds
 
-        // Radar Board dynamic content and animation
-        const radarItemsData = [
-            { text: "云雷大仙发布一条上海到深圳的货源：电子产品，8吨", highlight: false },
-            { text: "王师傅接单了从北京到天津的货源：建材，10方", highlight: false },
-            { text: "张小姐发布一条广州到武汉的货源：生鲜，2吨", highlight: false },
-            { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
-            { text: "李老板发布一条成都到重庆的货源：家具，5方", highlight: false },
-            { text: "系统匹配到您附近的新货源：蔬菜，3吨", highlight: false },
-            { text: "赵司机完成了从深圳到厦门货源的运输", highlight: false },
-            { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
-            { text: "钱先生发布一条杭州到南京的货源：纺织品，6吨", highlight: false },
-            { text: "孙女士发布一条武汉到长沙的货源：医药用品，1吨", highlight: false },
-            { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
-            { text: "周师傅接单了从济南到青岛的货源：海鲜，4吨", highlight: false }
-        ];
+    // Radar Board dynamic content and animation
+    const radarItemsData = [
+        { text: "云雷大仙发布一条上海到深圳的货源：电子产品，8吨", highlight: false },
+        { text: "王师傅接单了从北京到天津的货源：建材，10方", highlight: false },
+        { text: "张小姐发布一条广州到武汉的货源：生鲜，2吨", highlight: false },
+        { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
+        { text: "李老板发布一条成都到重庆的货源：家具，5方", highlight: false },
+        { text: "系统匹配到您附近的新货源：蔬菜，3吨", highlight: false },
+        { text: "赵司机完成了从深圳到厦门货源的运输", highlight: false },
+        { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
+        { text: "钱先生发布一条杭州到南京的货源：纺织品，6吨", highlight: false },
+        { text: "孙女士发布一条武汉到长沙的货源：医药用品，1吨", highlight: false },
+        { text: "您的货源有新的情况，请点击查看>", highlight: true }, // Highlighted item
+        { text: "周师傅接单了从济南到青岛的货源：海鲜，4吨", highlight: false }
+    ];
 
-        let radarItemHeight = 0; // Will be calculated dynamically
-        let currentRadarDisplayIndex = 0; // Tracks which item is at the top of the visible list
-        let radarScrollTimeout; // Use a single timeout for sequential scrolling
+    let radarItemHeight = 0; // Will be calculated dynamically
+    let currentRadarDisplayIndex = 0; // Tracks which item is at the top of the visible list
+    let radarScrollTimeout; // Use a single timeout for sequential scrolling
 
-        function initializeRadarDisplay() {
-            const radarItemsInner = document.getElementById('radarItemsInner');
-            radarItemsInner.innerHTML = ''; // Clear existing content
+    function initializeRadarDisplay() {
+        const radarItemsInner = document.getElementById('radarItemsInner');
+        radarItemsInner.innerHTML = ''; // Clear existing content
 
-            // Populate initial visible items (e.g., 5 items)
-            const initialItemsCount = 5;
-            for (let i = 0; i < initialItemsCount; i++) {
-                const itemIndex = (currentRadarDisplayIndex + i) % radarItemsData.length;
-                const radarItemDiv = document.createElement('div');
-                radarItemDiv.classList.add('radar-item');
-                if (radarItemsData[itemIndex].highlight) {
-                    radarItemDiv.classList.add('highlight');
-                }
-                radarItemDiv.textContent = radarItemsData[itemIndex].text;
-                radarItemsInner.appendChild(radarItemDiv);
-            }
-
-            // Measure item height after they are in DOM
-            if (radarItemsInner.children.length > 0) {
-                radarItemHeight = radarItemsInner.children[0].offsetHeight;
-            }
-
-            startRadarScrolling();
-        }
-
-        function startRadarScrolling() {
-            if (radarScrollTimeout) clearTimeout(radarScrollTimeout); // Clear any existing timeout
-
-            // Determine the delay for the next scroll
-            let nextScrollDelay = Math.random() * (4000 - 2000) + 2000; // Random speed between 2-4 seconds
-
-            // Check if the *next* item to be displayed (which is currently at the bottom) is a highlight item
-            // We need to look ahead to the item that will become the *new* top item after the scroll
-            const nextItemToBeTopIndex = (currentRadarDisplayIndex + 1) % radarItemsData.length; // The item that will move to the top position after the current scroll
-            if (radarItemsData[nextItemToBeTopIndex].highlight) {
-                nextScrollDelay = 5000; // Pause for 5 seconds for highlighted items
-            }
-
-            radarScrollTimeout = setTimeout(() => {
-                scrollRadarItem();
-                startRadarScrolling(); // Schedule the next scroll
-            }, nextScrollDelay);
-        }
-
-        function scrollRadarItem() {
-            const radarItemsInner = document.getElementById('radarItemsInner');
-            if (!radarItemsInner || radarItemHeight === 0) {
-                // Re-measure if height is not set, or if element is not found (unlikely)
-                if (radarItemsInner && radarItemsInner.children.length > 0) {
-                    radarItemHeight = radarItemsInner.children[0].offsetHeight;
-                }
-                if (radarItemHeight === 0) return; // Still no height, cannot scroll
-            }
-
-            // Add the next item to the bottom before starting the scroll
-            const itemToAddIndex = (currentRadarDisplayIndex + radarItemsInner.children.length) % radarItemsData.length;
-            const newItemData = radarItemsData[itemToAddIndex];
+        // Populate initial visible items (e.g., 5 items)
+        const initialItemsCount = 5;
+        for (let i = 0; i < initialItemsCount; i++) {
+            const itemIndex = (currentRadarDisplayIndex + i) % radarItemsData.length;
             const radarItemDiv = document.createElement('div');
             radarItemDiv.classList.add('radar-item');
-            if (newItemData.highlight) {
+            if (radarItemsData[itemIndex].highlight) {
                 radarItemDiv.classList.add('highlight');
             }
-            radarItemDiv.textContent = newItemData.text;
+            radarItemDiv.textContent = radarItemsData[itemIndex].text;
             radarItemsInner.appendChild(radarItemDiv);
-
-            // Apply smooth transition for the upward slide
-            radarItemsInner.style.transition = 'transform 1s ease-in-out'; // Fixed 1-second slide duration
-            radarItemsInner.style.transform = `translateY(-${radarItemHeight}px)`;
-
-            // After the slide animation completes, reset position and remove the top item
-            setTimeout(() => {
-                // Remove the first child (the one that scrolled out of view)
-                if (radarItemsInner.children.length > 0) {
-                    radarItemsInner.removeChild(radarItemsInner.children[0]);
-                }
-
-                // Immediately reset transform without transition to prepare for the next scroll
-                radarItemsInner.style.transition = 'none';
-                radarItemsInner.style.transform = 'translateY(0)';
-
-                // Update the index for the next item that will be at the top of the visible list
-                currentRadarDisplayIndex = (currentRadarDisplayIndex + 1) % radarItemsData.length;
-
-            }, 1000); // This timeout should match the CSS transition duration
         }
 
+        // Measure item height after they are in DOM
+        if (radarItemsInner.children.length > 0) {
+            radarItemHeight = radarItemsInner.children[0].offsetHeight;
+        }
 
-        // Initialize driver's cargo management tabs
-        function setupDriverCargoTabs() {
-            const tabsContainer = document.querySelector('#driver-cargo-manage-page .tabs');
-            if (tabsContainer) {
-                const tabs = tabsContainer.querySelectorAll('.tab');
-                tabs.forEach(tab => {
-                    tab.addEventListener('click', function() {
-                        // Remove active class from all tabs
-                        tabs.forEach(t => t.classList.remove('active'));
-                        // Add active class to clicked tab
-                        this.classList.add('active');
+        startRadarScrolling();
+    }
 
-                        // Hide all cargo content
-                        const allCargoContent = document.querySelectorAll('#driver-cargo-manage-page .cargo-content');
-                        allCargoContent.forEach(content => {
-                            content.style.display = 'none';
-                            content.classList.remove('active');
-                        });
+    function startRadarScrolling() {
+        if (radarScrollTimeout) clearTimeout(radarScrollTimeout); // Clear any existing timeout
 
-                        // Show active cargo content
-                        const targetTab = this.dataset.tab;
-                        document.getElementById(`${targetTab}-cargo`).style.display = 'block';
-                        document.getElementById(`${targetTab}-cargo`).classList.add('active');
-                    });
-                });
+        // Determine the delay for the next scroll
+        let nextScrollDelay = Math.random() * (4000 - 2000) + 2000; // Random speed between 2-4 seconds
+
+        // Check if the *next* item to be displayed (which is currently at the bottom) is a highlight item
+        // We need to look ahead to the item that will become the *new* top item after the scroll
+        const nextItemToBeTopIndex = (currentRadarDisplayIndex + 1) % radarItemsData.length; // The item that will move to the top position after the current scroll
+        if (radarItemsData[nextItemToBeTopIndex].highlight) {
+            nextScrollDelay = 5000; // Pause for 5 seconds for highlighted items
+        }
+
+        radarScrollTimeout = setTimeout(() => {
+            scrollRadarItem();
+            startRadarScrolling(); // Schedule the next scroll
+        }, nextScrollDelay);
+    }
+
+    function scrollRadarItem() {
+        const radarItemsInner = document.getElementById('radarItemsInner');
+        if (!radarItemsInner || radarItemHeight === 0) {
+            // Re-measure if height is not set, or if element is not found (unlikely)
+            if (radarItemsInner && radarItemsInner.children.length > 0) {
+                radarItemHeight = radarItemsInner.children[0].offsetHeight;
             }
+            if (radarItemHeight === 0) return; // Still no height, cannot scroll
         }
 
-        // Function to populate and show the Cargo Detail Page (Driver)
-        function showDriverCargoDetailPage(cargoItem) {
-            // Populate route information
-            document.getElementById('driver-origin-district').textContent = cargoItem.originDistrict;
-            document.getElementById('driver-origin-detail').textContent = cargoItem.originDetail;
-            document.getElementById('driver-destination-district').textContent = cargoItem.destinationDistrict;
-            document.getElementById('driver-destination-detail').textContent = cargoItem.destinationDetail;
+        // Add the next item to the bottom before starting the scroll
+        const itemToAddIndex = (currentRadarDisplayIndex + radarItemsInner.children.length) % radarItemsData.length;
+        const newItemData = radarItemsData[itemToAddIndex];
+        const radarItemDiv = document.createElement('div');
+        radarItemDiv.classList.add('radar-item');
+        if (newItemData.highlight) {
+            newItemData.classList.add('highlight');
+        }
+        radarItemDiv.textContent = newItemData.text;
+        radarItemsInner.appendChild(radarItemDiv);
 
-            // Populate cargo details
-            document.getElementById('driver-cargo-name').textContent = cargoItem.cargoName;
-            document.getElementById('driver-cargo-params').textContent = cargoItem.cargoParams;
-            document.getElementById('driver-load-time-detail').textContent = cargoItem.loadTime;
-            document.getElementById('driver-contact-phone').textContent = cargoItem.contactPhone;
-            document.getElementById('driver-remarks').textContent = cargoItem.remarks;
+        // Apply smooth transition for the upward slide
+        radarItemsInner.style.transition = 'transform 1s ease-in-out'; // Fixed 1-second slide duration
+        radarItemsInner.style.transform = `translateY(-${radarItemHeight}px)`;
 
-            // Populate fee information
-            document.getElementById('driver-freight-cost').textContent = cargoItem.freightCost;
+        // After the slide animation completes, reset position and remove the top item
+        setTimeout(() => {
+            // Remove the first child (the one that scrolled out of view)
+            if (radarItemsInner.children.length > 0) {
+                radarItemsInner.removeChild(radarItemsInner.children[0]);
+            }
 
-            // Populate mileage information
-            const mileageDisplay = document.getElementById('driver-mileage-display');
-            mileageDisplay.textContent = '正在计算'; // Initial state
-            setTimeout(() => {
-                mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
-            }, 1000); // Simulate a 1-second calculation time
+            // Immediately reset transform without transition to prepare for the next scroll
+            radarItemsInner.style.transition = 'none';
+            radarItemsInner.style.transform = 'translateY(0)';
 
-            // Set up the "查看路线" link for driver
-            const driverMapLinkContainer = document.getElementById('driver-map-link-container');
-            driverMapLinkContainer.onclick = () => {
-                const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
-                const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
-                alert(`查看从 ${originAddress} 到 ${destinationAddress} 的路线`);
+            // Update the index for the next item that will be at the top of the visible list
+            currentRadarDisplayIndex = (currentRadarDisplayIndex + 1) % radarItemsData.length;
+
+        }, 1000); // This timeout should match the CSS transition duration
+    }
+
+
+    // Initialize driver's cargo management tabs
+    function setupDriverCargoTabs() {
+        const tabsContainer = document.querySelector('#driver-cargo-manage-page .tabs');
+        if (tabsContainer) {
+            const tabs = tabsContainer.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    // Hide all cargo content
+                    const allCargoContent = document.querySelectorAll('#driver-cargo-manage-page .cargo-content');
+                    allCargoContent.forEach(content => {
+                        content.style.display = 'none';
+                        content.classList.remove('active');
+                    });
+
+                    // Show active cargo content
+                    const targetTab = this.dataset.tab;
+                    document.getElementById(`${targetTab}-cargo`).style.display = 'block';
+                    document.getElementById(`${targetTab}-cargo`).classList.add('active');
+                });
+            });
+        }
+    }
+
+    // Function to populate and show the Cargo Detail Page (Driver)
+    function showDriverCargoDetailPage(cargoItem) {
+        // Populate route information
+        document.getElementById('driver-origin-district').textContent = cargoItem.originDistrict;
+        document.getElementById('driver-origin-detail').textContent = cargoItem.originDetail;
+        document.getElementById('driver-destination-district').textContent = cargoItem.destinationDistrict;
+        document.getElementById('driver-destination-detail').textContent = cargoItem.destinationDetail;
+
+        // Populate cargo details
+        document.getElementById('driver-cargo-name').textContent = cargoItem.cargoName;
+        document.getElementById('driver-cargo-params').textContent = cargoItem.cargoParams;
+        document.getElementById('driver-load-time-detail').textContent = cargoItem.loadTime;
+        document.getElementById('driver-contact-phone').textContent = cargoItem.contactPhone;
+        document.getElementById('driver-remarks').textContent = cargoItem.remarks;
+
+        // Populate fee information
+        document.getElementById('driver-freight-cost').textContent = cargoItem.freightCost;
+
+        // Populate mileage information
+        const mileageDisplay = document.getElementById('driver-mileage-display');
+        mileageDisplay.textContent = '正在计算'; // Initial state
+        setTimeout(() => {
+            mileageDisplay.textContent = cargoItem.mileage || '未知里程'; // Simulate calculation
+        }, 1000); // Simulate a 1-second calculation time
+
+        // Set up the "查看路线" link for driver
+        const driverMapLinkContainer = document.getElementById('driver-map-link-container');
+        driverMapLinkContainer.onclick = () => {
+            const originAddress = `${cargoItem.originDistrict}${cargoItem.originDetail}`;
+            const destinationAddress = `${cargoItem.destinationDistrict}${cargoItem.destinationDetail}`;
+            alert(`查看从 ${originAddress} 到 ${destinationAddress} 的路线`);
+        };
+
+
+        // Set header action button (e.g., Share for driver, or specific driver action)
+        const driverDetailActionBtn = document.getElementById('driver-detail-action-btn');
+        driverDetailActionBtn.textContent = '分享'; // Default action for driver detail
+        driverDetailActionBtn.classList.remove('delete-btn'); // Ensure no delete style
+        driverDetailActionBtn.onclick = () => alert('分享货源: ' + cargoItem.id);
+
+
+        // Dynamically populate fixed footer buttons for driver
+        const driverDetailFooter = document.getElementById('driver-cargo-detail-footer');
+        driverDetailFooter.innerHTML = ''; // Clear existing buttons
+
+        const buttonsToCreate = [
+            { text: '联系货主', className: '', action: () => alert('联系货主: ' + cargoItem.id) },
+            { text: '立即抢单', className: 'primary', action: () => alert('立即抢单: ' + cargoItem.id) }
+        ];
+
+        buttonsToCreate.forEach(btnInfo => {
+            const button = document.createElement('button');
+            button.textContent = btnInfo.text;
+            button.classList.add('action-btn');
+            if (btnInfo.className) {
+                button.classList.add(btnInfo.className);
+            }
+            button.onclick = btnInfo.action;
+            driverDetailFooter.appendChild(button);
+        });
+
+        showPage('driver-cargo-detail-page'); // Show the driver detail page
+    }
+
+
+    // Function to generate smart shipping tip using Gemini API
+    async function generateSmartShippingTip() {
+        const tipDisplay = document.getElementById('shippingTipDisplay');
+        tipDisplay.style.opacity = 0; // Fade out current text
+        tipDisplay.textContent = '正在生成小贴士...'; // Show loading message
+        tipDisplay.style.backgroundColor = '#e0f7fa'; // Change background for loading
+        tipDisplay.style.border = '1px solid #a7d9e2';
+        tipDisplay.style.opacity = 1; // Fade in loading message
+
+        try {
+            let chatHistory = [];
+            const prompt = "请为物流App的用户生成一个简短、实用且积极的运货小贴士，例如关于如何打包、选择路线、与司机沟通等。长度在50字以内。";
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+            const payload = {
+                contents: chatHistory,
+                generationConfig: {
+                    temperature: 0.7, // Adjust creativity
+                    maxOutputTokens: 100 // Limit output length
+                }
             };
 
+            const apiKey = ""; // Canvas will automatically provide the API key
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-            // Set header action button (e.g., Share for driver, or specific driver action)
-            const driverDetailActionBtn = document.getElementById('driver-detail-action-btn');
-            driverDetailActionBtn.textContent = '分享'; // Default action for driver detail
-            driverDetailActionBtn.classList.remove('delete-btn'); // Ensure no delete style
-            driverDetailActionBtn.onclick = () => alert('分享货源: ' + cargoItem.id);
-
-
-            // Dynamically populate fixed footer buttons for driver
-            const driverDetailFooter = document.getElementById('driver-cargo-detail-footer');
-            driverDetailFooter.innerHTML = ''; // Clear existing buttons
-
-            const buttonsToCreate = [
-                { text: '联系货主', className: '', action: () => alert('联系货主: ' + cargoItem.id) },
-                { text: '立即抢单', className: 'primary', action: () => alert('立即抢单: ' + cargoItem.id) }
-            ];
-
-            buttonsToCreate.forEach(btnInfo => {
-                const button = document.createElement('button');
-                button.textContent = btnInfo.text;
-                button.classList.add('action-btn');
-                if (btnInfo.className) {
-                    button.classList.add(btnInfo.className);
-                }
-                button.onclick = btnInfo.action;
-                driverDetailFooter.appendChild(button);
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
-            showPage('driver-cargo-detail-page'); // Show the driver detail page
-        }
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`API error: ${response.status} - ${errorData.error.message || 'Unknown error'}`);
+            }
 
+            const result = await response.json();
 
-        // Function to generate smart shipping tip using Gemini API
-        async function generateSmartShippingTip() {
-            const tipDisplay = document.getElementById('shippingTipDisplay');
-            tipDisplay.style.opacity = 0; // Fade out current text
-            tipDisplay.textContent = '正在生成小贴士...'; // Show loading message
-            tipDisplay.style.backgroundColor = '#e0f7fa'; // Change background for loading
-            tipDisplay.style.border = '1px solid #a7d9e2';
-            tipDisplay.style.opacity = 1; // Fade in loading message
-
-            try {
-                let chatHistory = [];
-                const prompt = "请为物流App的用户生成一个简短、实用且积极的运货小贴士，例如关于如何打包、选择路线、与司机沟通等。长度在50字以内。";
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-
-                const payload = {
-                    contents: chatHistory,
-                    generationConfig: {
-                        temperature: 0.7, // Adjust creativity
-                        maxOutputTokens: 100 // Limit output length
-                    }
-                };
-
-                const apiKey = ""; // Canvas will automatically provide the API key
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`API error: ${response.status} - ${errorData.error.message || 'Unknown error'}`);
-                }
-
-                const result = await response.json();
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    tipDisplay.textContent = text;
-                    tipDisplay.style.backgroundColor = '#e8f5e9'; // Reset background
-                    tipDisplay.style.border = '1px solid #c8e6c9';
-                } else {
-                    tipDisplay.textContent = '未能生成小贴士，请稍后再试。';
-                    tipDisplay.style.backgroundColor = '#ffebee'; // Error background
-                    tipDisplay.style.border = '1px solid #ef9a9a';
-                }
-            } catch (error) {
-                console.error("Error generating shipping tip:", error);
-                tipDisplay.textContent = `生成小贴士时出错: ${error.message}`;
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                const text = result.candidates[0].content.parts[0].text;
+                tipDisplay.textContent = text;
+                tipDisplay.style.backgroundColor = '#e8f5e9'; // Reset background
+                tipDisplay.style.border = '1px solid #c8e6c9';
+            } else {
+                tipDisplay.textContent = '未能生成小贴士，请稍后再试。';
                 tipDisplay.style.backgroundColor = '#ffebee'; // Error background
                 tipDisplay.style.border = '1px solid #ef9a9a';
-            } finally {
-                tipDisplay.style.opacity = 1; // Ensure it's visible after content is set
             }
+        } catch (error) {
+            console.error("Error generating shipping tip:", error);
+            tipDisplay.textContent = `生成小贴士时出错: ${error.message}`;
+            tipDisplay.style.backgroundColor = '#ffebee'; // Error background
+            tipDisplay.style.border = '1px solid #ef9a9a';
+        } finally {
+            tipDisplay.style.opacity = 1; // Ensure it's visible after content is set
+        }
+    }
+
+
+    // Initialize the app on window load
+    window.onload = function() {
+        // Initially, only the password overlay is visible.
+        setupDriverCargoTabs();
+        initializeRadarDisplay(); // Start radar content updates
+
+        // Shipper My Page specific JS initialization
+        const demandInfoButton = document.getElementById('demandInfoButton');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalCloseButton = document.getElementById('modalCloseButton');
+
+        // Ensure elements exist before adding listeners
+        if (demandInfoButton && modalOverlay && modalCloseButton) {
+            // Button click to show modal
+            demandInfoButton.addEventListener('click', () => {
+                console.log('需求说明按钮被点击了！'); // Add debug log
+                modalOverlay.classList.add('show');
+            });
+
+            // Close modal
+            modalCloseButton.addEventListener('click', () => {
+                modalOverlay.classList.remove('show');
+            });
+
+            // Close modal on outside click
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    modalOverlay.classList.remove('show');
+                }
+            });
         }
 
+        // Initialize Lucide Icons after DOM is loaded and elements are present
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
+        } else {
+            console.error("Lucide icons library not loaded or not available.");
+        }
+    };
 
-        // Initialize the app on window load
-        window.onload = function() {
-            // Initially, only the password overlay is visible.
-            setupDriverCargoTabs();
-            initializeRadarDisplay(); // Start radar content updates
+    // Basic alert polyfill to avoid blocking prompts in iframe
+    window.alert = (message) => {
+        const appScreen = document.querySelector('.app-screen');
+        if (!appScreen) {
+            console.log(message); // Fallback for environments without app-screen
+            return;
+        }
 
-            // Shipper My Page specific JS initialization
-            const demandInfoButton = document.getElementById('demandInfoButton');
-            const modalOverlay = document.getElementById('modalOverlay');
-            const modalCloseButton = document.getElementById('modalCloseButton');
-            
-            // Ensure elements exist before adding listeners
-            if (demandInfoButton && modalOverlay && modalCloseButton) {
-                // Button click to show modal
-                demandInfoButton.addEventListener('click', () => {
-                    console.log('需求说明按钮被点击了！'); // Add debug log
-                    modalOverlay.classList.add('show');
-                });
+        // Create a simple modal
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        `;
 
-                // Close modal
-                modalCloseButton.addEventListener('click', () => {
-                    modalOverlay.classList.remove('show');
-                });
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 80%;
+            font-size: 16px;
+            color: #333;
+            animation: fadeIn 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+        `;
 
-                // Close modal on outside click
-                modalOverlay.addEventListener('click', (e) => {
-                    if (e.target === modalOverlay) {
-                        modalOverlay.classList.remove('show');
-                    }
-                });
+        const messageText = document.createElement('p');
+        messageText.textContent = message;
+        messageText.style.marginBottom = '25px';
+        messageText.style.fontWeight = 'bold';
+        messageText.style.lineHeight = '1.4';
+
+        const closeButton = document.createElement('button');
+        closeButton.textContent = '确定';
+        closeButton.style.cssText = `
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        `;
+        closeButton.onmouseover = () => closeButton.style.backgroundColor = '#0056b3';
+        closeButton.onmouseout = () => closeButton.style.backgroundColor = '#007bff';
+        closeButton.onclick = () => modal.remove();
+
+        modalContent.appendChild(messageText);
+        modalContent.appendChild(closeButton);
+        modal.appendChild(modalContent);
+        appScreen.appendChild(modal);
+
+        // Add a simple fadeIn animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
             }
+        `;
+        document.head.appendChild(style);
+    };
 
-            // Initialize Lucide Icons after DOM is loaded and elements are present
-            if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                lucide.createIcons();
-            } else {
-                console.error("Lucide icons library not loaded or not available.");
-            }
-        };
-
-        // Basic alert polyfill to avoid blocking prompts in iframe
-        window.alert = (message) => {
-            const appScreen = document.querySelector('.app-screen');
-            if (!appScreen) {
-                console.log(message); // Fallback for environments without app-screen
-                return;
-            }
-
-            // Create a simple modal
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.6);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-            `;
-
-            const modalContent = document.createElement('div');
-            modalContent.style.cssText = `
-                background-color: #fff;
-                padding: 30px;
-                border-radius: 15px;
-                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-                text-align: center;
-                max-width: 80%;
-                font-size: 16px;
-                color: #333;
-                animation: fadeIn 0.3s ease-out;
-                position: relative;
-                overflow: hidden;
-            `;
-
-            const messageText = document.createElement('p');
-            messageText.textContent = message;
-            messageText.style.marginBottom = '25px';
-            messageText.style.fontWeight = 'bold';
-            messageText.style.lineHeight = '1.4';
-
-            const closeButton = document.createElement('button');
-            closeButton.textContent = '确定';
-            closeButton.style.cssText = `
-                background-color: #007bff;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                padding: 12px 25px;
-                font-size: 16px;
-                cursor: pointer;
-                transition: background-color 0.2s ease, transform 0.2s ease;
-                box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
-            `;
-            closeButton.onmouseover = () => closeButton.style.backgroundColor = '#0056b3';
-            closeButton.onmouseout = () => closeButton.style.backgroundColor = '#007bff';
-            closeButton.onclick = () => modal.remove();
-
-            modalContent.appendChild(messageText);
-            modalContent.appendChild(closeButton);
-            modal.appendChild(modalContent);
-            appScreen.appendChild(modal);
-
-            // Add a simple fadeIn animation
-            const style = document.createElement('style');
-            style.innerHTML = `
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(-20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-            `;
-            document.head.appendChild(style);
-        };
-
-    </script>
+</script>
 </body>
 </html>
