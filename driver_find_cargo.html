@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找货页面</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* 手机屏幕模拟框 */
+        .app-screen {
+            width: 375px;
+            height: 812px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* 顶部地址选择器样式 */
+        .location-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            flex-shrink: 0;
+        }
+        .location-box {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            flex: 1;
+            min-width: 0;
+            justify-content: center;
+        }
+        .location-box span {
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+        .location-box svg {
+            margin-left: 4px;
+            flex-shrink: 0;
+        }
+        .separator-arrow {
+            font-size: 20px;
+            color: #ccc;
+            margin: 0 10px;
+        }
+
+        /* 货源列表 */
+        .cargo-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px 10px;
+            background-color: #f9f9f9;
+        }
+        .cargo-item {
+            background-color: #fff;
+            border: 1px solid #ffe0b2;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .cargo-item:hover {
+            transform: translateY(-3px);
+        }
+        .cargo-item h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 18px;
+            padding-right: 100px;
+        }
+        .cargo-item p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* 置顶水印 */
+        .cargo-item.is-pinned::after {
+            content: '置顶';
+            position: absolute;
+            top: 5px;
+            right: 0px;
+            font-size: 40px;
+            font-weight: 800;
+            color: rgba(255, 99, 71, 0.2);
+            transform: rotate(15deg);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .top-right-info, .cargo-item h4, .cargo-item p, .shipper-freight-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .top-right-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+        }
+        .distance-info {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* 底部信息 */
+        .shipper-freight-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .freight-cost-display {
+            color: #ef4444;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .freight-negotiable {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .shipper-info {
+            display: flex;
+            align-items: center;
+        }
+        .shipper-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+            object-fit: cover;
+            background-color: #f0f2f5;
+        }
+        .shipper-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .shipper-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+        .shipper-level {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        /* 地址选择弹窗样式 */
+        .address-modal-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        .address-modal-container.show {
+            display: flex;
+            pointer-events: all;
+        }
+        .address-modal-container iframe {
+            width: 100%;
+            height: 70%;
+            border: none;
+            border-radius: 16px 16px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+        }
+        .address-modal-container.show iframe {
+            transform: translateY(0);
+        }
+
+        /* 新增：Toast 提示样式 */
+        .toast-notification {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease, bottom 0.3s ease;
+            pointer-events: none;
+        }
+        .toast-notification.show {
+            opacity: 1;
+            bottom: 80px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-screen">
+    <!-- 顶部地址选择器 -->
+    <div class="location-selector">
+        <div id="originSelector" class="location-box">
+            <span id="originLocation">北京市</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+        </div>
+        <div class="separator-arrow">→</div>
+        <div id="destinationSelector" class="location-box">
+            <span id="destinationLocation">全国</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+        </div>
+    </div>
+
+    <div class="cargo-list" id="cargoListContainer">
+        <!-- 货物列表 -->
+    </div>
+</div>
+
+<!-- 地址选择弹窗 -->
+<div id="addressModal" class="address-modal-container">
+    <iframe id="addressFrame" src="address-selector.html"></iframe>
+</div>
+
+
+<script>
+    // 模拟货源数据（扩充到10条）
+    const driverCargoData = {
+        'findCargo': [
+            { id: 'D001', routeDisplay: '北京大兴区 - 天津港', cargoDisplay: '大型挖掘机 35吨 需13米低平板', loadTimeDisplay: '8月6日装', freightCost: '¥4500', mileage: '约140公里', shipperName: '中建三局-王经理', shipperLevel: 88, shipperAvatar: 'https://placehold.co/40x40/ffc107/333?text=王' },
+            { id: 'D002', routeDisplay: '上海临港 - 杭州萧山', cargoDisplay: '精密数控机床 15吨 需气垫车', loadTimeDisplay: '8月7日前卸', freightCost: '¥3800', mileage: '约170公里', shipperName: '上汽集团-刘女士', shipperLevel: 45, shipperAvatar: 'https://placehold.co/40x40/4caf50/fff?text=刘' },
+            { id: 'D003', routeDisplay: '广州南沙 - 深圳前海', cargoDisplay: '盾构机刀盘 45吨 超宽3.5米', loadTimeDisplay: '随到随装', freightCost: null, mileage: '约100公里', shipperName: '深圳地铁-陈工', shipperLevel: 62, shipperAvatar: 'https://placehold.co/40x40/f44336/fff?text=陈' },
+            { id: 'D004', routeDisplay: '成都龙泉驿 - 重庆两江新区', cargoDisplay: '大型变压器 50吨 需特种轴线车', loadTimeDisplay: '8月8日装', freightCost: '¥12000', mileage: '约300公里', shipperName: '国家电网-李老板', shipperLevel: 31, shipperAvatar: 'https://placehold.co/40x40/2196f3/fff?text=李' },
+            { id: 'D005', routeDisplay: '武汉经开区 - 长沙经开区', cargoDisplay: '履带式起重机 70吨 分体运输', loadTimeDisplay: '8月9日装', freightCost: '¥18000', mileage: '约350公里', shipperName: '三一重工-孙经理', shipperLevel: 79, shipperAvatar: 'https://placehold.co/40x40/9c27b0/fff?text=孙' },
+            { id: 'D006', routeDisplay: '西安阎良 - 兰州新区', cargoDisplay: '风力发电机叶片 1件 长40米', loadTimeDisplay: '随到随装', freightCost: '¥25000', mileage: '约630公里', shipperName: '金风科技-赵厂长', shipperLevel: 112, shipperAvatar: 'https://placehold.co/40x40/8bc34a/fff?text=赵' },
+            { id: 'D007', routeDisplay: '郑州航空港 - 济南高新区', cargoDisplay: '桥梁预制件 80吨 需多台车', loadTimeDisplay: '8月10日装', freightCost: null, mileage: '约430公里', shipperName: '中铁十四局-周工', shipperLevel: 8, shipperAvatar: 'https://placehold.co/40x40/e91e63/fff?text=周' },
+            { id: 'D008', routeDisplay: '苏州工业园区 - 无锡高新区', cargoDisplay: '光刻机设备 25吨 恒温防震', loadTimeDisplay: '8月11日装', freightCost: '¥9000', mileage: '约50公里', shipperName: '华虹半导体-吴博士', shipperLevel: 95, shipperAvatar: 'https://placehold.co/40x40/00bcd4/fff?text=吴' },
+            { id: 'D009', routeDisplay: '大连港 - 青岛港', cargoDisplay: '进口汽车配件 2个集装箱', loadTimeDisplay: '随到随装', freightCost: '¥15000', mileage: '约800公里', shipperName: '一汽大众-张主管', shipperLevel: 55, shipperAvatar: 'https://placehold.co/40x40/795548/fff?text=张' },
+            { id: 'D010', routeDisplay: '厦门海沧 - 福州马尾', cargoDisplay: '游艇 1艘 需特种低板', loadTimeDisplay: '8月12日装', freightCost: null, mileage: '约250公里', shipperName: '私人船主-林先生', shipperLevel: 23, shipperAvatar: 'https://placehold.co/40x40/607d8b/fff?text=林' }
+        ]
+    };
+
+    // --- 地址选择相关逻辑 ---
+    const originSelector = document.getElementById('originSelector');
+    const destinationSelector = document.getElementById('destinationSelector');
+    const addressModal = document.getElementById('addressModal');
+    const addressFrame = document.getElementById('addressFrame');
+
+    function openAddressSelector(type) {
+        addressFrame.src = `address-selector.html?type=${type}`;
+        addressModal.classList.add('show');
+    }
+
+    function closeAddressSelector() {
+        addressModal.classList.remove('show');
+    }
+
+    originSelector.addEventListener('click', () => openAddressSelector('origin'));
+    destinationSelector.addEventListener('click', () => openAddressSelector('destination'));
+    addressModal.addEventListener('click', (event) => {
+        if (event.target === addressModal) {
+            closeAddressSelector();
+        }
+    });
+
+    window.addEventListener('message', (event) => {
+        const data = event.data;
+        if (data.action === 'close') {
+            closeAddressSelector();
+        } else if (data.action === 'select') {
+            updateLocationAndSearch(data.type, data.location);
+            closeAddressSelector();
+        }
+    });
+
+    function updateLocationAndSearch(type, location) {
+        if (type === 'origin') {
+            document.getElementById('originLocation').textContent = location;
+        } else {
+            document.getElementById('destinationLocation').textContent = location;
+        }
+        showToast("执行请求");
+        populateCargoList();
+    }
+
+    // --- 新增：Toast 提示函数 ---
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        // 触发显示动画
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+
+        // 2秒后隐藏
+        setTimeout(() => {
+            toast.classList.remove('show');
+            // 动画结束后从DOM中移除
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 2000);
+    }
+
+    // --- 页面原有逻辑 ---
+    function getLevelTitle(level) {
+        let title = '';
+        if (level >= 1 && level <= 10) title = '无名小卒';
+        else if (level >= 11 && level <= 20) title = '初入江湖';
+        else if (level >= 21 && level <= 30) title = '略有小成';
+        else if (level >= 31 && level <= 40) title = '驾轻就熟';
+        else if (level >= 41 && level <= 50) title = '融会贯通';
+        else if (level >= 51 && level <= 60) title = '炉火纯青';
+        else if (level >= 61 && level <= 70) title = '出类拔萃';
+        else if (level >= 71 && level <= 80) title = '神乎其技';
+        else if (level >= 81 && level <= 90) title = '出神入化';
+        else if (level >= 91 && level <= 100) title = '登峰造极';
+        else if (level >= 101 && level <= 110) title = '一代宗师';
+        else if (level >= 111 && level <= 120) title = '天下无双';
+        else title = '资深货主';
+        return `${title}·${level}级`;
+    }
+
+    function populateCargoList() {
+        const container = document.getElementById('cargoListContainer');
+        container.innerHTML = '';
+
+        driverCargoData.findCargo.forEach((item, index) => {
+            const cargoDiv = document.createElement('div');
+            cargoDiv.className = 'cargo-item';
+            if (index === 0) {
+                cargoDiv.classList.add('is-pinned');
+            }
+
+            let topRightHTML = `<div class="distance-info">距离我 ${parseInt(item.mileage.replace('约', ''))} km</div>`;
+            let shipperInfoHTML = '';
+            if (item.shipperName && item.shipperAvatar && item.shipperLevel) {
+                const levelDisplay = getLevelTitle(item.shipperLevel);
+                shipperInfoHTML = `
+                    <div class="shipper-info">
+                        <div class="shipper-avatar"><img src="${item.shipperAvatar}" alt="头像" onerror="this.onerror=null;this.src='https://placehold.co/40x40/EFEFEF/333?text=头';"></div>
+                        <div class="shipper-details">
+                            <div class="shipper-name">${item.shipperName}</div>
+                            <div class="shipper-level">${levelDisplay}</div>
+                        </div>
+                    </div>`;
+            }
+            let freightInfoHTML = item.freightCost ? `<div class="freight-cost-display">${item.freightCost}</div>` : `<div class="freight-negotiable">电议</div>`;
+
+            cargoDiv.innerHTML = `
+                <div class="top-right-info">${topRightHTML}</div>
+                <h4>${item.routeDisplay}</h4>
+                <p><strong>货物:</strong> ${item.cargoDisplay}</p>
+                <p><strong>装卸时间:</strong> ${item.loadTimeDisplay}</p>
+                <div class="shipper-freight-container">${shipperInfoHTML}${freightInfoHTML}</div>
+            `;
+            container.appendChild(cargoDiv);
+        });
+    }
+
+    window.onload = function() {
+        populateCargoList();
+    };
+</script>
+</body>
+</html>

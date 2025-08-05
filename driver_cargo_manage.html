@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车方货源管理</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基础样式，在页面居中显示手机模拟框 */
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* 外部背景色 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* 手机屏幕模拟框样式 */
+        .app-screen {
+            width: 375px;
+            height: 812px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* 从主文件复制过来的相关样式 */
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid #eee;
+            background-color: #fcfcfc;
+            padding: 5px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            flex-shrink: 0; /* 防止tabs收缩 */
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 15px;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .tab.active {
+            color: #ff9800; /* Active orange */
+            border-bottom-color: #ff9800;
+            font-weight: bold;
+        }
+        .cargo-list {
+            flex-grow: 1; /* 占据剩余空间 */
+            overflow-y: auto; /* 内容溢出时滚动 */
+            padding: 15px 20px;
+            background-color: #f9f9f9;
+        }
+        .cargo-item {
+            background-color: #fff;
+            border: 1px solid #ffe0b2; /* Orange border */
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        .cargo-item:hover {
+            transform: translateY(-3px);
+        }
+        .cargo-item h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 18px;
+        }
+        .cargo-item p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .cargo-actions {
+            text-align: right;
+            margin-top: 15px;
+        }
+        .cargo-actions button {
+            background-color: #ff9800; /* Orange button */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .cargo-actions button:hover {
+            background-color: #fb8c00;
+            transform: translateY(-1px);
+        }
+        .cargo-actions button.secondary {
+            background-color: #9e9e9e;
+        }
+        .cargo-actions button.secondary:hover {
+            background-color: #757575;
+        }
+        .cargo-content {
+            display: none; /* 默认隐藏 */
+        }
+        .cargo-content.active {
+            display: block; /* 激活时显示 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-screen">
+    <div class="tabs">
+        <div class="tab active" data-tab="feedback">已反馈</div>
+        <div class="tab" data-tab="contacted">已联系</div>
+        <div class="tab" data-tab="followed">已关注</div>
+        <div class="tab" data-tab="history">浏览记录</div>
+    </div>
+    <div class="cargo-list">
+        <!-- 内容会根据tab选择动态变化 -->
+        <div id="feedback-cargo" class="cargo-content active">
+            <div class="cargo-item">
+                <h4>订单ID: #D20250625001</h4>
+                <p><strong>路线:</strong> 北京 - 天津</p>
+                <p><strong>货物:</strong> 建筑材料</p>
+                <p><strong>状态:</strong> 待确认</p>
+                <div class="cargo-actions">
+                    <button onclick="alert('联系货主')">联系货主</button>
+                    <button class="secondary" onclick="alert('取消反馈')">取消反馈</button>
+                </div>
+            </div>
+            <div class="cargo-item">
+                <h4>订单ID: #D20250625002</h4>
+                <p><strong>路线:</strong> 上海 - 苏州</p>
+                <p><strong>货物:</strong> 服装</p>
+                <p><strong>状态:</strong> 匹配中</p>
+                <div class="cargo-actions">
+                    <button onclick="alert('联系货主')">联系货主</button>
+                </div>
+            </div>
+        </div>
+        <div id="contacted-cargo" class="cargo-content">
+            <div class="cargo-item">
+                <h4>订单ID: #D20250624005</h4>
+                <p><strong>路线:</strong> 上海 - 杭州</p>
+                <p><strong>货物:</strong> 电子设备</p>
+                <p><strong>状态:</strong> 已接受</p>
+                <div class="cargo-actions">
+                    <button onclick="alert('开始导航')">开始导航</button>
+                </div>
+            </div>
+        </div>
+        <div id="followed-cargo" class="cargo-content">
+            <div class="cargo-item">
+                <h4>货源ID: #F20250623001</h4>
+                <p><strong>路线:</strong> 广州 - 珠海</p>
+                <p><strong>货物:</strong> 零配件</p>
+                <p><strong>状态:</strong> 待抢</p>
+                <div class="cargo-actions">
+                    <button onclick="alert('立即抢单')">立即抢单</button>
+                </div>
+            </div>
+        </div>
+        <div id="history-cargo" class="cargo-content">
+            <div class="cargo-item">
+                <h4>订单ID: #H20250622001</h4>
+                <p><strong>路线:</strong> 成都 - 重庆</p>
+                <p><strong>货物:</strong> 家具</p>
+                <p><strong>状态:</strong> 已完成</p>
+                <div class="cargo-actions">
+                    <button onclick="alert('查看详情')">查看详情</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 初始化车方货源管理页面的tabs
+    function setupDriverCargoTabs() {
+        const tabsContainer = document.querySelector('.tabs');
+        if (tabsContainer) {
+            const tabs = tabsContainer.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有tab的active class
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // 给当前点击的tab添加active class
+                    this.classList.add('active');
+
+                    // 隐藏所有货源内容
+                    const allCargoContent = document.querySelectorAll('.cargo-content');
+                    allCargoContent.forEach(content => {
+                        content.classList.remove('active');
+                    });
+
+                    // 显示对应的货源内容
+                    const targetTab = this.dataset.tab;
+                    document.getElementById(`${targetTab}-cargo`).classList.add('active');
+                });
+            });
+        }
+    }
+
+    // 页面加载完成后执行
+    window.onload = function() {
+        setupDriverCargoTabs();
+    };
+</script>
+</body>
+</html>

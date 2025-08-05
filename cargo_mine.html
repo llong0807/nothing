@@ -774,10 +774,13 @@
         console.log(`Navigating to page: ${pageName}`);
         // Here you would implement your actual page navigation logic,
         // e.g., changing content, redirecting, etc.
-         document.getElementById('yourButtonId').addEventListener('click', function() {
-            // 发送消息给父页面
+        window.parent.postMessage({
+                    action: 'showPage',
+                    pageId: pageName
+                }, '*');
+                // 这里填入你想要激活的页面ID
+                // 使用'*'表示可以向任何源发送消息，但在生产环境中应指定确切的目标源
 
-        });
     }
 
     // Ensure execution after DOM content is fully loaded
