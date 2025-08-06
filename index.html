@@ -199,149 +199,8 @@
             }
 
         /* Shipper Home Page */
-        #shipper-home-page .header {
+        #shipper-home-iframe-page .header {
             color: #2196f3; /* Blue header for shipper */
-        }
-        /* Banner styles */
-        .banner-container {
-            width: 100%;
-            height: 140px;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 25px;
-            position: relative;
-        }
-        .banner-wrapper {
-            display: flex;
-            width: 300%; /* 3 pages */
-            height: 100%;
-            transition: transform 1s ease-in-out;
-        }
-        .banner-page {
-            width: 33.33%; /* Each page takes 1/3 of the wrapper width */
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0; /* Prevent shrinking */
-            background-size: cover;
-            background-position: center;
-        }
-        .banner-page:nth-child(1) { background: linear-gradient(45deg, #64b5f6, #2196f3); } /* Blue */
-        .banner-page:nth-child(2) { background: linear-gradient(45deg, #81c784, #4caf50); } /* Green */
-        .banner-page:nth-child(3) { background: linear-gradient(45deg, #ffb74d, #ff9800); } /* Orange */
-
-        /* Radar board styles */
-        #shipper-home-page .radar-board {
-            background-color: #e1f5fe; /* Lighter blue */
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 40px;
-            border: 1px solid #b3e5fc;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            position: relative; /* For animation */
-            height: 150px; /* Fixed height for radar board */
-            overflow: hidden; /* Hide scrollbar for radar */
-        }
-        #shipper-home-page .radar-board h3 {
-            margin-top: 0;
-            color: #1976d2; /* Darker blue */
-            font-size: 17px;
-            margin-bottom: 15px;
-            text-align: center;
-            position: relative;
-            z-index: 2; /* Ensure text is above animated elements */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        #shipper-home-page .radar-board h3 .icon {
-            font-size: 20px;
-            color: #1976d2;
-        }
-        #shipper-home-page .radar-board .radar-items-container {
-            position: relative;
-            height: calc(100% - 32px); /* Adjust based on h3 height */
-            overflow: hidden;
-        }
-        #shipper-home-page .radar-item {
-            padding: 8px 0;
-            border-bottom: 1px dashed #c1e4ff;
-            font-size: 14px;
-            color: #424242;
-            white-space: nowrap; /* Prevent text wrapping */
-            overflow: hidden; /* Hide overflow */
-            text-overflow: ellipsis; /* Add ellipsis */
-        }
-        #shipper-home-page .radar-item:last-child {
-            border-bottom: none;
-        }
-        #shipper-home-page .radar-item.highlight {
-            font-size: 16px; /* Larger font for highlight */
-            font-weight: bold;
-            color: #e63946; /* Highlight color */
-            animation: pulseHighlight 1s infinite alternate; /* Pulsing effect */
-        }
-
-        /* Free Shipping Button styles */
-        #shipper-home-page .free-shipping-button {
-            width: 90%;
-            padding: 25px 20px; /* Increased padding */
-            background: linear-gradient(45deg, #ff7e5f, #feb47b); /* Warm orange gradient */
-            color: #fff;
-            border: none;
-            border-radius: 20px; /* More rounded */
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(255, 126, 95, 0.4); /* Stronger, warmer shadow */
-            margin: 0 auto;
-            display: flex; /* Use flexbox for internal layout */
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px; /* Space between title and slogan */
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        #shipper-home-page .free-shipping-button:hover {
-            transform: translateY(-5px); /* More pronounced lift */
-            box-shadow: 0 12px 30px rgba(255, 126, 95, 0.6);
-        }
-        #shipper-home-page .free-shipping-button .main-text {
-            font-size: 28px; /* Even larger font */
-            font-weight: bold;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        #shipper-home-page .free-shipping-button .main-text .icon {
-            font-size: 30px;
-        }
-        #shipper-home-page .free-shipping-button .slogan {
-            font-size: 16px; /* Slogan font size */
-            opacity: 0.9;
-            line-height: 1.3;
-        }
-        #shipper-home-page .free-shipping-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: skewX(-30deg);
-            transition: all 0.5s ease;
-        }
-        #shipper-home-page .free-shipping-button:hover::before {
-            left: 100%;
         }
 
         /* MODIFIED: Driver pages now have orange active tab color */
@@ -543,63 +402,6 @@
             transform: translateY(-1px);
         }
 
-        /* Radar board animation keyframes */
-        @keyframes radarScan {
-            0% { transform: rotate(0deg); opacity: 0.5; }
-            50% { opacity: 0.8; }
-            100% { transform: rotate(360deg); opacity: 0.5; }
-        }
-
-        .radar-board::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 80%;
-            height: 80%;
-            border: 2px dashed #b3e5fc;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.3;
-            animation: pulse 2s infinite ease-in-out;
-            z-index: 1;
-        }
-
-        .radar-board::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle, transparent 20%, #e1f5fe 80%);
-            opacity: 0.2;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-            50% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
-            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-        }
-
-        .radar-items-container {
-            position: relative;
-            height: calc(100% - 32px); /* Adjust based on h3 height */
-            overflow: hidden;
-        }
-
-        @keyframes pulseHighlight {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(1.02); opacity: 0.9; }
-        }
-
-        /* Pause animation on hover */
-        .radar-board:hover .radar-items-inner {
-            animation-play-state: paused;
-        }
-
         /* NEW: Styles for detail pages */
         .detail-header {
             display: flex;
@@ -637,8 +439,8 @@
         .detail-header .header-action-btn:hover { background-color: #f0f0f0; }
         .detail-content {
             flex-grow: 1;
-            overflow-y: auto;
             padding: 15px;
+            overflow-y: auto;
             background-color: #f9f9f9;
             padding-bottom: 80px;
         }
@@ -821,7 +623,7 @@
     <!-- 2. Identity Selection Page -->
     <div id="identity-page" class="page">
         <div class="identity-title">请选择您的身份</div>
-        <div class="identity-card shipper-card" onclick="showPage('shipper-home-page')">
+        <div class="identity-card shipper-card" onclick="showPage('shipper-home-iframe-page')">
             <span class="icon">📦</span>
             我要发货
         </div>
@@ -832,30 +634,14 @@
         </div>
     </div>
 
-    <!-- 3. Shipper's Home Page -->
-    <div id="shipper-home-page" class="page">
+    <!-- 3. Shipper's Home Page (iframe) -->
+    <div id="shipper-home-iframe-page" class="page">
         <div class="header">首页 (货方)</div>
-        <div class="content">
-            <div class="banner-container">
-                <div class="banner-wrapper" id="bannerWrapper">
-                    <div class="banner-page"><span>大运到家，省心省力！</span></div>
-                    <div class="banner-page"><span>新用户首单立减，优惠享不停！</span></div>
-                    <div class="banner-page"><span>智能匹配，极速发货，告别等待！</span></div>
-                </div>
-            </div>
-            <div class="radar-board">
-                <h3><span class="icon">📡</span> 雷达功能看板</h3>
-                <div class="radar-items-container">
-                    <div class="radar-items-inner" id="radarItemsInner"></div>
-                </div>
-            </div>
-            <button class="free-shipping-button" onclick="window.location.href = 'https://llong0807.github.io/nothing/publish_1.html'">
-                <span class="main-text"><span class="icon">✨</span> 免费发货</span>
-                <span class="slogan">多快好省，如此简单！</span>
-            </button>
+        <div class="content p-0">
+            <iframe id="shipperHomeIframe" src="shipper_home.html" class="w-full h-full border-0"></iframe>
         </div>
         <div class="footer">
-            <div class="tab-button active" onclick="showPage('shipper-home-page')">
+            <div class="tab-button active" onclick="showPage('shipper-home-iframe-page')">
                 <span class="icon">🏠</span> 首页
             </div>
             <div class="tab-button" onclick="showPage('shipper-cargo-manage-iframe-page')">
@@ -874,7 +660,7 @@
             <iframe id="cargoManageIframe" src="cargo_manage.html" class="w-full h-full border-0"></iframe>
         </div>
         <div class="footer">
-            <div class="tab-button" onclick="showPage('shipper-home-page')">
+            <div class="tab-button" onclick="showPage('shipper-home-iframe-page')">
                 <span class="icon">🏠</span> 首页
             </div>
             <div class="tab-button active" onclick="showPage('shipper-cargo-manage-iframe-page')">
@@ -893,7 +679,7 @@
             <iframe id="cargo_mineIframe" src="cargo_mine.html" class="w-full h-full border-0"></iframe>
         </div>
         <div class="footer">
-            <div class="tab-button" onclick="showPage('shipper-home-page')">
+            <div class="tab-button" onclick="showPage('shipper-home-iframe-page')">
                 <span class="icon">🏠</span> 首页
             </div>
             <div class="tab-button" onclick="showPage('shipper-cargo-manage-iframe-page')">
@@ -1015,6 +801,13 @@
         <div class="detail-fixed-footer" id="driver-cargo-detail-footer"></div>
     </div>
 
+    <!-- 10. NEW: Publish Iframe Page (for publish_1.html and publish_2.html) -->
+    <div id="publish-iframe-page" class="page">
+        <div class="content p-0">
+            <iframe id="publishIframe" src="" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
@@ -1040,6 +833,7 @@
             const tabButtons = footer.querySelectorAll('.tab-button');
             tabButtons.forEach(button => {
                 button.classList.remove('active');
+                // Check if the button's onclick directly calls showPage with the current pageId
                 if (button.onclick && button.onclick.toString().includes(`showPage('${pageId}')`)) {
                     button.classList.add('active');
                 }
@@ -1106,25 +900,6 @@
 
     // --- Other JS functions from the original file ---
 
-    // Shipper Home Page Banner Auto-Slide
-    let currentBannerIndex = 0;
-    const bannerWrapper = document.getElementById('bannerWrapper');
-    const totalBanners = 3;
-    function autoSlideBanner() {
-        currentBannerIndex = (currentBannerIndex + 1) % totalBanners;
-        bannerWrapper.style.transform = `translateX(-${currentBannerIndex * 100 / totalBanners}%)`;
-    }
-    setInterval(autoSlideBanner, 5000);
-
-    // Radar Board dynamic content and animation
-    const radarItemsData = [
-        { text: "云雷大仙发布一条上海到深圳的货源：电子产品，8吨", highlight: false },
-        { text: "王师傅接单了从北京到天津的货源：建材，10方", highlight: false },
-        { text: "您的货源有新的情况，请点击查看>", highlight: true },
-        { text: "李老板发布一条成都到重庆的货源：家具，5方", highlight: false },
-    ];
-    // ... (rest of radar logic remains the same)
-
     // Initialize driver's cargo management tabs
     function setupDriverCargoTabs() {
         const tabsContainer = document.querySelector('#driver-cargo-manage-iframe-page .tabs');
@@ -1170,30 +945,35 @@
     // Initialize the app on window load
     window.onload = function() {
         setupDriverCargoTabs();
-        // initializeRadarDisplay(); // Simplified for this example
         if (typeof lucide !== 'undefined' && lucide.createIcons) {
             lucide.createIcons();
         }
     };
 
-        // This is the message listener for the main page (parent)
-        // It listens for messages coming from iframes embedded within it.
-        window.addEventListener('message', function(event) {
-            // Ensure the message comes from a trusted origin.
-            // Replace 'https://llong0807.github.io' with the actual domain where your iframe content is hosted.
-            // For local development, this might be 'http://localhost:port' or similar.
+    // This is the message listener for the main page (parent)
+    // It listens for messages coming from iframes embedded within it.
+    window.addEventListener('message', function(event) {
+        const data = event.data;
+        console.log(`Main page received message from iframe:`, data);
 
-            const data = event.data;
-            console.log(`Main page received message from iframe, attempting to navigate to page: ${data.pageId}`);
-
-            // If the action is 'showPage' and a pageId is provided, call the main page's showPage function.
-            if (data.action === 'showPage' && data.pageId) {
-                // Directly call showPage as it's defined in the global scope of the parent window.
-                showPage(data.pageId);
-            }
-        }, false);
-
-
+        if (data.action === 'showPage' && data.pageId) {
+            // Directly call showPage as it's defined in the global scope of the parent window.
+            showPage(data.pageId);
+        } else if (data.action === 'loadPublishPage') {
+            const publishIframe = document.getElementById('publishIframe');
+            publishIframe.src = data.url;
+            showPage('publish-iframe-page'); // Show the iframe container page
+        } else if (data.action === 'navigatePublishIframe') {
+            const publishIframe = document.getElementById('publishIframe');
+            publishIframe.src = data.url;
+            // No need to call showPage again, as publish-iframe-page is already active
+        } else if (data.action === 'closePublishFlow') {
+            // Close the publish iframe and return to shipper home
+            showPage('shipper-home-iframe-page');
+            const publishIframe = document.getElementById('publishIframe');
+            publishIframe.src = ''; // Clear iframe content
+        }
+    }, false);
 </script>
 </body>
 </html>

@@ -35,6 +35,22 @@
             position: relative;
         }
 
+        /* 新增：需求说明按钮 */
+        .info-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
         /* 顶部地址选择器样式 */
         .location-selector {
             display: flex;
@@ -214,7 +230,7 @@
             transform: translateY(0);
         }
 
-        /* 新增：Toast 提示样式 */
+        /* Toast 提示样式 */
         .toast-notification {
             position: fixed;
             bottom: 60px;
@@ -234,11 +250,66 @@
             opacity: 1;
             bottom: 80px;
         }
+
+        /* 新增：需求说明对话框样式 */
+        .info-modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        .info-modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 340px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .info-modal-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .info-modal-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .info-modal-header .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+        .info-modal-body {
+            padding: 15px;
+            overflow-y: auto;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .info-modal-body p {
+            margin: 8px 0;
+        }
     </style>
 </head>
 <body>
 
 <div class="app-screen">
+    <!-- 新增：需求说明按钮 -->
+    <button id="showInfoBtn" class="info-button">需求说明</button>
+
     <!-- 顶部地址选择器 -->
     <div class="location-selector">
         <div id="originSelector" class="location-box">
@@ -262,9 +333,33 @@
     <iframe id="addressFrame" src="address-selector.html"></iframe>
 </div>
 
+<!-- 新增：需求说明对话框 -->
+<div id="infoModal" class="info-modal-container">
+    <div class="info-modal-content">
+        <div class="info-modal-header">
+            <h3>需求说明</h3>
+            <button id="closeInfoBtn" class="close-button">&times;</button>
+        </div>
+        <div class="info-modal-body">
+            <p><strong>置顶水印：</strong></p>
+            <p>只对货方开放。货方想要对货源操作置顶，会跳转一个独立的“找货页面”，地区信息就是用户货源所属区域，在该区域下，货源会被置顶，货方能看到自己的货源水印。</p>
+            <br>
+            <p><strong>列表出发地目的地文案展示规则：</strong></p>
+            <p>竞品也是一行文案展示，一个控件，内容是文案拼接，我们借鉴。</p>
+            <br>
+            <p><strong>出发地及目的地：</strong>不展示省，只展示城市+区县名称。</p>
+            <p>直辖市+一般地区</p>
+            <p>例如：北京朝阳 → 广州白云区</p>
+            <br>
+            <p><strong>超长地址规则：</strong></p>
+            <p>默认全部拼接展示，展示不下的省略号结尾。</p>
+        </div>
+    </div>
+</div>
+
 
 <script>
-    // 模拟货源数据（扩充到10条）
+    // 模拟货源数据
     const driverCargoData = {
         'findCargo': [
             { id: 'D001', routeDisplay: '北京大兴区 - 天津港', cargoDisplay: '大型挖掘机 35吨 需13米低平板', loadTimeDisplay: '8月6日装', freightCost: '¥4500', mileage: '约140公里', shipperName: '中建三局-王经理', shipperLevel: 88, shipperAvatar: 'https://placehold.co/40x40/ffc107/333?text=王' },
@@ -279,6 +374,23 @@
             { id: 'D010', routeDisplay: '厦门海沧 - 福州马尾', cargoDisplay: '游艇 1艘 需特种低板', loadTimeDisplay: '8月12日装', freightCost: null, mileage: '约250公里', shipperName: '私人船主-林先生', shipperLevel: 23, shipperAvatar: 'https://placehold.co/40x40/607d8b/fff?text=林' }
         ]
     };
+
+    // --- 新增：需求说明对话框逻辑 ---
+    const showInfoBtn = document.getElementById('showInfoBtn');
+    const infoModal = document.getElementById('infoModal');
+    const closeInfoBtn = document.getElementById('closeInfoBtn');
+
+    showInfoBtn.addEventListener('click', () => {
+        infoModal.style.display = 'flex';
+    });
+    closeInfoBtn.addEventListener('click', () => {
+        infoModal.style.display = 'none';
+    });
+    infoModal.addEventListener('click', (event) => {
+        if (event.target === infoModal) {
+            infoModal.style.display = 'none';
+        }
+    });
 
     // --- 地址选择相关逻辑 ---
     const originSelector = document.getElementById('originSelector');
@@ -323,22 +435,19 @@
         populateCargoList();
     }
 
-    // --- 新增：Toast 提示函数 ---
+    // --- Toast 提示函数 ---
     function showToast(message) {
         const toast = document.createElement('div');
         toast.className = 'toast-notification';
         toast.textContent = message;
         document.body.appendChild(toast);
 
-        // 触发显示动画
         setTimeout(() => {
             toast.classList.add('show');
         }, 10);
 
-        // 2秒后隐藏
         setTimeout(() => {
             toast.classList.remove('show');
-            // 动画结束后从DOM中移除
             setTimeout(() => {
                 document.body.removeChild(toast);
             }, 300);
