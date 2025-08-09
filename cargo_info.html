@@ -843,7 +843,8 @@
         <!-- Shipper's Cargo Detail Page -->
         <div id="cargo-detail-page">
             <div class="header detail-header">
-                <span class="back-arrow" onclick="window.history.back()">←</span>
+
+                <span class="back-arrow" onclick="window.parent.postMessage({ action: 'cargoManager' }, '*')">←</span>
                 <span class="header-title">货物信息</span>
                 <!-- New Test Button -->
                 <button id="test-button">测试</button>

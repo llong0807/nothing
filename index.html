@@ -636,9 +636,9 @@
 
     <!-- 3. Shipper's Home Page (iframe) -->
     <div id="shipper-home-iframe-page" class="page">
-        <div class="header">首页 (货方)</div>
         <div class="content p-0">
-            <iframe id="shipperHomeIframe" src="shipper_home.html" class="w-full h-full border-0"></iframe>
+<!--            换一个首页shipper_home_2实施效果-->
+            <iframe id="shipperHomeIframe" src="shipper_home_2.html" class="w-full h-full border-0"></iframe>
         </div>
         <div class="footer">
             <div class="tab-button active" onclick="showPage('shipper-home-iframe-page')">
@@ -808,6 +808,13 @@
         </div>
     </div>
 
+    <!-- 10. NEW: Publish Iframe Page (for publish_1.html and publish_2.html) -->
+    <div id="cargo_info-iframe-page" class="page">
+        <div class="content p-0">
+            <iframe id="cargoInfoIframe" src="" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
@@ -972,7 +979,14 @@
             showPage('shipper-home-iframe-page');
             const publishIframe = document.getElementById('publishIframe');
             publishIframe.src = ''; // Clear iframe content
+        } else if (data.action === 'cargoInfoPage') {
+            const cargoInfoIframe = document.getElementById('cargoInfoIframe');
+            cargoInfoIframe.src = data.url;
+            showPage('cargo_info-iframe-page'); // Show the iframe container page
+        } else if (data.action === 'cargoManager') {
+            showPage('shipper-cargo-manage-iframe-page')
         }
+
     }, false);
 </script>
 </body>

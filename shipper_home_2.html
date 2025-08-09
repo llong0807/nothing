@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>货方App首页 v5.9</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Lucide Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
+    <!-- 引入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 使用更适合中文阅读的字体 */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f7f8fa; /* 更柔和的背景色 */
+            color: #1f2937; /* 深灰色文字 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            /* 为底部的悬浮按钮留出更多空间 */
+            padding-bottom: 120px;
+        }
+
+        /* 为了在 iframe 中有更好的点击效果 */
+        .clickable-card:active {
+            transform: scale(0.98);
+            filter: brightness(0.95);
+        }
+
+        /* 卡片阴影效果 */
+        .custom-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Banner广告样式 */
+        .banner-container {
+            width: 100%;
+            height: 140px;
+            overflow: hidden;
+            border-radius: 1rem; /* 16px */
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .banner-wrapper {
+            display: flex;
+            width: 300%; /* 3 pages */
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+        .banner-page {
+            width: 33.333%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .banner-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        .banner-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        .banner-dots .dot.active {
+            background-color: white;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        /* 动态看板滚动效果 */
+        .dynamics-container {
+            height: 372px; /* 根据要求缩短高度 (400px - 28px) */
+            overflow: hidden;
+            position: relative;
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+        .dynamics-list {
+            animation: scroll-up 30s linear infinite; /* 减慢速度以适应更复杂信息 */
+        }
+        .dynamics-container:hover .dynamics-list {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%); /* 滚动一半距离后循环 */
+            }
+        }
+
+        /* 底部悬浮操作栏 */
+        .floating-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* 适配 iPhone X 等机型 */
+            background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.8));
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+        .primary-cta-button {
+            width: 100%;
+            /* 增加按钮高度 */
+            padding: 1.25rem 0;
+            color: white;
+            /* 更新为更醒目的亮橙色渐变 */
+            background: linear-gradient(45deg, #F97316, #EA580C);
+            border-radius: 1rem; /* 16px */
+            border: none;
+            cursor: pointer;
+            /* 阴影也更新为匹配的橙色 */
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+            transition: all 0.2s ease-in-out;
+        }
+        .primary-cta-button:active {
+            transform: scale(0.97);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+
+        /* 高亮样式 */
+        .highlight {
+            background-color: #FFFBEB; /* 淡黄色背景 */
+            border-left: 4px solid #FBBF24; /* 黄色左边框 */
+            padding-left: 12px !important;
+            margin-left: -16px;
+        }
+
+        /* 新增：需求说明弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(-20px);
+            transition: all 0.3s ease-in-out;
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        .modal-close-btn:hover {
+            color: #1f2937;
+        }
+        .modal-content h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        .modal-content h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        .modal-content p, .modal-content li {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        .modal-content ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .modal-content ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+        }
+        .modal-content code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+    </style>
+</head>
+<body class="p-4">
+
+<!-- 1. 顶部：问候与Banner -->
+<header class="mb-6">
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">王老板, 生意兴隆！</h1>
+            <p class="text-sm text-gray-500">好运常在，大展宏图</p>
+        </div>
+        <!-- 更新：将铃铛和新按钮放在一个flex容器中 -->
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <i data-lucide="bell" class="text-gray-500 cursor-pointer"></i>
+                <span class="absolute -top-1 -right-1 block h-2 w-2 rounded-full bg-red-500"></span>
+            </div>
+            <!-- 新增：需求说明按钮 -->
+            <button id="openModalBtn" class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md hover:bg-red-600 transition-colors">需求说明</button>
+        </div>
+    </div>
+
+    <!-- Banner广告位 -->
+    <div class="banner-container">
+        <div class="banner-wrapper" id="bannerWrapper">
+            <div class="banner-page" style="background: linear-gradient(45deg, #3B82F6, #60A5FA);">安全发货 就上大运</div>
+            <div class="banner-page" style="background: linear-gradient(45deg, #10B981, #34D399);">新用户专享 首单8折</div>
+            <div class="banner-page" style="background: linear-gradient(45deg, #F59E0B, #FBBF24);">邀请司机入驻 领现金奖励</div>
+        </div>
+        <div class="banner-dots" id="bannerDots"></div>
+    </div>
+</header>
+
+<!-- 2. 中部：大货雷达 -->
+<section class="bg-white p-4 rounded-2xl custom-shadow">
+    <div class="flex items-center mb-4">
+        <i data-lucide="radio-tower" class="text-blue-500 mr-2"></i>
+        <h3 class="text-lg font-bold text-gray-800">大货雷达</h3>
+    </div>
+
+    <div class="dynamics-container">
+        <div id="dynamicsList" class="dynamics-list space-y-3">
+            <!-- 动态信息将由JS生成 -->
+        </div>
+    </div>
+</section>
+
+<!-- 3. 底部悬浮操作栏 -->
+<div class="floating-action-bar">
+    <!-- 增加 onclick 事件 -->
+    <button class="primary-cta-button" onclick="navigateToPublishPage()">
+        <div class="text-center">
+            <span class="block text-2xl font-bold leading-tight">免费发布货源</span>
+            <span class="block text-sm font-normal opacity-90 leading-tight">多快好省，如此简单</span>
+        </div>
+    </button>
+</div>
+
+<!-- 新增：需求说明弹窗HTML结构 -->
+<div id="infoModal" class="modal-overlay">
+    <div class="modal-content">
+        <i id="closeModalBtn" data-lucide="x" class="modal-close-btn"></i>
+        <h2>设计说明与思考</h2>
+
+        <h3>背景</h3>
+        <p>一个初生还需要成长的应用。</p>
+
+        <h3>页面的难点</h3>
+        <ul>
+            <li>因为体量太小了，初期没有那么丰富的功能业务内容可以展示给用户。</li>
+            <li>会给用户app过于空洞的感觉。</li>
+            <li>这个感觉非常危险，进而会让用户对平台失去信心。</li>
+        </ul>
+
+        <h3>雷达区域的设计说明</h3>
+        <p>雷达的设计也是为了解决这个难点的一个方案，一个是填补空洞，还能增强用户信心。</p>
+        <p>原本的设计是展示一些动态货源信息的看板，类似车方货源看板。</p>
+        <p>货方新用户有个建立信任的过程，会潜意识确认平台的活跃和可靠性，而不是一些不相干货源信息的细节。</p>
+        <p>从这个角度，一个高频滚动的雷达看板，能够传达“平台很忙，很多人在用”的信号。</p>
+
+        <h3>显示规则</h3>
+        <ol>
+            <li><strong>动态分类：</strong>根据动作目前显示4类，后续可以扩张，不同信息有不同的文案风格，如果滚动的信息与当前用户有关，则高亮。
+                <ul>
+                    <li><strong>第一类发布:</strong> 例如：<code>${昵称} 发布了${货源信息}</code></li>
+                    <li><strong>第二类权益动作:</strong> 例如：<code>${昵称} 使用了${权益}</code></li>
+                    <li><strong>第三类用户事件广播:</strong> 例如：<code>恭喜${昵称} 达到${用户称号}${用户等级}</code></li>
+                    <li><strong>第四类消费信息:</strong> 例如：<code>恭喜${昵称} 升级为${会员等级}</code></li>
+                </ul>
+            </li>
+            <li><strong>昵称：</strong>除当前用户之外，其他的昵称只显示第一个字，其他字符隐藏，保护隐私和机器人。</li>
+            <li><strong>货源信息：</strong>展示货源名称+吨重+长宽高。</li>
+            <li><strong>权益：</strong>目前有曝光卡和醒目卡两种。</li>
+            <li><strong>称号参考详情</strong></li>
+        </ol>
+    </div>
+</div>
+
+
+<script>
+    // 页面加载完成后初始化
+    window.onload = function() {
+        // 确保 lucide 库已加载
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        // 初始化Banner
+        initializeBanner();
+        // 初始化动态看板
+        initializeDynamicsBoard();
+        // 初始化弹窗事件
+        initializeModal();
+    };
+
+    // Banner 初始化函数
+    function initializeBanner() {
+        const wrapper = document.getElementById('bannerWrapper');
+        const dotsContainer = document.getElementById('bannerDots');
+        if (!wrapper || !dotsContainer) return;
+
+        const totalBanners = wrapper.children.length;
+        let currentBannerIndex = 0;
+
+        // 创建指示点
+        for (let i = 0; i < totalBanners; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dotsContainer.appendChild(dot);
+        }
+
+        const dots = dotsContainer.children;
+        dots[0].classList.add('active');
+
+        function updateBanner(index) {
+            wrapper.style.transform = `translateX(-${index * 100 / totalBanners}%)`;
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].classList.remove('active');
+            }
+            dots[index].classList.add('active');
+            currentBannerIndex = index;
+        }
+
+        setInterval(() => {
+            let nextIndex = (currentBannerIndex + 1) % totalBanners;
+            updateBanner(nextIndex);
+        }, 4000); // 每4秒滚动一次
+    }
+
+    // --- 大货雷达逻辑重构 ---
+
+    // 模拟当前登录的用户ID
+    const currentUserId = 'user_101';
+
+    // 动态看板数据 - 更新货源信息为大件特质货物
+    const dynamicsData = [
+        { type: 'publication', userId: 'user_123', nickname: '李老板', cargoInfo: '广州→上海，大型变压器设备，30吨' },
+        { type: 'rights', userId: 'user_101', nickname: '王老板', right: '曝光卡', isCurrentUser: true }, // 与当前用户相关
+        { type: 'level_up', userId: 'user_456', nickname: '赵总', level: 95},
+        { type: 'membership', userId: 'user_789', nickname: '陈女士', membership: '黄金会员' },
+        { type: 'publication', userId: 'user_ABC', nickname: '张总', cargoInfo: '北京→天津，工程挖掘机，超宽超重' },
+        { type: 'rights', userId: 'user_DEF', nickname: '孙老板', right: '醒目卡' },
+        { type: 'level_up', userId: 'user_101', nickname: '王老板', level: 42, isCurrentUser: true }, // 与当前用户相关
+        { type: 'publication', userId: 'user_XYZ', nickname: '钱老板', cargoInfo: '山东→江苏，风力发电机叶片，超长' },
+        { type: 'membership', userId: 'user_GHI', nickname: '周总', membership: '钻石会员' },
+    ];
+
+    // 昵称脱敏
+    function maskNickname(name) {
+        if (!name || name.length === 0) return '**';
+        return name.substring(0, 1) + '**';
+    }
+
+    // 获取用户称号
+    function getUserTitle(level) {
+        if (level >= 1 && level <= 10) return '无名小卒';
+        if (level >= 11 && level <= 20) return '初入江湖';
+        if (level >= 21 && level <= 30) return '略有小成';
+        if (level >= 31 && level <= 40) return '驾轻就熟';
+        if (level >= 41 && level <= 50) return '融会贯通';
+        if (level >= 51 && level <= 60) return '炉火纯青';
+        if (level >= 61 && level <= 70) return '出类拔萃';
+        if (level >= 71 && level <= 80) return '神乎其技';
+        if (level >= 81 && level <= 90) return '出神入化';
+        if (level >= 91 && level <= 100) return '登峰造极';
+        if (level >= 101 && level <= 110) return '一代宗师';
+        if (level >= 111 && level <= 120) return '天下无双';
+        return '深不可测'; // 默认值
+    }
+
+    // 格式化动态文本
+    function formatDynamicsText(item) {
+        // FIX: 如果是当前用户，则显示全名，否则脱敏处理
+        const displayName = item.isCurrentUser ? item.nickname : maskNickname(item.nickname);
+        switch (item.type) {
+            case 'publication':
+                return `${displayName} 发布了 ${item.cargoInfo}`;
+            case 'rights':
+                return `${displayName} 使用了 ${item.right}`;
+            case 'level_up':
+                const title = getUserTitle(item.level);
+                return `恭喜 ${displayName} 达到 ${title} LV.${item.level}`;
+            case 'membership':
+                return `恭喜 ${displayName} 升级为 ${item.membership}`;
+            default:
+                return '平台有新的动态';
+        }
+    }
+
+    // 动态看板初始化函数
+    function initializeDynamicsBoard() {
+        const listElement = document.getElementById('dynamicsList');
+        if (!listElement) return;
+
+        const fullData = [...dynamicsData, ...dynamicsData];
+
+        fullData.forEach(item => {
+            const div = document.createElement('div');
+            // 检查是否高亮
+            if (item.isCurrentUser) {
+                div.className = 'flex items-center gap-3 text-sm p-2 rounded-lg highlight';
+            } else {
+                div.className = 'flex items-center gap-3 text-sm p-2';
+            }
+
+            const text = formatDynamicsText(item);
+
+            // 图标和颜色逻辑可以保持或根据新类型调整
+            const iconMap = {
+                publication: { icon: 'send', color: 'blue' },
+                rights: { icon: 'award', color: 'purple' },
+                level_up: { icon: 'trending-up', color: 'green' },
+                membership: { icon: 'gem', color: 'yellow' },
+            };
+            const { icon, color } = iconMap[item.type] || { icon: 'bell', color: 'gray' };
+            const iconColorClass = {
+                blue: 'text-blue-500 bg-blue-100',
+                green: 'text-green-500 bg-green-100',
+                purple: 'text-purple-500 bg-purple-100',
+                yellow: 'text-yellow-500 bg-yellow-100',
+            }[color] || 'text-gray-500 bg-gray-100';
+
+            div.innerHTML = `
+                <div class="p-2 rounded-full ${iconColorClass} flex-shrink-0">
+                    <i data-lucide="${icon}" class="h-4 w-4"></i>
+                </div>
+                <p class="text-gray-600 truncate">${text}</p>
+            `;
+            listElement.appendChild(div);
+        });
+
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+
+    // 新增：弹窗初始化函数
+    function initializeModal() {
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const modalOverlay = document.getElementById('infoModal');
+
+        if (openBtn && closeBtn && modalOverlay) {
+            openBtn.addEventListener('click', () => {
+                modalOverlay.classList.add('active');
+            });
+            closeBtn.addEventListener('click', () => {
+                modalOverlay.classList.remove('active');
+            });
+            // 点击遮罩层关闭
+            modalOverlay.addEventListener('click', (event) => {
+                if (event.target === modalOverlay) {
+                    modalOverlay.classList.remove('active');
+                }
+            });
+        }
+    }
+
+    // 处理导航到发布页面的函数
+    function navigateToPublishPage() {
+        window.parent.postMessage({ action: 'loadPublishPage', url: 'publish_1.html' }, '*');
+        console.log("请求跳转到发布页面...");
+    }
+</script>
+</body>
+</html>
