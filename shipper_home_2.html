@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>货方App首页 v5.9</title>
+    <title>货方App首页 v5.12</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Lucide Icons -->
@@ -14,14 +14,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* 使用更适合中文阅读的字体 */
+        html, body {
+            height: 100%; /* 确保body可以撑满整个iframe */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 防止body出现滚动条 */
+        }
         body {
             font-family: 'Noto Sans SC', sans-serif;
             background-color: #f7f8fa; /* 更柔和的背景色 */
             color: #1f2937; /* 深灰色文字 */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            /* 为底部的悬浮按钮留出更多空间 */
-            padding-bottom: 120px;
+        }
+
+        /* FIX: 创建一个包裹层来处理内边距和flex布局 */
+        .page-wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 1rem;
+            padding-bottom: 120px; /* 为底部的悬浮按钮留出空间 */
         }
 
         /* 为了在 iframe 中有更好的点击效果 */
@@ -87,7 +101,8 @@
 
         /* 动态看板滚动效果 */
         .dynamics-container {
-            height: 372px; /* 根据要求缩短高度 (400px - 28px) */
+            /* 移除固定高度，由flexbox控制 */
+            height: 100%; /* 填充其弹性父容器 */
             overflow: hidden;
             position: relative;
             -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
@@ -150,7 +165,7 @@
             margin-left: -16px;
         }
 
-        /* 新增：需求说明弹窗样式 */
+        /* 需求说明弹窗样式 */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -229,54 +244,66 @@
 
     </style>
 </head>
-<body class="p-4">
-
-<!-- 1. 顶部：问候与Banner -->
-<header class="mb-6">
-    <div class="flex justify-between items-center mb-4">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">王老板, 生意兴隆！</h1>
-            <p class="text-sm text-gray-500">好运常在，大展宏图</p>
-        </div>
-        <!-- 更新：将铃铛和新按钮放在一个flex容器中 -->
-        <div class="flex items-center gap-4">
-            <div class="relative">
-                <i data-lucide="bell" class="text-gray-500 cursor-pointer"></i>
-                <span class="absolute -top-1 -right-1 block h-2 w-2 rounded-full bg-red-500"></span>
+<body>
+<div class="page-wrapper">
+    <!-- 1. 顶部：问候与Banner -->
+    <!-- FIX: 设为 flex-shrink-0 防止其被压缩 -->
+    <header class="mb-6 flex-shrink-0">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">王老板, 生意兴隆！</h1>
+                <p class="text-sm text-gray-500">好运常在，大展宏图</p>
             </div>
-            <!-- 新增：需求说明按钮 -->
-            <button id="openModalBtn" class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md hover:bg-red-600 transition-colors">需求说明</button>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <i data-lucide="bell" class="text-gray-500 cursor-pointer"></i>
+                    <span class="absolute -top-1 -right-1 block h-2 w-2 rounded-full bg-red-500"></span>
+                </div>
+                <button id="openModalBtn" class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md hover:bg-red-600 transition-colors">需求说明</button>
+            </div>
         </div>
-    </div>
 
-    <!-- Banner广告位 -->
-    <div class="banner-container">
-        <div class="banner-wrapper" id="bannerWrapper">
-            <div class="banner-page" style="background: linear-gradient(45deg, #3B82F6, #60A5FA);">安全发货 就上大运</div>
-            <div class="banner-page" style="background: linear-gradient(45deg, #10B981, #34D399);">新用户专享 首单8折</div>
-            <div class="banner-page" style="background: linear-gradient(45deg, #F59E0B, #FBBF24);">邀请司机入驻 领现金奖励</div>
+        <div class="banner-container">
+            <div class="banner-wrapper" id="bannerWrapper">
+                <div class="banner-page" style="background: linear-gradient(45deg, #3B82F6, #60A5FA);">安全发货 就上大运</div>
+                <div class="banner-page" style="background: linear-gradient(45deg, #10B981, #34D399);">新用户专享 首单8折</div>
+                <div class="banner-page" style="background: linear-gradient(45deg, #F59E0B, #FBBF24);">邀请司机入驻 领现金奖励</div>
+            </div>
+            <div class="banner-dots" id="bannerDots"></div>
         </div>
-        <div class="banner-dots" id="bannerDots"></div>
-    </div>
-</header>
+    </header>
 
-<!-- 2. 中部：大货雷达 -->
-<section class="bg-white p-4 rounded-2xl custom-shadow">
-    <div class="flex items-center mb-4">
-        <i data-lucide="radio-tower" class="text-blue-500 mr-2"></i>
-        <h3 class="text-lg font-bold text-gray-800">大货雷达</h3>
-    </div>
-
-    <div class="dynamics-container">
-        <div id="dynamicsList" class="dynamics-list space-y-3">
-            <!-- 动态信息将由JS生成 -->
+    <!-- 2. 中部：多多雷达 -->
+    <!-- FIX: 设为 flex-1 使其填充剩余空间，min-h-0 允许其收缩 -->
+    <section class="bg-white p-4 rounded-2xl custom-shadow flex-1 flex flex-col min-h-0">
+        <div class="flex items-center mb-4 flex-shrink-0">
+            <i data-lucide="radio-tower" class="text-blue-500 mr-2"></i>
+            <h3 class="text-lg font-bold text-gray-800">多多雷达</h3>
         </div>
-    </div>
-</section>
 
+        <!-- FIX: 设为 flex-1 使其填充父容器的弹性空间 -->
+        <div class="dynamics-container flex-1">
+            <div id="dynamicsList" class="dynamics-list space-y-3">
+                <!-- 动态信息将由JS生成 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户相关信息摘要 -->
+    <!-- FIX: 设为 flex-shrink-0 防止其被压缩, 并增加 mb-2.5 (10px) 的下边距 -->
+    <section id="userSummarySection" class="bg-white p-4 rounded-2xl custom-shadow mt-6 mb-2.5 cursor-pointer clickable-card flex-shrink-0" onclick="openCargoInfoPage('cargo_101', 'viewed')">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i data-lucide="message-square-text" class="text-orange-500 h-5 w-5"></i>
+                <p class="text-sm text-gray-700 font-medium">您发布的上海到深圳的货源已有15人查看</p>
+            </div>
+            <!-- 小红点 -->
+            <span class="block h-2.5 w-2.5 rounded-full bg-red-500"></span>
+        </div>
+    </section>
+</div>
 <!-- 3. 底部悬浮操作栏 -->
 <div class="floating-action-bar">
-    <!-- 增加 onclick 事件 -->
     <button class="primary-cta-button" onclick="navigateToPublishPage()">
         <div class="text-center">
             <span class="block text-2xl font-bold leading-tight">免费发布货源</span>
@@ -285,28 +312,22 @@
     </button>
 </div>
 
-<!-- 新增：需求说明弹窗HTML结构 -->
+<!-- 需求说明弹窗HTML结构 -->
 <div id="infoModal" class="modal-overlay">
     <div class="modal-content">
         <i id="closeModalBtn" data-lucide="x" class="modal-close-btn"></i>
         <h2>设计说明与思考</h2>
-
         <h3>背景</h3>
         <p>一个初生还需要成长的应用。</p>
-
         <h3>页面的难点</h3>
         <ul>
             <li>因为体量太小了，初期没有那么丰富的功能业务内容可以展示给用户。</li>
             <li>会给用户app过于空洞的感觉。</li>
             <li>这个感觉非常危险，进而会让用户对平台失去信心。</li>
         </ul>
-
         <h3>雷达区域的设计说明</h3>
-        <p>雷达的设计也是为了解决这个难点的一个方案，一个是填补空洞，还能增强用户信心。</p>
-        <p>原本的设计是展示一些动态货源信息的看板，类似车方货源看板。</p>
-        <p>货方新用户有个建立信任的过程，会潜意识确认平台的活跃和可靠性，而不是一些不相干货源信息的细节。</p>
-        <p>从这个角度，一个高频滚动的雷达看板，能够传达“平台很忙，很多人在用”的信号。</p>
-
+        <p>雷达的设计也是为了解决这个难点的一个方案。原本的设计是展示一些动态货源信息的看板，类似车方可以看。</p>
+        <p>发货新用户有个建立信任的过程，会潜意识确认平台的活跃和可靠性，而不是一些货源信息的细节。从这个角度，一个高频滚动的雷达看板，能够传达“平台很忙，很多人在用”的信号。</p>
         <h3>显示规则</h3>
         <ol>
             <li><strong>动态分类：</strong>根据动作目前显示4类，后续可以扩张，不同信息有不同的文案风格，如果滚动的信息与当前用户有关，则高亮。
@@ -317,10 +338,10 @@
                     <li><strong>第四类消费信息:</strong> 例如：<code>恭喜${昵称} 升级为${会员等级}</code></li>
                 </ul>
             </li>
-            <li><strong>昵称：</strong>除当前用户之外，其他的昵称只显示第一个字，其他字符隐藏，保护隐私和机器人。</li>
+            <li><strong>昵称：</strong>昵称只显示第一个字，后续名称隐藏，这样可以保护机器人。</li>
             <li><strong>货源信息：</strong>展示货源名称+吨重+长宽高。</li>
             <li><strong>权益：</strong>目前有曝光卡和醒目卡两种。</li>
-            <li><strong>称号参考详情</strong></li>
+            <li><strong>称号权益统一。</strong></li>
         </ol>
     </div>
 </div>
@@ -329,15 +350,11 @@
 <script>
     // 页面加载完成后初始化
     window.onload = function() {
-        // 确保 lucide 库已加载
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
-        // 初始化Banner
         initializeBanner();
-        // 初始化动态看板
         initializeDynamicsBoard();
-        // 初始化弹窗事件
         initializeModal();
     };
 
@@ -350,7 +367,6 @@
         const totalBanners = wrapper.children.length;
         let currentBannerIndex = 0;
 
-        // 创建指示点
         for (let i = 0; i < totalBanners; i++) {
             const dot = document.createElement('div');
             dot.className = 'dot';
@@ -372,34 +388,30 @@
         setInterval(() => {
             let nextIndex = (currentBannerIndex + 1) % totalBanners;
             updateBanner(nextIndex);
-        }, 4000); // 每4秒滚动一次
+        }, 4000);
     }
 
-    // --- 大货雷达逻辑重构 ---
+    // --- 大货雷达逻辑 ---
 
-    // 模拟当前登录的用户ID
     const currentUserId = 'user_101';
 
-    // 动态看板数据 - 更新货源信息为大件特质货物
     const dynamicsData = [
         { type: 'publication', userId: 'user_123', nickname: '李老板', cargoInfo: '广州→上海，大型变压器设备，30吨' },
-        { type: 'rights', userId: 'user_101', nickname: '王老板', right: '曝光卡', isCurrentUser: true }, // 与当前用户相关
+        { type: 'rights', userId: 'user_101', nickname: '王老板', right: '曝光卡', isCurrentUser: true },
         { type: 'level_up', userId: 'user_456', nickname: '赵总', level: 95},
         { type: 'membership', userId: 'user_789', nickname: '陈女士', membership: '黄金会员' },
         { type: 'publication', userId: 'user_ABC', nickname: '张总', cargoInfo: '北京→天津，工程挖掘机，超宽超重' },
         { type: 'rights', userId: 'user_DEF', nickname: '孙老板', right: '醒目卡' },
-        { type: 'level_up', userId: 'user_101', nickname: '王老板', level: 42, isCurrentUser: true }, // 与当前用户相关
+        { type: 'level_up', userId: 'user_101', nickname: '王老板', level: 42, isCurrentUser: true },
         { type: 'publication', userId: 'user_XYZ', nickname: '钱老板', cargoInfo: '山东→江苏，风力发电机叶片，超长' },
         { type: 'membership', userId: 'user_GHI', nickname: '周总', membership: '钻石会员' },
     ];
 
-    // 昵称脱敏
     function maskNickname(name) {
         if (!name || name.length === 0) return '**';
         return name.substring(0, 1) + '**';
     }
 
-    // 获取用户称号
     function getUserTitle(level) {
         if (level >= 1 && level <= 10) return '无名小卒';
         if (level >= 11 && level <= 20) return '初入江湖';
@@ -413,12 +425,10 @@
         if (level >= 91 && level <= 100) return '登峰造极';
         if (level >= 101 && level <= 110) return '一代宗师';
         if (level >= 111 && level <= 120) return '天下无双';
-        return '深不可测'; // 默认值
+        return '深不可测';
     }
 
-    // 格式化动态文本
     function formatDynamicsText(item) {
-        // FIX: 如果是当前用户，则显示全名，否则脱敏处理
         const displayName = item.isCurrentUser ? item.nickname : maskNickname(item.nickname);
         switch (item.type) {
             case 'publication':
@@ -435,7 +445,6 @@
         }
     }
 
-    // 动态看板初始化函数
     function initializeDynamicsBoard() {
         const listElement = document.getElementById('dynamicsList');
         if (!listElement) return;
@@ -444,7 +453,6 @@
 
         fullData.forEach(item => {
             const div = document.createElement('div');
-            // 检查是否高亮
             if (item.isCurrentUser) {
                 div.className = 'flex items-center gap-3 text-sm p-2 rounded-lg highlight';
             } else {
@@ -453,7 +461,6 @@
 
             const text = formatDynamicsText(item);
 
-            // 图标和颜色逻辑可以保持或根据新类型调整
             const iconMap = {
                 publication: { icon: 'send', color: 'blue' },
                 rights: { icon: 'award', color: 'purple' },
@@ -482,7 +489,7 @@
         }
     }
 
-    // 新增：弹窗初始化函数
+    // 弹窗初始化函数
     function initializeModal() {
         const openBtn = document.getElementById('openModalBtn');
         const closeBtn = document.getElementById('closeModalBtn');
@@ -494,8 +501,7 @@
             });
             closeBtn.addEventListener('click', () => {
                 modalOverlay.classList.remove('active');
-            });
-            // 点击遮罩层关闭
+});
             modalOverlay.addEventListener('click', (event) => {
                 if (event.target === modalOverlay) {
                     modalOverlay.classList.remove('active');
@@ -508,6 +514,12 @@
     function navigateToPublishPage() {
         window.parent.postMessage({ action: 'loadPublishPage', url: 'publish_1.html' }, '*');
         console.log("请求跳转到发布页面...");
+    }
+
+    // 新增：处理跳转到货源详情页面的函数
+    function openCargoInfoPage(cargoId, status) {
+        window.parent.postMessage({ action: 'cargoInfoPage', url: `cargo_info.html?id=${cargoId}&status=${status}` }, '*');
+        console.log(`请求跳转到货源详情页面: id=${cargoId}, status=${status}`);
     }
 </script>
 </body>
