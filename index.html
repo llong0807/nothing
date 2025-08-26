@@ -614,11 +614,29 @@
     <!-- 1. Original Login Page (Now shown by default) -->
     <div id="login-page" class="page active">
         <div class="logo">物流App</div>
-        <button class="login-button" onclick="showPage('identity-page')">一键登录</button>
+        <!-- MODIFIED: onclick now shows the name input modal -->
+        <button class="login-button" onclick="showPage('name-modal-page')">一键登录</button>
         <div class="login-options">
             <a href="#">短信验证码登录</a> | <a href="#">忘记密码</a>
         </div>
     </div>
+
+    <!-- NEW: Name Input Modal Page -->
+    <div id="name-modal-page" class="page justify-center items-center" style="background-color: rgba(0, 0, 0, 0.6); z-index: 20;">
+        <!-- The stopPropagation here prevents clicks inside the modal from bubbling up, if you were to add a "close on overlay click" feature. -->
+        <div class="bg-white rounded-xl p-8 text-center w-11/12 max-w-xs shadow-2xl" onclick="event.stopPropagation();">
+            <h2 class="text-xl font-bold mb-2 text-gray-800">您怎么称呼？</h2>
+            <p class="text-sm text-gray-500 mb-5">输入一个昵称，让大家更好地认识你</p>
+            <input id="nickname-input" type="text" placeholder="请输入您的昵称" class="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+            <div class="flex justify-center gap-4">
+                <!-- Visually de-emphasized skip button -->
+                <button onclick="handleModalClose(false)" class="flex-1 bg-transparent border border-gray-300 text-gray-600 py-2.5 rounded-lg hover:bg-gray-100 transition-colors text-base">跳过</button>
+                <!-- Visually emphasized confirm button -->
+                <button onclick="handleModalClose(true)" class="flex-1 bg-blue-500 text-white py-2.5 rounded-lg hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/30 text-base font-semibold">确认</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- 2. Identity Selection Page -->
     <div id="identity-page" class="page">
@@ -637,7 +655,7 @@
     <!-- 3. Shipper's Home Page (iframe) -->
     <div id="shipper-home-iframe-page" class="page">
         <div class="content p-0">
-<!--            换一个首页shipper_home_2实施效果-->
+            <!--            换一个首页shipper_home_2实施效果-->
             <iframe id="shipperHomeIframe" src="shipper_home_2.html" class="w-full h-full border-0"></iframe>
         </div>
         <div class="footer">
@@ -847,6 +865,22 @@
             });
         }
     }
+
+    /**
+     * NEW: Handles the action from the name input modal.
+     * @param {boolean} isConfirm - True if the confirm button was clicked, false for skip.
+     */
+    function handleModalClose(isConfirm) {
+        if (isConfirm) {
+            const nickname = document.getElementById('nickname-input').value;
+            // 您可以在这里保存或使用用户输入的昵称。
+            // 目前，我们只是在控制台打印它。
+            console.log('用户昵称:', nickname || '未提供');
+        }
+        // Whether confirmed or skipped, proceed to the identity selection page.
+        showPage('identity-page');
+    }
+
 
     // This function is now defined in the parent window.
     // The iframe (driver_find_cargo.html) will call `window.parent.showDriverCargoDetailPage`.
