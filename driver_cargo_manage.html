@@ -75,6 +75,7 @@
             margin-bottom: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: transform 0.2s ease-in-out;
+            cursor: pointer; /* 新增: 增加手型光标提示可点击 */
         }
         .cargo-item:hover {
             transform: translateY(-3px);
@@ -137,56 +138,56 @@
     <div class="cargo-list">
         <!-- 内容会根据tab选择动态变化 -->
         <div id="feedback-cargo" class="cargo-content active">
-            <div class="cargo-item">
+            <div class="cargo-item" onclick="navigateToDetail('D20250625001')">
                 <h4>订单ID: #D20250625001</h4>
                 <p><strong>路线:</strong> 北京 - 天津</p>
                 <p><strong>货物:</strong> 建筑材料</p>
                 <p><strong>状态:</strong> 待确认</p>
                 <div class="cargo-actions">
-                    <button onclick="alert('联系货主')">联系货主</button>
-                    <button class="secondary" onclick="alert('取消反馈')">取消反馈</button>
+                    <button onclick="event.stopPropagation(); alert('联系货主')">联系货主</button>
+                    <button class="secondary" onclick="event.stopPropagation(); alert('取消反馈')">取消反馈</button>
                 </div>
             </div>
-            <div class="cargo-item">
+            <div class="cargo-item" onclick="navigateToDetail('D20250625002')">
                 <h4>订单ID: #D20250625002</h4>
                 <p><strong>路线:</strong> 上海 - 苏州</p>
                 <p><strong>货物:</strong> 服装</p>
                 <p><strong>状态:</strong> 匹配中</p>
                 <div class="cargo-actions">
-                    <button onclick="alert('联系货主')">联系货主</button>
+                    <button onclick="event.stopPropagation(); alert('联系货主')">联系货主</button>
                 </div>
             </div>
         </div>
         <div id="contacted-cargo" class="cargo-content">
-            <div class="cargo-item">
+            <div class="cargo-item" onclick="navigateToDetail('D20250624005')">
                 <h4>订单ID: #D20250624005</h4>
                 <p><strong>路线:</strong> 上海 - 杭州</p>
                 <p><strong>货物:</strong> 电子设备</p>
                 <p><strong>状态:</strong> 已接受</p>
                 <div class="cargo-actions">
-                    <button onclick="alert('开始导航')">开始导航</button>
+                    <button onclick="event.stopPropagation(); alert('开始导航')">开始导航</button>
                 </div>
             </div>
         </div>
         <div id="followed-cargo" class="cargo-content">
-            <div class="cargo-item">
+            <div class="cargo-item" onclick="navigateToDetail('F20250623001')">
                 <h4>货源ID: #F20250623001</h4>
                 <p><strong>路线:</strong> 广州 - 珠海</p>
                 <p><strong>货物:</strong> 零配件</p>
                 <p><strong>状态:</strong> 待抢</p>
                 <div class="cargo-actions">
-                    <button onclick="alert('立即抢单')">立即抢单</button>
+                    <button onclick="event.stopPropagation(); alert('立即抢单')">立即抢单</button>
                 </div>
             </div>
         </div>
         <div id="history-cargo" class="cargo-content">
-            <div class="cargo-item">
+            <div class="cargo-item" onclick="navigateToDetail('H20250622001')">
                 <h4>订单ID: #H20250622001</h4>
                 <p><strong>路线:</strong> 成都 - 重庆</p>
                 <p><strong>货物:</strong> 家具</p>
                 <p><strong>状态:</strong> 已完成</p>
                 <div class="cargo-actions">
-                    <button onclick="alert('查看详情')">查看详情</button>
+                    <button onclick="event.stopPropagation(); alert('查看详情')">查看详情</button>
                 </div>
             </div>
         </div>
@@ -194,6 +195,21 @@
 </div>
 
 <script>
+    // --- 新增跳转函数 ---
+    /**
+     * @description: 请求父窗口跳转到货源详情页
+     * @param {string} cargoId - 货源的唯一标识
+     */
+    function navigateToDetail(cargoId) {
+        const source = 'cargoManagement'
+        // 目标页面是车方视角的详情页, 并携带来源参数
+        const targetUrl = `cargo-driver-detail.html?id=${cargoId}&source=${source}`;
+        // 使用 postMessage 通知父窗口进行页面导航
+        window.parent.postMessage({ action: 'driverCargoInfoPage', url: targetUrl }, '*');
+        console.log(`Requesting navigation from ${source} to: ${targetUrl}`);
+    }
+
+
     // 初始化车方货源管理页面的tabs
     function setupDriverCargoTabs() {
         const tabsContainer = document.querySelector('.tabs');

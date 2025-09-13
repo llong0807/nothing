@@ -375,6 +375,20 @@
         ]
     };
 
+    // --- 新增：跳转函数 ---
+    /**
+     * @description: 请求父窗口跳转到货源详情页
+     * @param {string} cargoId - 货源的唯一标识
+     */
+    function navigateToDetail(cargoId) {
+        const source = `findCargo`
+        // 目标页面是车方视角的详情页
+        const targetUrl = `cargo-driver-detail.html?id=${cargoId}&source=${source}`;
+        // 使用 postMessage 通知父窗口进行页面导航
+        window.parent.postMessage({ action: 'driverCargoInfoPage', url: targetUrl }, '*');
+        console.log(`Requesting navigation from ${source} to: ${targetUrl}`);
+    }
+
     // --- 新增：需求说明对话框逻辑 ---
     const showInfoBtn = document.getElementById('showInfoBtn');
     const infoModal = document.getElementById('infoModal');
@@ -483,6 +497,8 @@
             if (index === 0) {
                 cargoDiv.classList.add('is-pinned');
             }
+            // --- 新增：为列表项添加点击事件 ---
+            cargoDiv.setAttribute('onclick', `navigateToDetail('${item.id}')`);
 
             let topRightHTML = `<div class="distance-info">距离我 ${parseInt(item.mileage.replace('约', ''))} km</div>`;
             let shipperInfoHTML = '';

@@ -833,6 +833,12 @@
         </div>
     </div>
 
+    <div id="car_cargo_info-iframe-page" class="page">
+        <div class="content p-0">
+            <iframe id="carCargoInfoIframe" src="" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lucide-icons@latest/dist/lucide.min.js"></script>
@@ -1017,8 +1023,16 @@
             const cargoInfoIframe = document.getElementById('cargoInfoIframe');
             cargoInfoIframe.src = data.url;
             showPage('cargo_info-iframe-page'); // Show the iframe container page
-        } else if (data.action === 'cargoManager') {
+        }  else if (data.action === 'driverCargoInfoPage') {
+            const driverCargoInfoIframe = document.getElementById('carCargoInfoIframe');
+            driverCargoInfoIframe.src = data.url;
+            showPage('car_cargo_info-iframe-page'); // Show the iframe container page
+        }else if (data.action === 'cargoManager') {
             showPage('shipper-cargo-manage-iframe-page')
+        }else if (data.action === 'driverCargoManager') {
+            showPage('driver-cargo-manage-iframe-page')
+        } if (data.action === 'driverFindCargo') {
+            showPage('driver-find-cargo-iframe-page')
         }
 
     }, false);
