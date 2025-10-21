@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>快速发货 - 货物信息原型（商业优化版）</title>
+    <title>设置运费和发布类型</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Inter 字体 -->
@@ -13,58 +13,40 @@
     <style>
         /* 自定义基础样式 */
         body {
-            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; /* 字体与参考代码一致 */
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f2f5; /* Light grey background 与参考代码一致 */
+            background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden; /* 隐藏超出视口的内容 */
-            color: #333; /* 基础字体颜色 */
-            box-sizing: border-box; /* 边框和内边距包含在元素的总宽度和高度内 */
+            overflow: hidden;
+            color: #333;
+            box-sizing: border-box;
         }
 
-        /* 模拟移动设备屏幕容器 (参照 app-screen 样式) */
-        /* Note: This page is designed to adapt to its parent iframe's size. */
-        /* The parent app-screen is 375px wide, so this page will automatically adjust to that width. */
+        /* 模拟移动设备屏幕容器 */
         .mobile-container {
-            width: 100%; /* Take full width of parent iframe */
-            height: 100vh; /* Take full height of parent iframe */
-            background-color: #fff; /* 背景色与参考代码一致 */
-            /* border-radius: 20px; /* 圆角与参考代码一致 - Removed as iframe handles this */
-            /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* 阴影与参考代码一致 - Removed as iframe handles this */
-            overflow: hidden; /* 隐藏超出容器的内容，特别是滑动页面 */
-            display: flex; /* 使其成为 flex 容器 */
-            flex-direction: column; /* 内部元素垂直堆叠 */
-            position: relative; /* 为内部绝对定位的页面提供参考 */
-        }
-
-        /* All toggleable page base styles */
-        .page {
-            transition: transform 0.3s ease-in-out;
-            position: absolute; /* 绝对定位，相对于 mobile-container */
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
+            background-color: #fff;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            background-color: #fff; /* 确保页面有背景色覆盖 */
-            z-index: 1; /* Default layer */
-        }
-        /* Slide out to the right when page is hidden */
-        .page.hidden {
-            transform: translateX(100%);
-        }
-        /* Current active page has higher z-index */
-        .page.active {
-            z-index: 2;
-            transform: translateX(0);
+            position: relative;
         }
 
-        /* Header styles adjustment to match reference code */
+        /* 页面样式 */
+        .page {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        /* Header styles */
         .header {
             padding: 15px 20px;
             text-align: center;
@@ -79,7 +61,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-shrink: 0; /* Prevent header from being squeezed by content */
+            flex-shrink: 0;
         }
         .header .back-arrow {
             font-size: 24px;
@@ -89,67 +71,14 @@
             padding: 5px;
         }
         .header .header-title {
-            flex-grow: 1; /* Allow title to take available space */
-            text-align: center;
-            margin-right: 34px; /* Compensate for back-arrow width + padding */
-        }
-
-        /* Input group styles */
-        .input-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px; /* Reduced margin-bottom for tighter spacing */
-        }
-        .input-group label {
-            width: 60px; /* Fixed width for labels */
-            flex-shrink: 0;
-            font-size: 0.9rem;
-            color: #555;
-            text-align: left; /* Left align labels */
-            margin-right: 10px; /* Spacing between label and input */
-        }
-        .input-group input {
             flex-grow: 1;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .input-group input:focus {
-            border-color: #2563eb; /* Blue focus border */
-        }
-        .input-group .unit {
-            margin-left: 8px;
-            font-size: 0.9rem;
-            color: #555;
-            flex-shrink: 0; /* Prevent unit from being squeezed */
-        }
-
-        /* Input-like button style */
-        .input-like-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: #999; /* Hint text color */
-            background-color: #f9f9f9;
-            cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-        .input-like-button:hover {
-            background-color: #f0f0f0;
-            border-color: #ccc;
+            text-align: center;
+            margin-right: 34px;
         }
 
         /* Phone selection modal styles */
         .phone-modal-content {
-            max-height: 400px; /* Max height for scrollable list */
+            max-height: 400px;
             overflow-y: auto;
         }
         .phone-list-item {
@@ -161,24 +90,8 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        .phone-list-item:hover {
-            background-color: #f5f5f5;
-        }
         .phone-list-item:last-child {
             border-bottom: none;
-        }
-        .phone-list-item .phone-number {
-            font-size: 1rem;
-            color: #333;
-            font-weight: 500;
-        }
-        .phone-list-item .tag {
-            background-color: #e0f2fe; /* blue-100 */
-            color: #2563eb; /* blue-600 */
-            padding: 4px 8px;
-            border-radius: 9999px; /* full rounded */
-            font-size: 0.75rem; /* text-xs */
-            font-weight: 500;
         }
 
         /* Radio button styled as toggle buttons */
@@ -195,566 +108,495 @@
             background-color: #f9f9f9;
         }
         .toggle-option.active {
-            background-color: #2563eb; /* Blue background for active */
-            color: #fff; /* White text for active */
+            background-color: #2563eb;
+            color: #fff;
             border-color: #2563eb;
-            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.2);
         }
         .toggle-option:first-child {
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
-            margin-right: -1px; /* Overlap borders */
+            margin-right: -1px;
         }
         .toggle-option:last-child {
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
         }
+
+        /* New Styles for Redesign */
+        .perk-button, .publish-button {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .perk-button.selected, .publish-button.selected {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .publish-button.disabled {
+            background-color: #f3f4f6;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .checkbox-icon {
+            color: #d1d5db; /* gray-400 */
+        }
+
+        .perk-button.selected .checkbox-icon, .publish-button.selected .checkbox-icon {
+            color: #2563eb; /* blue-600 */
+        }
+
+        .get-perks-btn {
+            background-color: #FEF3C7; /* amber-100 */
+            color: #D97706; /* amber-600 */
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        #preview-item-container.highlight {
+             border-color: #f59e0b; /* amber-500 */
+             box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            z-index: 100;
+            transition: bottom 0.3s ease-in-out;
+        }
+        .toast.show {
+            bottom: 80px; /* Adjust based on footer height */
+        }
+
     </style>
 </head>
 <body>
 
 <div class="mobile-container">
-
-    <!-- =================================================================== -->
-    <!-- Page 1: 快速发货 (主页) -->
-    <!-- =================================================================== -->
-    <div id="main-quick-ship-page" class="page active">
+    <div id="main-page" class="page">
         <!-- Header -->
         <header class="header">
-            <button class="back-arrow p-2" onclick="window.parent.postMessage({ action: 'navigatePublishIframe', url: 'publish_1.html' }, '*')">
+            <button class="back-arrow p-2" onclick="window.parent.postMessage({ action: 'navigatePublishIframe', url: 'publish_1_updated.html' }, '*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
-            <h1 class="header-title">快速发货</h1>
+            <h1 class="header-title">设置运费和发布类型</h1>
             <span></span>
         </header>
 
         <!-- Main content area -->
         <main class="flex-1 p-4 overflow-y-auto bg-[#FFF9F7]">
-            <!-- Cargo Information Card Area -->
-            <div class="bg-white rounded-xl shadow-md p-4 mb-3">
-                <h2 class="font-bold text-gray-800 text-base mb-4">货物信息</h2>
 
-                <!-- Quick fill cargo information entry - adjusted to input-like style -->
-                <div id="quick-fill-cargo-btn" class="input-like-button mb-4">
-                    <span id="cargo-info-display" class="text-gray-500">点击我编辑货物信息</span>
-                </div>
-
-                <!-- Length, Width, Height, and Tonnage editing fields -->
-                <!-- Optimized: Long, Wide, High in one line with smaller inputs -->
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center">
-                        <label for="cargo-length" class="text-sm font-medium text-gray-700 mr-1">长</label>
-                        <input type="text" id="cargo-length" placeholder="0.00" value="2.50" class="w-14 p-1 border border-gray-300 rounded-md text-center text-sm">
-                        <span class="ml-1 text-sm text-gray-500">米</span>
-                    </div>
-                    <div class="flex items-center">
-                        <label for="cargo-width" class="text-sm font-medium text-gray-700 mr-1">宽</label>
-                        <input type="text" id="cargo-width" placeholder="0.00" value="2.50" class="w-14 p-1 border border-gray-300 rounded-md text-center text-sm">
-                        <span class="ml-1 text-sm text-gray-500">米</span>
-                    </div>
-                    <div class="flex items-center">
-                        <label for="cargo-height" class="text-sm font-medium text-gray-700 mr-1">高</label>
-                        <input type="text" id="cargo-height" placeholder="0.00" value="2.50" class="w-14 p-1 border border-gray-300 rounded-md text-center text-sm">
-                        <span class="ml-1 text-sm text-gray-500">米</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center mb-2">
-                    <label for="cargo-tonnage" class="w-16 text-sm font-medium text-gray-700 flex-shrink-0">重量</label>
-                    <input type="text" id="cargo-tonnage" placeholder="0.00" value="2.50" class="flex-1 p-2 border border-gray-300 rounded-md">
-                    <span class="ml-2 text-sm text-gray-500">吨</span>
-                </div>
-
-                <!-- Notes editing field -->
-                <div class="flex items-center mb-0">
-                    <label for="cargo-notes" class="w-16 text-sm font-medium text-gray-700 flex-shrink-0">备注</label>
-                    <input type="text" id="cargo-notes" placeholder="见我发财" value="见我发财" class="flex-1 p-2 border border-gray-300 rounded-md">
-                </div>
-
-            </div>
-
-            <!-- Freight Rate Section -->
-            <div class="bg-white rounded-xl shadow-md p-4 mb-3">
+            <!-- Freight Rate Section (Unchanged) -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-4">
                 <div class="flex items-center mb-4">
                     <label for="freight-rate" class="w-16 text-sm font-medium text-gray-700 flex-shrink-0">运价</label>
                     <input type="text" id="freight-rate" placeholder="请输入运价" class="flex-1 p-2 border border-gray-300 rounded-md">
                     <span class="ml-2 text-sm text-gray-500">元</span>
                 </div>
-                <div class="flex space-x-0 mb-4">
+                <div class="flex space-x-0">
                     <div id="fixed-price-option" class="toggle-option active" data-price-type="fixed">一口价</div>
                     <div id="negotiable-option" class="toggle-option" data-price-type="negotiable">可商议</div>
                 </div>
             </div>
 
-            <!-- Contact Phone Section -->
+            <!-- Contact Phone Section (Unchanged) -->
             <div class="bg-white rounded-xl shadow-md p-4 mb-4">
                 <h2 class="font-bold text-gray-800 text-base mb-4">联系电话</h2>
                 <div class="flex items-center">
                     <input type="tel" id="contact-phone" placeholder="请输入电话号码" class="flex-1 p-2 border border-gray-300 rounded-md">
-                    <!-- Changed plus icon to select icon -->
                     <button id="select-phone-btn" class="ml-2 p-2 bg-blue-500 text-white rounded-md flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                     </button>
                 </div>
             </div>
+
+            <!-- START: NEW "Publish Preview" Card -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-4">
+                <h3 class="font-semibold text-gray-800 text-sm mb-3">发布预览</h3>
+                <!-- Preview Item -->
+                <div id="preview-item-container" class="border-2 border-transparent rounded-lg p-3 bg-gray-50 relative transition-all duration-200">
+                    <!-- Top Watermark -->
+                    <div id="top-watermark" class="hidden absolute inset-0 bg-black bg-opacity-5 flex items-center justify-center rounded-lg pointer-events-none">
+                        <svg class="w-16 h-16 text-red-500 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                        <span class="absolute text-red-600 font-bold text-2xl transform -rotate-15 opacity-50">置顶</span>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <p class="text-base font-bold text-gray-800">挖掘机 22吨</p>
+                            <!-- Member Tag -->
+                            <span id="member-tag" class="hidden ml-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">会员专属</span>
+                        </div>
+                        <p class="text-sm font-semibold text-red-600">5000元</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm text-gray-600">上海浦东 → 北京朝阳</p>
+                        <p class="text-xs text-gray-400">刚刚</p>
+                    </div>
+                </div>
+
+                <!-- Special Perks Section -->
+                <div class="mt-4">
+                    <h4 class="font-semibold text-gray-800 text-sm mb-2">特别货源</h4>
+                    <div class="space-y-2">
+                        <!-- Top Perk -->
+                        <div id="perk-top-btn" class="perk-button flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="mr-3">
+                                    <p class="font-bold text-sm text-gray-800 flex items-center">
+                                        置顶货源
+                                        <span class="text-gray-400 font-normal ml-1">(剩 <span id="top-count">5</span> 次)</span>
+                                        <button id="get-top-btn" class="get-perks-btn ml-2 hidden">去获取</button>
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-1">货源会在当前地区置顶1小时，更多人可见。</p>
+                                </div>
+                            </div>
+                            <svg class="checkbox-icon w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <!-- Highlight Perk -->
+                        <div id="perk-highlight-btn" class="perk-button flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="mr-3">
+                                    <p class="font-bold text-sm text-gray-800 flex items-center">
+                                        醒目货源
+                                        <span class="text-gray-400 font-normal ml-1">(剩 <span id="highlight-count">0</span> 次)</span>
+                                        <button id="get-highlight-btn" class="get-perks-btn ml-2 hidden">去获取</button>
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-1">一眼可见，你就是最靓的仔。</p>
+                                </div>
+                            </div>
+                            <svg class="checkbox-icon w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END: NEW "Publish Preview" Card -->
+
+            <!-- START: NEW "Publish Area" Card -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-4">
+                <div class="space-y-2">
+                    <!-- Free Publish -->
+                    <div id="publish-free-btn" class="publish-button flex items-center justify-between">
+                        <div class="mr-3">
+                            <p class="font-bold text-sm text-gray-800">免费发布 <span class="text-gray-400 font-normal">(剩 <span id="free-count">10</span> 次)</span></p>
+                            <p class="text-xs text-gray-500 mt-1">免费次数可通过签到积分获取。</p>
+                        </div>
+                        <svg class="checkbox-icon w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <!-- Member Publish -->
+                    <div id="publish-member-btn" class="publish-button flex items-center justify-between selected">
+                        <div class="mr-3">
+                            <p class="font-bold text-sm text-gray-800">权益发布 <span class="text-gray-400 font-normal">(剩 <span id="member-count">无限</span> 次)</span></p>
+                            <p class="text-xs text-gray-500 mt-1">会员专属，快人一步，随心发布。</p>
+                        </div>
+                        <svg class="checkbox-icon w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+            </div>
+            <!-- END: NEW "Publish Area" Card -->
 
         </main>
 
         <!-- Bottom button area -->
         <footer class="bg-white p-4 flex items-center space-x-4 border-t border-gray-200 mt-auto flex-shrink-0">
-            <!-- "上一步" button made smaller -->
-            <button class="w-1/3 bg-orange-100 text-orange-500 font-bold py-2.5 rounded-full text-sm" onclick="window.parent.postMessage({ action: 'navigatePublishIframe', url: 'publish_1.html' }, '*')">上一步</button>
-            <!-- "免费发布" button made larger and text changed -->
-            <button id="free-publish-btn" class="w-2/3 bg-blue-500 text-white font-bold py-3.5 rounded-full">免费发布 (10/15次)</button>
+            <button class="w-1/3 bg-orange-100 text-orange-500 font-bold py-2.5 rounded-full text-sm" onclick="window.parent.postMessage({ action: 'navigatePublishIframe', url: 'publish_1_updated.html' }, '*')">上一步</button>
+            <button id="final-publish-btn" class="w-2/3 bg-blue-500 text-white font-bold py-3.5 rounded-full transition-colors duration-300"></button>
         </footer>
     </div>
-
-    <!-- =================================================================== -->
-    <!-- Page 2: 编辑货源 (整合的页面) -->
-    <!-- =================================================================== -->
-    <div id="edit-cargo-page" class="page hidden">
-        <!-- Header -->
-        <header class="header">
-            <button id="back-to-main-quick-ship-btn" class="back-arrow p-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <h1 class="header-title">编辑货源</h1>
-            <span></span>
-        </header>
-
-        <!-- Text editing area -->
-        <div class="p-4 flex-shrink-0">
-            <div class="relative">
-                <textarea id="cargo-textarea" maxlength="100" class="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none" placeholder="请输入货物名称或型号，例如：挖掘机、起重机"></textarea>
-                <div id="editor-buttons" class="absolute bottom-3 right-3 flex items-center space-x-2">
-                    <!-- Buttons will be dynamically inserted -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Matching cargo information area -->
-        <div id="cargo-suggestions" class="flex-1 bg-gray-50 overflow-y-auto">
-            <!-- Matching cargo list will be dynamically inserted -->
-        </div>
-    </div>
-
 </div>
 
-<!-- =================================================================== -->
-<!-- Modal: Phone Number Selection Modal -->
-<!-- =================================================================== -->
+<!-- Modals (Unchanged) -->
 <div id="phone-selection-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end hidden" style="z-index: 100;">
     <div class="bg-white w-full max-w-[375px] rounded-t-2xl">
         <div class="p-4 flex justify-between items-center border-b">
             <h2 class="font-bold text-lg text-left flex-grow">选择联系电话</h2>
             <button id="close-phone-modal-btn" class="text-gray-500 text-2xl">&times;</button>
         </div>
-        <div id="phone-list" class="phone-modal-content">
-            <!-- Phone numbers will be dynamically inserted here -->
-        </div>
+        <div id="phone-list" class="phone-modal-content"></div>
         <div class="p-4 border-t border-gray-200">
             <button id="confirm-phone-selection-btn" class="w-full bg-blue-500 text-white font-bold py-3 rounded-full">确定</button>
         </div>
     </div>
 </div>
-
-<!-- =================================================================== -->
-<!-- Modal: Free Publish Developer Alert -->
-<!-- =================================================================== -->
 <div id="dev-alert-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden" style="z-index: 101;">
     <div class="bg-white rounded-lg p-6 shadow-lg text-center w-80">
-        <p class="text-lg font-semibold mb-4">需求说明</p>
-        <p class="text-sm text-gray-700 mb-6">
-            1. 用户发布，后台校验次数，如果次数不够，根据不同的code码来引导用户成为会员或者做其他操作。<br><br>
-            2. 允许非标准化货源发布，风险在于乱发，所以后面车方看货源的右上角提供一个异常投诉的途经，对于反复发布垃圾信息的用户肯定进行限制，不过能到这一步就说明我们成功了。<br><br>
-            3. 发布信息，后台校验，如果次数不够，信息给用户缓存本地，根据不同的code码和弹窗来引导用户成为会员或者做其操作。<br><br>
-            4. 这个页面在发布形式上还会有增值服务，次数够的话则快速通过。通过窗口提示用户，是再发一单，还是查看货源。
-        </p>
+        <p id="dev-alert-title" class="text-lg font-semibold mb-4">需求说明</p>
+        <p id="dev-alert-content" class="text-sm text-gray-700 mb-6"></p>
         <div class="flex justify-center">
-            <!-- Only one "确定" button -->
             <button id="dev-alert-confirm-btn" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-full">确定</button>
         </div>
     </div>
 </div>
 
+<!-- Toast Notification -->
+<div id="toast-notification" class="toast"></div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- 页面元素 ---
-        const mainQuickShipPage = document.getElementById('main-quick-ship-page');
-        const editCargoPage = document.getElementById('edit-cargo-page');
+        // --- State Management ---
+        const state = {
+            counts: {
+                top: 5,
+                highlight: 0,
+                free: 10,
+                member: '无限' // Can be a number or string
+            },
+            perks: {
+                isTop: false,
+                isHighlight: false
+            },
+            publishType: 'member' // 'free' or 'member'
+        };
 
-        // --- 主快速发货页元素 ---
-        const quickFillCargoBtn = document.getElementById('quick-fill-cargo-btn');
-        const cargoInfoDisplay = document.getElementById('cargo-info-display');
-        const cargoLengthInput = document.getElementById('cargo-length');
-        const cargoWidthInput = document.getElementById('cargo-width');
-        const cargoHeightInput = document.getElementById('cargo-height');
-        const cargoTonnageInput = document.getElementById('cargo-tonnage');
-        const cargoNotesInput = document.getElementById('cargo-notes');
-        const contactPhoneInput = document.getElementById('contact-phone');
-        const selectPhoneBtn = document.getElementById('select-phone-btn'); // Select phone button
-        const freePublishBtn = document.getElementById('free-publish-btn'); // Free publish button
+        // --- Element Cache ---
+        const elements = {
+            contactPhoneInput: document.getElementById('contact-phone'),
+            selectPhoneBtn: document.getElementById('select-phone-btn'),
+            freightRateInput: document.getElementById('freight-rate'),
+            fixedPriceOption: document.getElementById('fixed-price-option'),
+            negotiableOption: document.getElementById('negotiable-option'),
+            phoneSelectionModal: document.getElementById('phone-selection-modal'),
+            closePhoneModalBtn: document.getElementById('close-phone-modal-btn'),
+            phoneList: document.getElementById('phone-list'),
+            confirmPhoneSelectionBtn: document.getElementById('confirm-phone-selection-btn'),
+            devAlertModal: document.getElementById('dev-alert-modal'),
+            devAlertTitle: document.getElementById('dev-alert-title'),
+            devAlertContent: document.getElementById('dev-alert-content'),
+            devAlertConfirmBtn: document.getElementById('dev-alert-confirm-btn'),
+            toast: document.getElementById('toast-notification'),
+            finalPublishBtn: document.getElementById('final-publish-btn'),
+            // New Redesigned Elements
+            preview: {
+                container: document.getElementById('preview-item-container'),
+                topWatermark: document.getElementById('top-watermark'),
+                memberTag: document.getElementById('member-tag')
+            },
+            perks: {
+                topBtn: document.getElementById('perk-top-btn'),
+                highlightBtn: document.getElementById('perk-highlight-btn'),
+                topCount: document.getElementById('top-count'),
+                highlightCount: document.getElementById('highlight-count'),
+                getTopBtn: document.getElementById('get-top-btn'),
+                getHighlightBtn: document.getElementById('get-highlight-btn')
+            },
+            publish: {
+                freeBtn: document.getElementById('publish-free-btn'),
+                memberBtn: document.getElementById('publish-member-btn'),
+                freeCount: document.getElementById('free-count'),
+                memberCount: document.getElementById('member-count')
+            }
+        };
 
-        // 运价元素
-        const freightRateInput = document.getElementById('freight-rate');
-        const fixedPriceOption = document.getElementById('fixed-price-option');
-        const negotiableOption = document.getElementById('negotiable-option');
-
-        // --- 编辑货源页元素 ---
-        const cargoTextarea = document.getElementById('cargo-textarea');
-        const editorButtonsContainer = document.getElementById('editor-buttons');
-        const cargoSuggestionsContainer = document.getElementById('cargo-suggestions');
-        const backToMainQuickShipBtn = document.getElementById('back-to-main-quick-ship-btn');
-
-        // --- 电话选择弹窗元素 ---
-        const phoneSelectionModal = document.getElementById('phone-selection-modal');
-        const closePhoneModalBtn = document.getElementById('close-phone-modal-btn');
-        const phoneList = document.getElementById('phone-list');
-        const confirmPhoneSelectionBtn = document.getElementById('confirm-phone-selection-btn');
-
-        // --- 开发者提示弹窗元素 ---
-        const devAlertModal = document.getElementById('dev-alert-modal');
-        const devAlertConfirmBtn = document.getElementById('dev-alert-confirm-btn');
-
-
-        // --- 状态变量 ---
-        let currentPageInIframe = mainQuickShipPage; // Track current page within this iframe
-        let selectedCargo = null;
-        let selectedPhoneNumber = ''; // 用于存储弹窗中选择的电话号码
-        let selectedPriceType = 'fixed'; // 'fixed' or 'negotiable'
-
-        // --- 模拟数据 ---
-        const mockCargoData = [
-            { name: '挖掘机', detail: '卡特彼勒 320D', length: 9.5, width: 2.9, height: 3.1, tonnage: 22, notes: '工作状态良好' },
-            { name: '挖掘机', detail: '小松 PC200-8', length: 9.4, width: 2.8, height: 3.0, tonnage: 20, notes: '近期保养' },
-            { name: '起重机', detail: '徐工 QY25K', length: 12.8, width: 2.5, height: 3.4, tonnage: 25, notes: '带吊具' },
-            { name: '起重机', detail: '中联重科 ZMC25', length: 13.0, width: 2.6, height: 3.5, tonnage: 28, notes: '需专业操作' },
-            { name: '推土机', detail: '山推 SD16', length: 5.1, width: 3.4, height: 3.0, tonnage: 17, notes: '履带式' },
-            { name: '装载机', detail: '柳工 CLG856', length: 8.1, width: 3.0, height: 3.5, tonnage: 18, notes: '轮式，带铲斗' },
-            { name: '压路机', detail: '三一 SSR200C-8', length: 6.0, width: 2.3, height: 3.0, tonnage: 12, notes: '振动压实' }
-        ];
-
+        // --- Mock Data ---
         const mockPhoneNumbers = [
             { number: '13812345678', label: '张三', isLoggedInUser: true },
-            { number: '13987654321', label: '李四', isLoggedInUser: false },
-            { number: '13700001111', label: '王五', isLoggedInUser: false },
-            { number: '13655554444', label: '公司座机', isLoggedInUser: false },
+            { number: '13987654321', label: '李四', isLoggedInUser: false }
         ];
+        const devAlertText = `1. 用户发布，后台校验次数...<br><br>2. 允许非标准化货源发布...<br><br>3. 发布信息，后台校验...<br><br>4. 这个页面在发布形式上还会有增值服务...`;
 
-        // =================================================
-        // 页面切换逻辑 (仅限 iframe 内部的页面切换)
-        // =================================================
-        function showPageInIframe(targetPage) {
-            console.log(`iframe内部切换页面：从 ${currentPageInIframe.id} 到 ${targetPage.id}`);
-            if (currentPageInIframe) {
-                currentPageInIframe.classList.remove('active');
-                currentPageInIframe.classList.add('hidden');
-            }
-            targetPage.classList.remove('hidden');
-            targetPage.classList.add('active');
-            currentPageInIframe = targetPage;
-            console.log(`iframe内部当前页面已更新为：${currentPageInIframe.id}`);
-        }
+        // --- Render Functions ---
+        const render = {
+            updatePreview: () => {
+                elements.preview.container.classList.toggle('highlight', state.perks.isHighlight);
+                elements.preview.topWatermark.classList.toggle('hidden', !state.perks.isTop);
+                elements.preview.memberTag.classList.toggle('hidden', state.publishType !== 'member');
+            },
+            updatePerkButtons: () => {
+                elements.perks.topBtn.classList.toggle('selected', state.perks.isTop);
+                elements.perks.highlightBtn.classList.toggle('selected', state.perks.isHighlight);
 
-        // =================================================
-        // 主快速发货页逻辑
-        // =================================================
+                elements.perks.topCount.textContent = state.counts.top;
+                elements.perks.getTopBtn.classList.toggle('hidden', state.counts.top > 0);
 
-        // 从 localStorage 加载货物数据
-        function loadCargoData() {
-            const savedCargo = localStorage.getItem('selected_cargo_data');
-            if (savedCargo) {
-                const cargo = JSON.parse(savedCargo);
-                console.log('Loaded cargo data:', cargo);
+                elements.perks.highlightCount.textContent = state.counts.highlight;
+                elements.perks.getHighlightBtn.classList.toggle('hidden', state.counts.highlight > 0);
+            },
+            updatePublishOptions: () => {
+                const isFree = state.publishType === 'free';
+                elements.publish.freeBtn.classList.toggle('selected', isFree);
+                elements.publish.memberBtn.classList.toggle('selected', !isFree);
 
-                // 填充输入字段
-                cargoLengthInput.value = cargo.length || '';
-                cargoWidthInput.value = cargo.width || '';
-                cargoHeightInput.value = cargo.height || '';
-                cargoTonnageInput.value = cargo.tonnage || '';
-                cargoNotesInput.value = cargo.notes || ''; // 加载备注
+                elements.publish.freeCount.textContent = state.counts.free;
+                elements.publish.memberCount.textContent = state.counts.member;
 
-                // 更新 "点击我编辑货物信息" 的显示文本
-                cargoInfoDisplay.textContent = `${cargo.name || '未知'} ${cargo.detail || ''}`;
-                cargoInfoDisplay.classList.remove('text-gray-500');
-                cargoInfoDisplay.classList.add('text-gray-800', 'font-semibold');
-
-                // 清除存储的数据，以便下次加载时不会自动填充
-                localStorage.removeItem('selected_cargo_data');
-            } else {
-                // 如果没有加载到数据，重置为默认提示
-                cargoInfoDisplay.textContent = '点击我编辑货物信息';
-                cargoInfoDisplay.classList.add('text-gray-500');
-                cargoInfoDisplay.classList.remove('text-gray-800', 'font-semibold');
-            }
-        }
-
-        // "快速填写货物信息" 按钮的事件监听器
-        quickFillCargoBtn.addEventListener('click', () => {
-            showPageInIframe(editCargoPage);
-            cargoTextarea.value = ''; // 清空之前的内容
-            cargoTextarea.dispatchEvent(new Event('input')); // 触发 input 事件以更新按钮
-            cargoSuggestionsContainer.innerHTML = ''; // 清空建议
-        });
-
-        // =================================================
-        // 编辑货源页逻辑
-        // =================================================
-
-        // 更新编辑器按钮状态
-        function updateEditorButtons(text) {
-            editorButtonsContainer.innerHTML = '';
-            if (text.length > 0) {
-                const clearBtn = document.createElement('button');
-                clearBtn.textContent = '清空';
-                clearBtn.className = 'py-1 px-3 border border-gray-400 text-gray-600 rounded-full text-sm';
-                clearBtn.onclick = () => {
-                    cargoTextarea.value = '';
-                    cargoTextarea.focus();
-                    cargoTextarea.dispatchEvent(new Event('input'));
-                    selectedCargo = null; // 清空时重置选择
-                };
-
-                const confirmBtn = document.createElement('button');
-                confirmBtn.textContent = '确认';
-                confirmBtn.className = 'py-1 px-3 bg-blue-500 text-white rounded-full text-sm';
-                confirmBtn.onclick = confirmCargo;
-
-                editorButtonsContainer.append(clearBtn, confirmBtn);
-            } else {
-                const cancelBtn = document.createElement('button');
-                cancelBtn.textContent = '取消';
-                cancelBtn.className = 'py-1 px-3 bg-gray-200 text-gray-700 rounded-full text-sm';
-                cancelBtn.onclick = () => showPageInIframe(mainQuickShipPage); // 返回主快速发货页面
-                editorButtonsContainer.appendChild(cancelBtn);
-            }
-        }
-
-        // 确认货物选择并返回
-        function confirmCargo() {
-            let cargoToSave = null;
-            if (selectedCargo) {
-                cargoToSave = selectedCargo;
-            } else {
-                // 如果用户直接确认但没有选择建议，可以保存textarea的内容作为自定义货物名称
-                const customCargoName = cargoTextarea.value.trim();
-                if (customCargoName) {
-                    cargoToSave = {
-                        name: customCargoName,
-                        detail: customCargoName, // 详细信息也用名称
-                        length: '', width: '', height: '', tonnage: '', notes: '' // 尺寸吨位留空
-                    };
+                if (state.counts.free === 0) {
+                    elements.publish.freeBtn.classList.add('disabled');
+                    elements.publish.freeBtn.querySelector('.font-bold').textContent = '免费发布 (次数用尽)';
+                } else {
+                     elements.publish.freeBtn.classList.remove('disabled');
                 }
+            },
+            updateFinalButton: () => {
+                if (state.publishType === 'free') {
+                    elements.finalPublishBtn.textContent = `免费发布 (${state.counts.free}次)`;
+                    elements.finalPublishBtn.classList.remove('bg-amber-500');
+                    elements.finalPublishBtn.classList.add('bg-blue-500');
+                } else {
+                    elements.finalPublishBtn.textContent = `会员优先发布`;
+                     elements.finalPublishBtn.classList.add('bg-amber-500');
+                    elements.finalPublishBtn.classList.remove('bg-blue-500');
+                }
+            },
+            showToast: (message) => {
+                elements.toast.textContent = message;
+                elements.toast.classList.add('show');
+                setTimeout(() => {
+                    elements.toast.classList.remove('show');
+                }, 2000);
             }
+        };
 
-            if (cargoToSave) {
-                localStorage.setItem('selected_cargo_data', JSON.stringify(cargoToSave));
-                console.log('Selected cargo saved:', cargoToSave);
+        // --- Event Handlers ---
+        const handlers = {
+            togglePerk: (perkName) => {
+                const count = state.counts[perkName];
+                if (count > 0) {
+                    state.perks[`is${perkName.charAt(0).toUpperCase() + perkName.slice(1)}`] = !state.perks[`is${perkName.charAt(0).toUpperCase() + perkName.slice(1)}`];
+                } else {
+                    // Allow temporary selection even if count is 0
+                    const isPerkActive = !state.perks[`is${perkName.charAt(0).toUpperCase() + perkName.slice(1)}`];
+                    state.perks[`is${perkName.charAt(0).toUpperCase() + perkName.slice(1)}`] = isPerkActive;
+                    if(isPerkActive) {
+                       const perkChineseName = perkName === 'top' ? '置顶' : '醒目';
+                       render.showToast(`您没有${perkChineseName}次数`);
+                       setTimeout(() => {
+                           state.perks[`is${perkName.charAt(0).toUpperCase() + perkName.slice(1)}`] = false;
+                           render.updatePerkButtons();
+                           render.updatePreview();
+                       }, 1500);
+                    }
+                }
+                render.updatePerkButtons();
+                render.updatePreview();
+            },
+            selectPublishType: (type) => {
+                if (type === 'free' && state.counts.free === 0) {
+                    render.showToast('免费次数已用尽');
+                    return;
+                }
+                state.publishType = type;
+                render.updatePublishOptions();
+                render.updatePreview();
+                render.updateFinalButton();
+            },
+            showDevAlert: () => {
+                elements.devAlertTitle.textContent = "需求说明";
+                elements.devAlertContent.innerHTML = devAlertText;
+                elements.devAlertModal.classList.remove('hidden');
             }
+        };
 
-            showPageInIframe(mainQuickShipPage); // 返回主快速发货页面
-            loadCargoData(); // 重新加载数据以更新主页面的显示
+        // --- Initial Setup and Event Binding ---
+        function initialize() {
+            // Bind perk buttons
+            elements.perks.topBtn.addEventListener('click', () => handlers.togglePerk('top'));
+            elements.perks.highlightBtn.addEventListener('click', () => handlers.togglePerk('highlight'));
+
+            // Bind publish type buttons
+            elements.publish.freeBtn.addEventListener('click', () => handlers.selectPublishType('free'));
+            elements.publish.memberBtn.addEventListener('click', () => handlers.selectPublishType('member'));
+
+            // Bind final publish button
+            elements.finalPublishBtn.addEventListener('click', handlers.showDevAlert);
+
+            // Initial render
+            render.updatePerkButtons();
+            render.updatePublishOptions();
+            render.updateFinalButton();
+            render.updatePreview();
+
+            // Setup for unchanged components
+            setupLegacyComponents();
         }
 
-        // 文本高亮显示
-        function highlightText(text, query) {
-            if (!query) return text;
-            const regex = new RegExp(query, 'gi');
-            return text.replace(regex, match => `<span class="text-blue-500 font-bold">${match}</span>`);
-        }
-
-        // 渲染货物建议
-        function renderCargoSuggestions(query) {
-            const filtered = mockCargoData.filter(cargo =>
-                cargo.name.includes(query) || cargo.detail.includes(query)
-            );
-
-            cargoSuggestionsContainer.innerHTML = filtered.map((cargo, index) => {
-                const highlightedName = highlightText(cargo.name, query);
-                const highlightedDetail = highlightText(cargo.detail, query);
-                return `
-                    <div class="suggestion-item p-4 border-b border-gray-200 cursor-pointer hover:bg-gray-100" data-index="${index}">
-                        <p class="font-semibold text-gray-800">${highlightedName}</p>
-                        <p class="text-sm text-gray-500 mt-1">${highlightedDetail} (长: ${cargo.length}m 宽: ${cargo.width}m 高: ${cargo.height}m 吨位: ${cargo.tonnage}吨)</p>
-                    </div>
-                `;
-            }).join('');
-
-            document.querySelectorAll('.suggestion-item').forEach(item => {
-                item.addEventListener('click', (event) => {
-                    const index = parseInt(event.currentTarget.dataset.index);
-                    selectedCargo = filtered[index]; // 存储选中的货物对象
-                    cargoTextarea.value = `${selectedCargo.name} ${selectedCargo.detail}`; // 填充文本框
-                    cargoTextarea.dispatchEvent(new Event('input')); // 触发输入事件以更新按钮
-                    cargoSuggestionsContainer.innerHTML = ''; // 清空建议
-                });
+        // --- Unchanged Logic from previous version ---
+        function setupLegacyComponents() {
+            elements.selectPhoneBtn.addEventListener('click', () => {
+                elements.phoneSelectionModal.classList.remove('hidden');
+                renderPhoneList();
             });
-        }
+            elements.closePhoneModalBtn.addEventListener('click', () => elements.phoneSelectionModal.classList.add('hidden'));
+            elements.confirmPhoneSelectionBtn.addEventListener('click', () => {
+                const selectedPhoneItem = elements.phoneList.querySelector('.bg-blue-50');
+                if (selectedPhoneItem) {
+                    elements.contactPhoneInput.value = selectedPhoneItem.dataset.number;
+                }
+                elements.phoneSelectionModal.classList.add('hidden');
+            });
+            elements.fixedPriceOption.addEventListener('click', () => updatePriceTypeSelection('fixed'));
+            elements.negotiableOption.addEventListener('click', () => updatePriceTypeSelection('negotiable'));
+            elements.devAlertConfirmBtn.addEventListener('click', () => {
+                elements.devAlertModal.classList.add('hidden');
+                window.parent.postMessage({ action: 'closePublishFlow' }, '*');
+            });
 
-        // 文本区域输入事件
-        cargoTextarea.addEventListener('input', () => {
-            const text = cargoTextarea.value.trim();
-            updateEditorButtons(text);
-            if (text.length >= 1) { // 至少输入一个字符开始匹配
-                renderCargoSuggestions(text);
-            } else {
-                cargoSuggestionsContainer.innerHTML = '';
-                selectedCargo = null; // 清空时重置选择
-            }
-        });
-
-        // 返回按钮事件
-        backToMainQuickShipBtn.addEventListener('click', () => {
-            showPageInIframe(mainQuickShipPage);
-        });
-
-        // =================================================
-        // 电话号码选择弹窗逻辑
-        // =================================================
-
-        // "选择电话" 按钮的事件监听器
-        selectPhoneBtn.addEventListener('click', () => {
-            phoneSelectionModal.classList.remove('hidden');
-            renderPhoneList();
-        });
-
-        // 关闭电话弹窗按钮
-        closePhoneModalBtn.addEventListener('click', () => {
-            phoneSelectionModal.classList.add('hidden');
-        });
-
-        // 确认电话选择按钮
-        confirmPhoneSelectionBtn.addEventListener('click', () => {
-            if (selectedPhoneNumber) {
-                contactPhoneInput.value = selectedPhoneNumber;
-            }
-            phoneSelectionModal.classList.add('hidden');
-        });
-
-        // 渲染电话号码列表
-        function renderPhoneList() {
-            phoneList.innerHTML = ''; // 清空现有列表
-            mockPhoneNumbers.forEach(phone => {
-                const phoneItem = document.createElement('div');
-                phoneItem.classList.add('phone-list-item');
-                phoneItem.dataset.number = phone.number;
-                phoneItem.innerHTML = `
-                    <span class="phone-number">${phone.number} ${phone.label ? `(${phone.label})` : ''}</span>
-                    ${phone.isLoggedInUser ? '<span class="tag">登录手机</span>' : ''}
-                `;
-                phoneItem.addEventListener('click', () => {
-                    // 移除所有项目的选中样式
-                    phoneList.querySelectorAll('.phone-list-item').forEach(item => {
-                        item.classList.remove('bg-blue-50');
-                        item.classList.remove('font-bold');
+            function renderPhoneList() {
+                elements.phoneList.innerHTML = '';
+                mockPhoneNumbers.forEach(phone => {
+                    const phoneItem = document.createElement('div');
+                    phoneItem.classList.add('phone-list-item');
+                    phoneItem.dataset.number = phone.number;
+                    phoneItem.innerHTML = `<span class="font-medium">${phone.number} ${phone.label ? `(${phone.label})` : ''}</span> ${phone.isLoggedInUser ? '<span class="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded-full">登录手机</span>' : ''}`;
+                    phoneItem.addEventListener('click', () => {
+                        elements.phoneList.querySelectorAll('.phone-list-item').forEach(item => item.classList.remove('bg-blue-50', 'font-bold'));
+                        phoneItem.classList.add('bg-blue-50', 'font-bold');
                     });
-                    // 为点击的项目添加选中样式
-                    phoneItem.classList.add('bg-blue-50', 'font-bold');
-                    selectedPhoneNumber = phone.number; // 存储选中的号码
+                    elements.phoneList.appendChild(phoneItem);
                 });
-                phoneList.appendChild(phoneItem);
-            });
+                if (elements.phoneList.querySelector('.bg-blue-100')) {
+                    elements.phoneList.querySelector('.bg-blue-100').closest('.phone-list-item').click();
+                } else if (mockPhoneNumbers.length > 0) {
+                    elements.phoneList.querySelector('.phone-list-item').click();
+                }
+            }
 
-            // 如果有登录用户，默认选中其电话号码
-            const loggedInPhoneItem = phoneList.querySelector('.phone-list-item .tag');
-            if (loggedInPhoneItem) {
-                const parentItem = loggedInPhoneItem.closest('.phone-list-item');
-                if (parentItem) {
-                    parentItem.classList.add('bg-blue-50', 'font-bold');
-                    selectedPhoneNumber = parentItem.dataset.number;
+            function updatePriceTypeSelection(type) {
+                if (type === 'fixed') {
+                    elements.fixedPriceOption.classList.add('active');
+                    elements.negotiableOption.classList.remove('active');
+                    elements.freightRateInput.disabled = false;
+                    elements.freightRateInput.placeholder = "请输入运价";
+                } else {
+                    elements.negotiableOption.classList.add('active');
+                    elements.fixedPriceOption.classList.remove('active');
+                    elements.freightRateInput.disabled = true;
+                    elements.freightRateInput.placeholder = "可商议";
+                    elements.freightRateInput.value = '';
                 }
-            } else if (mockPhoneNumbers.length > 0) {
-                // 如果没有登录用户，默认选中第一个
-                const firstItem = phoneList.querySelector('.phone-list-item');
-                if (firstItem) {
-                    firstItem.classList.add('bg-blue-50', 'font-bold');
-                    selectedPhoneNumber = firstItem.dataset.number;
-                }
+            }
+            updatePriceTypeSelection('fixed');
+            formatDecimalInput(elements.freightRateInput, 5, 2);
+
+            function formatDecimalInput(input, intLimit, decLimit) {
+                input.addEventListener('input', (e) => {
+                    let val = e.target.value.replace(/[^0-9.]/g, '');
+                    let parts = val.split('.');
+                    if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+                    parts = val.split('.');
+                    if (parts[0] && parts[0].length > intLimit) parts[0] = parts[0].substring(0, intLimit);
+                    if (parts[1] && parts[1].length > decLimit) parts[1] = parts[1].substring(0, decLimit);
+                    e.target.value = parts.join('.');
+                });
             }
         }
 
-        // =================================================
-        // 运价切换逻辑
-        // =================================================
-        function updatePriceTypeSelection(selectedType) {
-            selectedPriceType = selectedType;
-            if (selectedType === 'fixed') {
-                fixedPriceOption.classList.add('active');
-                negotiableOption.classList.remove('active');
-                freightRateInput.disabled = false; // 启用输入框
-                freightRateInput.placeholder = "请输入运价";
-                freightRateInput.value = ''; // 切换到一口价时清空值
-            } else {
-                negotiableOption.classList.add('active');
-                fixedPriceOption.classList.remove('active');
-                freightRateInput.disabled = true; // 禁用输入框
-                freightRateInput.placeholder = "可商议";
-                freightRateInput.value = ''; // 切换到可商议时清空值
-            }
-        }
-
-        fixedPriceOption.addEventListener('click', () => updatePriceTypeSelection('fixed'));
-        negotiableOption.addEventListener('click', () => updatePriceTypeSelection('negotiable'));
-
-        // =================================================
-        // 输入格式化和验证逻辑 (小数位限制)
-        // =================================================
-        function formatDecimalInput(inputElement, integerLimit, decimalLimit) {
-            inputElement.addEventListener('input', (event) => {
-                let value = event.target.value;
-
-                // 移除任何非数字或非小数点字符
-                value = value.replace(/[^0-9.]/g, '');
-
-                // 处理多个小数点
-                const parts = value.split('.');
-                if (parts.length > 2) {
-                    value = parts[0] + '.' + parts.slice(1).join('');
-                }
-
-                // 限制整数位数
-                if (parts[0] && parts[0].length > integerLimit) {
-                    parts[0] = parts[0].substring(0, integerLimit);
-                    value = parts.join('.');
-                }
-
-                // 限制小数位数
-                if (parts[1] && parts[1].length > decimalLimit) {
-                    parts[1] = parts[1].substring(0, decimalLimit);
-                    value = parts.join('.');
-                }
-
-                event.target.value = value;
-            });
-        }
-
-        // 对相关输入框应用格式化
-        formatDecimalInput(cargoLengthInput, 3, 2);
-        formatDecimalInput(cargoWidthInput, 3, 2);
-        formatDecimalInput(cargoHeightInput, 3, 2);
-        formatDecimalInput(cargoTonnageInput, 3, 2);
-        formatDecimalInput(freightRateInput, 5, 2); // 假设运价可以更大，例如 99999.99
-
-        // =================================================
-        // 免费发布按钮逻辑 (开发者提示)
-        // =================================================
-        freePublishBtn.addEventListener('click', () => {
-            devAlertModal.classList.remove('hidden'); // 显示开发者提示弹窗
-        });
-
-        devAlertConfirmBtn.addEventListener('click', () => {
-            devAlertModal.classList.add('hidden'); // 隐藏开发者提示弹窗
-            // 在实际应用中，这里会继续发布逻辑
-            // Send message to parent to close the publish flow
-            window.parent.postMessage({ action: 'closePublishFlow' }, '*');
-        });
-
-
-        // --- 初始化 ---
-        updateEditorButtons(''); // 初始化编辑货源页按钮状态
-        showPageInIframe(mainQuickShipPage); // 确保初始显示主快速发货页面
-        loadCargoData(); // 页面加载时尝试加载保存的数据
-        updatePriceTypeSelection('fixed'); // 默认选中 "一口价"
+        initialize();
     });
 </script>
 
