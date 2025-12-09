@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车货匹配业务逻辑图 V2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        /* 垂直连接线 */
+        .v-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            background-color: #cbd5e1;
+            z-index: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        /* 虚线连接 */
+        .dashed-line {
+            border-top: 2px dashed #cbd5e1;
+            position: absolute;
+            z-index: 0;
+        }
+
+        /* 卡片基础样式 */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #94a3b8;
+        }
+
+        /* 角色标签 */
+        .role-tag {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            white-space: nowrap;
+        }
+
+        .role-shipper { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe; }
+        .role-driver { background: #f0fdf4; color: #22c55e; border: 1px solid #bbf7d0; }
+        .role-system { background: #fff7ed; color: #f97316; border: 1px solid #fed7aa; }
+
+        /* 弹窗模拟样式 */
+        .modal-mock {
+            background: #fafafa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body class="py-12 px-4 min-h-screen">
+
+<!-- 顶部说明 -->
+<div class="max-w-4xl mx-auto text-center mb-12">
+    <h1 class="text-2xl font-bold text-slate-800 mb-2">车货匹配业务全流程 (V2)</h1>
+    <div class="flex justify-center gap-6 text-sm">
+        <span class="flex items-center"><div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>货方操作</span>
+        <span class="flex items-center"><div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>车方操作</span>
+        <span class="flex items-center"><div class="w-3 h-3 rounded-full bg-orange-400 mr-2"></div>系统/逻辑</span>
+    </div>
+</div>
+
+<!-- 流程主体 -->
+<div class="max-w-5xl mx-auto relative flex flex-col items-center gap-10 pb-20">
+
+    <!-- 主轴线 -->
+    <div class="v-line"></div>
+
+    <!-- 1. 发布 -->
+    <div class="card w-full max-w-md p-5 text-center border-t-4 border-blue-500">
+        <div class="role-tag role-shipper"><i class="fa-solid fa-user-tie mr-1"></i>货方发货</div>
+        <h3 class="font-bold text-lg">发布货源</h3>
+        <div class="flex justify-center gap-4 mt-4">
+            <div class="bg-blue-50 px-3 py-2 rounded border border-blue-100 flex-1">
+                <span class="font-bold text-blue-700 block text-sm">一口价货源</span>
+                <span class="text-xs text-blue-500">特性：车方不可直接拨号</span>
+            </div>
+            <div class="bg-indigo-50 px-3 py-2 rounded border border-indigo-100 flex-1">
+                <span class="font-bold text-indigo-700 block text-sm">电议货源</span>
+                <span class="text-xs text-indigo-500">特性：允许车方电话联系</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 列表与关注 -->
+    <div class="card w-full max-w-md p-4 text-center border-t-4 border-green-500 relative">
+        <div class="role-tag role-driver"><i class="fa-solid fa-truck mr-1"></i>车方浏览</div>
+        <h3 class="font-bold text-slate-800">货源列表 / 详情页</h3>
+
+        <div class="mt-3 flex items-center justify-center gap-6 text-sm">
+            <div class="flex flex-col items-center group cursor-pointer">
+                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-purple-100 transition">
+                    <i class="fa-regular fa-heart text-slate-400 group-hover:text-purple-500"></i>
+                </div>
+                <span class="text-xs mt-1 text-slate-500">点击关注</span>
+            </div>
+            <div class="text-xs text-slate-400 max-w-[150px] text-left border-l-2 pl-2 border-slate-200">
+                <span class="block font-bold text-purple-600">数据同步：</span>
+                货方可实时看到关注人数动态
+            </div>
+        </div>
+    </div>
+
+    <!-- 分支逻辑容器 -->
+    <div class="w-full relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-5xl px-2">
+
+        <!-- 左侧：一口价流程 -->
+        <div class="relative flex flex-col items-center gap-6">
+            <!-- 顶部标签 -->
+            <div class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full z-20">
+                场景 A：一口价货源
+            </div>
+
+            <!-- 只有申请按钮 -->
+            <div class="card w-full p-4 border-l-4 border-green-500">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-sm text-green-700">操作动作</span>
+                    <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">无拨打按钮</span>
+                </div>
+                <button class="w-full bg-green-600 text-white py-2 rounded text-sm font-bold shadow-sm hover:bg-green-700">
+                    申请承运
+                </button>
+
+                <!-- 弹窗逻辑 -->
+                <div class="modal-mock relative">
+                    <div class="absolute -top-3 left-2 bg-yellow-100 text-yellow-800 text-[10px] px-2 rounded border border-yellow-200 font-bold">弹窗交互</div>
+                    <div class="text-xs text-slate-500 mb-1"><i class="fa-solid fa-circle-info mr-1 text-blue-500"></i>提示：货方不希望还价</div>
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" value="¥ 2000 (可修改)" class="w-2/3 border rounded px-2 py-1 text-xs bg-white text-slate-400" disabled>
+                        <button class="w-1/3 bg-slate-200 text-slate-600 text-xs rounded">修改金额</button>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <span class="text-xs text-slate-400 underline cursor-pointer">取消</span>
+                        <span class="text-xs bg-blue-500 text-white px-2 py-0.5 rounded">确认申请</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：电议流程 -->
+        <div class="relative flex flex-col items-center gap-6">
+            <!-- 顶部标签 -->
+            <div class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full z-20">
+                场景 B：电议货源
+            </div>
+
+            <!-- 双按钮 -->
+            <div class="card w-full p-4 border-l-4 border-green-500">
+                <div class="font-bold text-sm text-green-700 mb-3">操作动作 (二选一)</div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- 报价 -->
+                    <div class="flex flex-col gap-2">
+                        <button class="w-full bg-green-100 text-green-700 py-2 rounded text-sm font-bold border border-green-200 hover:bg-green-200">
+                            报价申请
+                        </button>
+                        <div class="modal-mock text-center">
+                            <div class="text-[10px] text-slate-400 mb-1">弹窗交互</div>
+                            <div class="border rounded px-2 py-1 text-xs bg-white mb-1">输入意向价格</div>
+                            <div class="bg-blue-500 text-white text-[10px] rounded px-2 py-1 inline-block">提交申请</div>
+                        </div>
+                    </div>
+
+                    <!-- 电话 -->
+                    <div class="flex flex-col gap-2 relative">
+                        <button class="w-full bg-indigo-600 text-white py-2 rounded text-sm font-bold shadow-sm hover:bg-indigo-700">
+                            <i class="fa-solid fa-phone mr-1"></i>联系货方
+                        </button>
+                        <!-- 连线到下方 -->
+                        <div class="h-20 border-l-2 border-dashed border-indigo-300 absolute left-1/2 top-full"></div>
+                        <div class="absolute top-[110%] left-1/2 -translate-x-1/2 bg-white border border-indigo-200 text-indigo-600 text-[10px] px-2 py-1 rounded shadow-sm whitespace-nowrap">
+                            唤起系统拨号盘
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 货方处理 -->
+    <div class="card w-full max-w-md p-5 text-center border-t-4 border-blue-500 mt-4 z-20">
+        <div class="role-tag role-shipper"><i class="fa-solid fa-clipboard-check mr-1"></i>货方管理 & 决策</div>
+
+        <div class="grid grid-cols-2 gap-4 text-left">
+            <div class="bg-slate-50 p-2 rounded">
+                <h4 class="text-xs font-bold text-slate-600">查看动态</h4>
+                <p class="text-[10px] text-slate-400 mt-1">• 谁关注了 (人数)</p>
+                <p class="text-[10px] text-slate-400">• 谁申请了 (列表)</p>
+            </div>
+            <div class="bg-slate-50 p-2 rounded">
+                <h4 class="text-xs font-bold text-slate-600">操作决策</h4>
+                <div class="flex gap-2 mt-2">
+                    <button class="flex-1 bg-red-100 text-red-600 text-[10px] py-1 rounded font-bold hover:bg-red-200">拒绝</button>
+                    <button class="flex-1 bg-green-100 text-green-600 text-[10px] py-1 rounded font-bold hover:bg-green-200">成交</button>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-100 text-xs text-orange-500 font-bold">
+            <i class="fa-solid fa-bolt mr-1"></i>一旦成交，货源自动下架
+        </div>
+    </div>
+
+    <!-- 4. 车方信息管理页面 (Tabs) -->
+    <div class="w-full max-w-4xl mt-8">
+        <div class="relative">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                <div class="w-full border-t border-slate-300"></div>
+            </div>
+            <div class="relative flex justify-center">
+                    <span class="bg-slate-800 text-white px-4 py-1 text-sm rounded-full font-bold shadow-lg">
+                        车方信息管理页面 (4个 Tab 逻辑)
+                    </span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+
+            <!-- Tab 1: 申请 -->
+            <div class="card p-4 border-l-4 border-purple-500 bg-white">
+                <h4 class="font-bold text-slate-800 text-sm mb-2">
+                    <i class="fa-solid fa-file-signature text-purple-500 mr-2"></i>申请 (Apply)
+                </h4>
+                <div class="text-xs text-slate-500 space-y-2">
+                    <p class="bg-slate-50 p-1.5 rounded">来源：<span class="text-slate-700">所有发起过的一口价申请 & 报价申请</span></p>
+                    <p class="bg-orange-50 p-1.5 rounded text-orange-700">状态：等待货方同意/拒绝</p>
+                    <div class="flex justify-between items-center pt-1 border-t border-slate-100">
+                        <span class="text-[10px]">车方权限:</span>
+                        <span class="text-[10px] text-red-500 cursor-pointer hover:underline">主动取消申请</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: 已联系 -->
+            <div class="card p-4 border-l-4 border-indigo-500 bg-white">
+                <h4 class="font-bold text-slate-800 text-sm mb-2">
+                    <i class="fa-solid fa-phone text-indigo-500 mr-2"></i>已联系 (Contacted)
+                </h4>
+                <div class="text-xs text-slate-500 space-y-2">
+                    <p class="bg-slate-50 p-1.5 rounded">来源：<span class="text-slate-700">点击过“联系货方”按钮</span></p>
+                    <div class="bg-red-50 p-2 rounded border border-red-100">
+                        <div class="font-bold text-red-600 text-[10px] mb-1">关键逻辑：</div>
+                        <p class="text-[10px]">若货源被成交/下架，此列表中的<span class="font-bold">拨打按钮将消失/隐藏</span>，不再提供联系。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: 关注 -->
+            <div class="card p-4 border-l-4 border-pink-500 bg-white">
+                <h4 class="font-bold text-slate-800 text-sm mb-2">
+                    <i class="fa-solid fa-heart text-pink-500 mr-2"></i>关注 (Following)
+                </h4>
+                <div class="text-xs text-slate-500">
+                    <p class="mb-2">展示所有点击过关注的货源。</p>
+                    <p class="text-[10px] text-slate-400">货方端看到的“关注动态”数据来源。</p>
+                </div>
+            </div>
+
+            <!-- Tab 4: 浏览记录 -->
+            <div class="card p-4 border-l-4 border-gray-500 bg-white">
+                <h4 class="font-bold text-slate-800 text-sm mb-2">
+                    <i class="fa-solid fa-clock-rotate-left text-gray-500 mr-2"></i>浏览记录 (History)
+                </h4>
+                <div class="text-xs text-slate-500">
+                    <p>自动记录查看过详情的货源，方便回溯。</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
